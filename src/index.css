@@ -72,6 +72,16 @@
   border: 3px solid var(--rasa-black);
   box-shadow: -6px 6px 0 var(--rasa-black);
   border-radius: 8px;
+  transition:
+    transform 140ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 140ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (hover: hover) {
+  .brutal-card:hover {
+    transform: translate(2px, -2px);
+    box-shadow: -8px 8px 0 var(--rasa-black);
+  }
 }
 
 .brutal-card-lg {
@@ -374,6 +384,7 @@
     animation: none !important;
   }
 
+  .brutal-card,
   .brutal-press,
   .brutal-press-sm,
   .brutal-press-red {

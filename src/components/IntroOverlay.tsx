@@ -4,6 +4,7 @@ import { PixelCursorLogo } from './PixelArt'
 
 interface IntroOverlayProps {
   onComplete: () => void
+  onRevealStart?: () => void
 }
 
 type IntroPhase = 'moving' | 'clicking' | 'dissolving' | 'done'
@@ -17,7 +18,10 @@ const ROWS = 8
  * RASA badge and "clicks" (shadow collapses + green/red pixel burst), then the
  * entire screen dissolves away in a staggered pixel-block grid transition.
  */
-export const IntroOverlay: React.FC<IntroOverlayProps> = ({ onComplete }) => {
+export const IntroOverlay: React.FC<IntroOverlayProps> = ({
+  onComplete,
+  onRevealStart,
+}) => {
   const shouldReduceMotion = useReducedMotion()
   const [phase, setPhase] = useState<IntroPhase>(shouldReduceMotion ? 'done' : 'moving')
 
@@ -42,12 +46,16 @@ export const IntroOverlay: React.FC<IntroOverlayProps> = ({ onComplete }) => {
   useEffect(() => {
     if (shouldReduceMotion) {
       setPhase('done')
+      onRevealStart?.()
       onComplete()
       return
     }
 
     const tClick = window.setTimeout(() => setPhase('clicking'), 820)
-    const tDissolve = window.setTimeout(() => setPhase('dissolving'), 1180)
+    const tDissolve = window.setTimeout(() => {
+      setPhase('dissolving')
+      onRevealStart?.()
+    }, 1180)
     const tDone = window.setTimeout(() => {
       setPhase('done')
       onComplete()
@@ -58,10 +66,11 @@ export const IntroOverlay: React.FC<IntroOverlayProps> = ({ onComplete }) => {
       window.clearTimeout(tDissolve)
       window.clearTimeout(tDone)
     }
-  }, [shouldReduceMotion, onComplete])
+  }, [shouldReduceMotion, onComplete, onRevealStart])
 
   const handleSkip = () => {
     setPhase('done')
+    onRevealStart?.()
     onComplete()
   }
 
@@ -93,23 +102,21 @@ export const IntroOverlay: React.FC<IntroOverlayProps> = ({ onComplete }) => {
             initial={{ opacity: 1, scale: 1.02 }}
             animate={
               isDissolving
-                ? {
-                    opacity: 0,
-                    scale: 0.4,
-                    backgroundColor: block.isAccent
-                      ? '#22C55E'
-                      : block.isRed
-                        ? '#E5252A'
-                        : '#0A0A0A',
-                  }
+                ? { opacity: 0, scale: 0.35 }
                 : { opacity: 1, scale: 1.02 }
             }
             transition={{
-              duration: 0.24,
+              duration: 0.25,
               delay: isDissolving ? block.delay : 0,
               ease: [0.4, 0, 0.2, 1],
             }}
-            className="bg-[#0A0A0A] border border-white/[0.04]"
+            className={`border border-white/[0.05] will-change-transform ${
+              isDissolving && block.isAccent
+                ? 'bg-[#22C55E]'
+                : isDissolving && block.isRed
+                  ? 'bg-[#E5252A]'
+                  : 'bg-[#0A0A0A]'
+            }`}
           />
         ))}
       </div>
@@ -203,20 +210,38 @@ export const IntroOverlay: React.FC<IntroOverlayProps> = ({ onComplete }) => {
             </div>
           </motion.div>
 
+          {/* Stepped pixel motion-trail dots following the cursor path */}
+          {phase === 'moving' &&
+            [
+              { x: 112, y: 110, delay: 0.12, color: '#22C55E' },
+              { x: 78, y: 78, delay: 0.26, color: '#E5252A' },
+              { x: 46, y: 48, delay: 0.4, color: '#22C55E' },
+            ].map((dot, idx) => (
+              <motion.span
+                key={idx}
+                initial={{ x: dot.x, y: dot.y, opacity: 0, scale: 0 }}
+                animate={{ x: dot.x, y: dot.y, opacity: [0, 1, 0], scale: [0.5, 1, 0.6] }}
+                transition={{ duration: 0.45, delay: dot.delay, ease: 'easeOut' }}
+                style={{ backgroundColor: dot.color }}
+                className="absolute left-1/2 top-1/2 w-3 h-3 pointer-events-none"
+                aria-hidden="true"
+              />
+            ))}
+
           {/* Animated Pixel Cursor Arrow gliding across screen and clicking! */}
           <motion.div
-            initial={{ x: 185, y: 155, scale: 1.15, rotate: 8, opacity: 0 }}
+            initial={{ x: 132, y: 132, scale: 1.12, rotate: 8, opacity: 0 }}
             animate={
               isClicking
-                ? { x: 18, y: 20, scale: 0.82, rotate: -6, opacity: 1 }
-                : { x: 24, y: 24, scale: 1, rotate: 0, opacity: 1 }
+                ? { x: 12, y: 14, scale: 0.82, rotate: -6, opacity: 1 }
+                : { x: 20, y: 20, scale: 1, rotate: 0, opacity: 1 }
             }
             transition={
               isClicking
                 ? { duration: 0.11, ease: 'easeInOut' }
-                : { duration: 0.76, ease: [0.22, 1, 0.36, 1] }
+                : { duration: 0.74, ease: [0.22, 1, 0.36, 1] }
             }
-            className="absolute left-1/2 top-1/2 pointer-events-none drop-shadow-[0_4px_0_rgba(0,0,0,0.8)]"
+            className="absolute left-1/2 top-1/2 pointer-events-none will-change-transform drop-shadow-[0_4px_0_rgba(0,0,0,0.8)]"
           >
             <PixelCursorLogo size={68} showClickSparks={isClicking} />
           </motion.div>

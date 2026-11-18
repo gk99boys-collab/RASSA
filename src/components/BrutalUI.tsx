@@ -1,6 +1,6 @@
 import React from 'react'
 import { Check } from 'lucide-react'
-import { toPersianDigits } from '../lib/supabase'
+import { formatOrderBadge } from '../lib/supabase'
 
 interface SectionPillProps {
   index: number
@@ -13,7 +13,7 @@ interface SectionPillProps {
  * Connected Red badge + Black tab + 3px black border + hard offset shadow + green pixel dot.
  */
 export const SectionPill: React.FC<SectionPillProps> = ({ index, title, badgeLabel }) => {
-  const num = badgeLabel ?? `۰${toPersianDigits(index)}`
+  const num = badgeLabel ?? formatOrderBadge(index)
   return (
     <div className="inline-flex items-stretch border-[3px] border-[#0A0A0A] rounded-[7px] shadow-[-5px_5px_0_#0A0A0A] overflow-hidden bg-[#0A0A0A] select-none">
       <span className="flex items-center justify-center bg-[#E5252A] text-white font-black text-sm sm:text-base px-3.5 py-2 border-l-[3px] border-[#0A0A0A] tracking-tight">

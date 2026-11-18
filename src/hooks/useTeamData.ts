@@ -54,39 +54,44 @@ export function useTeamData(): TeamDataState {
 
         if (cancelled) return
 
-        const hasValidTeam = !teamRes.error && teamRes.data && Boolean(teamRes.data.name)
-        const hasValidMembers =
-          !membersRes.error && Array.isArray(membersRes.data) && membersRes.data.length > 0
+        const teamData = !teamRes.error ? teamRes.data : null
+        const membersData =
+          !membersRes.error && Array.isArray(membersRes.data) ? membersRes.data : null
 
-        const resolvedTeam: Team = hasValidTeam
-          ? {
-              id: String(teamRes.data.id),
-              name: teamRes.data.name || FALLBACK_TEAM.name,
-              tagline: teamRes.data.tagline || FALLBACK_TEAM.tagline,
-              description: teamRes.data.description || FALLBACK_TEAM.description,
-              achievement_text: teamRes.data.achievement_text || FALLBACK_TEAM.achievement_text,
-              links: teamRes.data.links ?? [],
-            }
-          : FALLBACK_TEAM
+        const resolvedTeam: Team =
+          teamData && teamData.name
+            ? {
+                id: String(teamData.id),
+                name: teamData.name || FALLBACK_TEAM.name,
+                tagline: teamData.tagline || FALLBACK_TEAM.tagline,
+                description: teamData.description || FALLBACK_TEAM.description,
+                achievement_text: teamData.achievement_text || FALLBACK_TEAM.achievement_text,
+                links: teamData.links ?? [],
+              }
+            : FALLBACK_TEAM
 
-        const resolvedMembers: Member[] = hasValidMembers
-          ? membersRes.data.map((row) => ({
-              id: String(row.id),
-              sort_order: Number(row.sort_order) || 0,
-              name: row.name || '',
-              role: row.role || '',
-              skills: Array.isArray(row.skills) ? row.skills.filter(Boolean) : [],
-              bio: row.bio || '',
-              photo_url: row.photo_url ?? null,
-              links: row.links ?? [],
-            }))
-          : FALLBACK_MEMBERS
+        const resolvedMembers: Member[] =
+          membersData && membersData.length > 0
+            ? membersData.map((row) => ({
+                id: String(row.id),
+                sort_order: Number(row.sort_order) || 0,
+                name: row.name || '',
+                role: row.role || '',
+                skills: Array.isArray(row.skills) ? row.skills.filter(Boolean) : [],
+                bio: row.bio || '',
+                photo_url: row.photo_url ?? null,
+                links: row.links ?? [],
+              }))
+            : FALLBACK_MEMBERS
 
         setState({
           team: resolvedTeam,
           members: resolvedMembers,
           loading: false,
-          source: hasValidTeam || hasValidMembers ? 'supabase' : 'fallback',
+          source:
+            (teamData && teamData.name) || (membersData && membersData.length > 0)
+              ? 'supabase'
+              : 'fallback',
         })
       } catch {
         if (cancelled) return

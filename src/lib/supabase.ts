@@ -132,3 +132,8 @@ const PERSIAN_DIGITS = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '�
 export function toPersianDigits(input: number | string): string {
   return String(input).replace(/\d/g, (digit) => PERSIAN_DIGITS[Number(digit)] ?? digit)
 }
+
+export function formatOrderBadge(num: number): string {
+  const padded = num < 10 ? `0${num}` : String(num)
+  return toPersianDigits(padded)
+}
