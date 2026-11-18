@@ -1,8 +1,10 @@
 import { expect, test, type Page } from '@playwright/test'
+import { publicConfig } from './fixtures/publicConfig'
 import { FALLBACK_MEMBERS, FALLBACK_TEAM } from '../src/data/fallbackData'
 import type { Member, Team } from '../src/types'
 
 const api = 'https://rassa-fixture.invalid'
+test.beforeEach(async ({ page }) => { await page.route(`${api}/functions/v1/rassa-public-config`, r => r.fulfill({ json: publicConfig })) })
 async function fixture(page: Page, team: Team = FALLBACK_TEAM, members: Member[] = FALLBACK_MEMBERS) {
   await page.route(`${api}/rest/v1/**`, async (route) => {
     expect(route.request().method()).toBe('GET')

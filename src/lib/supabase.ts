@@ -1,20 +1,8 @@
-import { createClient, type SupabaseClient } from '@supabase/supabase-js'
+import { publicDb as supabase } from './connection'
 import type { Member, NormalizedLink, RawLinks } from '../types'
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL?.trim()
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY?.trim()
-
+export { supabase }
 export const MEMBER_PHOTOS_BUCKET = 'member-photos'
-
-export const supabase: SupabaseClient | null =
-  supabaseUrl && supabaseAnonKey
-    ? createClient(supabaseUrl, supabaseAnonKey, {
-        auth: {
-          persistSession: false,
-          autoRefreshToken: false,
-        },
-      })
-    : null
 
 /**
  * Resolves a member's `photo_url` value.

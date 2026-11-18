@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { FALLBACK_MEMBERS, FALLBACK_TEAM } from '../data/fallbackData'
-import { supabase } from '../lib/supabase'
+import { connectPublic } from '../lib/connection'
 import type { DataSource, Member, Team } from '../types'
 
 interface TeamDataState {
@@ -16,36 +16,27 @@ export function useTeamData(): TeamDataState {
   const [state, setState] = useState<TeamDataState>({
     team: FALLBACK_TEAM,
     members: FALLBACK_MEMBERS,
-    loading: Boolean(supabase),
-    source: supabase ? 'loading' : 'fallback',
+    loading: true,
+    source: 'loading',
   })
 
   useEffect(() => {
-    const client = supabase
-    if (!client) {
-      setState({
-        team: FALLBACK_TEAM,
-        members: FALLBACK_MEMBERS,
-        loading: false,
-        source: 'fallback',
-      })
-      return
-    }
-
     let cancelled = false
     const controller = new AbortController()
     const timeoutId = window.setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS)
 
     async function load() {
       try {
+        const client = await connectPublic()
+        if (cancelled) return
         const [teamRes, membersRes] = await Promise.all([
-          client!
+          client
             .from('team')
             .select('id, name, tagline, description, achievement_text, links')
             .limit(1)
             .abortSignal(controller.signal)
             .maybeSingle(),
-          client!
+          client
             .from('members')
             .select('id, sort_order, name, role, skills, bio, photo_url, links')
             .order('sort_order', { ascending: true })
