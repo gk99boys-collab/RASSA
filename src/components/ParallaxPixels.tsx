@@ -1,73 +1,85 @@
 import React from 'react'
-import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
-import { PixelCursorLogo } from './PixelArt'
+import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion'
+import { EventCursorLogo } from './BrandAssets'
 
 /**
- * GPU-only parallax pixel shapes floating in the page margins.
- * Subtle enough to never obstruct text, bold enough to tie the whole page
- * to the 8th Event's pixel-art neo-brutalist visual language.
+ * Multi-layer 60fps scroll-parallax pixel blocks & official event cursors
+ * creating continuous architectural depth along the page edges.
  */
 export const ParallaxPixels: React.FC = () => {
   const shouldReduceMotion = useReducedMotion()
   const { scrollYProgress } = useScroll()
+  const smooth = useSpring(scrollYProgress, { stiffness: 120, damping: 26, restDelta: 0.001 })
 
-  const yFast = useTransform(scrollYProgress, [0, 1], [0, shouldReduceMotion ? 0 : -190])
-  const yMedium = useTransform(scrollYProgress, [0, 1], [0, shouldReduceMotion ? 0 : 140])
-  const ySlow = useTransform(scrollYProgress, [0, 1], [0, shouldReduceMotion ? 0 : -110])
+  const yLayer1 = useTransform(smooth, [0, 1], [0, shouldReduceMotion ? 0 : -260])
+  const yLayer2 = useTransform(smooth, [0, 1], [0, shouldReduceMotion ? 0 : 210])
+  const yLayer3 = useTransform(smooth, [0, 1], [0, shouldReduceMotion ? 0 : -160])
+  const rotSlow = useTransform(smooth, [0, 1], [-18, shouldReduceMotion ? -18 : 16])
 
   return (
     <div
       aria-hidden="true"
       className="fixed inset-0 pointer-events-none overflow-hidden z-0 select-none"
     >
-      {/* Upper-left stepped red/green pixel cluster */}
+      {/* Top-left chromatic pixel tetromino */}
       <motion.div
-        style={{ y: yFast }}
-        className="hidden sm:block absolute top-[19%] left-5 lg:left-12 opacity-85"
+        style={{ y: yLayer1 }}
+        className="hidden md:block absolute top-[17%] left-5 xl:left-12 opacity-90"
       >
-        <div className="relative w-12 h-12">
-          <span className="absolute top-0 left-0 w-5 h-5 bg-[#E5252A] border-[2.5px] border-black shadow-[-2px_2px_0_#0A0A0A]" />
-          <span className="absolute top-5 left-5 w-4 h-4 bg-white border-[2.5px] border-black" />
-          <span className="absolute top-1 left-7 w-3 h-3 bg-[#22C55E] border-2 border-black" />
+        <div className="relative w-14 h-14">
+          <span className="absolute top-0 left-0 w-5 h-5 bg-[#E5252A] border-[3px] border-[#080A0D] shadow-[-3px_3px_0_#080A0D]" />
+          <span className="absolute top-5 left-5 w-5 h-5 bg-[#16B853] border-[3px] border-[#080A0D] shadow-[-3px_3px_0_#080A0D]" />
+          <span className="absolute top-0 left-8 w-3.5 h-3.5 bg-[#00D4C8] border-2 border-[#080A0D]" />
         </div>
       </motion.div>
 
-      {/* Mid-right floating mini pixel cursor logo */}
+      {/* Mid-right floating official 8th Event cursor arrow */}
       <motion.div
-        style={{ y: yMedium }}
-        className="hidden md:block absolute top-[46%] right-4 lg:right-10 opacity-75"
+        style={{ y: yLayer2, rotate: rotSlow }}
+        className="hidden lg:block absolute top-[42%] right-5 xl:right-12 opacity-85 drop-shadow-[-4px_4px_0_rgba(8,10,13,0.45)]"
       >
-        <PixelCursorLogo size={38} />
+        <EventCursorLogo className="w-11 h-14" />
       </motion.div>
 
-      {/* Lower-left L-tetromino pixel block */}
+      {/* Mid-left architectural pixel stair + cyan spark */}
       <motion.div
-        style={{ y: ySlow }}
-        className="hidden sm:block absolute top-[72%] left-4 lg:left-14 opacity-80"
+        style={{ y: yLayer3 }}
+        className="hidden lg:block absolute top-[58%] left-6 xl:left-14 opacity-85"
       >
-        <div className="relative w-12 h-12">
-          <span className="absolute top-0 left-0 w-4 h-4 bg-[#0A0A0A]" />
-          <span className="absolute top-4 left-0 w-4 h-4 bg-[#E5252A] border-2 border-black" />
-          <span className="absolute top-4 left-4 w-4 h-4 bg-[#E5252A] border-2 border-black" />
-          <span className="absolute top-0 left-6 w-3 h-3 bg-[#22C55E] border-2 border-black" />
+        <div className="relative w-14 h-14">
+          <span className="absolute top-0 left-0 w-4 h-4 bg-[#080A0D]" />
+          <span className="absolute top-4 left-4 w-5 h-5 bg-white border-[3px] border-[#080A0D] shadow-[-3px_3px_0_#E5252A]" />
+          <span className="absolute top-9 left-9 w-3.5 h-3.5 bg-[#F0E808] border-2 border-[#080A0D]" />
         </div>
       </motion.div>
 
-      {/* Mobile-friendly subtle edge pixel dots */}
+      {/* Lower-right floating mini event cursor */}
       <motion.div
-        style={{ y: ySlow }}
-        className="absolute top-[33%] left-2.5 sm:hidden opacity-75"
+        style={{ y: yLayer1 }}
+        className="hidden md:block absolute top-[82%] right-6 xl:right-14 opacity-80"
       >
-        <span className="block w-3 h-3 bg-[#22C55E] border-2 border-black mb-1.5" />
-        <span className="block w-3.5 h-3.5 bg-[#E5252A] border-2 border-black translate-x-2" />
+        <div className="relative w-12 h-12">
+          <span className="absolute top-0 right-0 w-5 h-5 bg-[#00D4C8] border-[3px] border-[#080A0D] shadow-[-3px_3px_0_#080A0D]" />
+          <span className="absolute top-6 right-5 w-4 h-4 bg-[#E5252A] border-2 border-[#080A0D]" />
+          <span className="absolute top-1 right-7 w-3 h-3 bg-[#16B853] border-2 border-[#080A0D]" />
+        </div>
+      </motion.div>
+
+      {/* Subtle mobile margin pixel accents */}
+      <motion.div
+        style={{ y: yLayer3 }}
+        className="md:hidden absolute top-[30%] left-2 opacity-80"
+      >
+        <span className="block w-3 h-3 bg-[#16B853] border-2 border-[#080A0D] mb-1.5" />
+        <span className="block w-3.5 h-3.5 bg-[#E5252A] border-2 border-[#080A0D] translate-x-2" />
       </motion.div>
 
       <motion.div
-        style={{ y: yMedium }}
-        className="absolute top-[64%] right-2.5 sm:hidden opacity-75"
+        style={{ y: yLayer2 }}
+        className="md:hidden absolute top-[68%] right-2 opacity-80"
       >
-        <span className="block w-3.5 h-3.5 bg-[#E5252A] border-2 border-black mb-1.5" />
-        <span className="block w-2.5 h-2.5 bg-[#22C55E] border-2 border-black -translate-x-2" />
+        <span className="block w-3.5 h-3.5 bg-[#00D4C8] border-2 border-[#080A0D] mb-1.5" />
+        <span className="block w-3 h-3 bg-[#E5252A] border-2 border-[#080A0D] -translate-x-2" />
       </motion.div>
     </div>
   )
