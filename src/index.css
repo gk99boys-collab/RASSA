@@ -2,12 +2,15 @@
 
 :root {
   --rasa-red: #e5252a;
-  --rasa-red-hover: #c91d22;
-  --rasa-red-soft: #fff1f2;
-  --rasa-green: #22c55e;
-  --rasa-black: #0a0a0a;
+  --rasa-red-deep: #c4191e;
+  --rasa-green: #16b853;
+  --rasa-green-bright: #22c55e;
+  --rasa-teal: #00a8a8;
+  --rasa-cyan: #00d4c8;
+  --rasa-yellow: #f0e808;
+  --rasa-black: #080a0d;
   --rasa-white: #ffffff;
-  --rasa-bg: #f1f2f4;
+  --rasa-bg: #eef0f3;
 }
 
 @layer base {
@@ -24,9 +27,14 @@
     min-height: 100vh;
     font-family: 'Vazirmatn', Tahoma, sans-serif;
     background-color: var(--rasa-bg);
-    background-image: radial-gradient(circle, rgba(10, 10, 10, 0.17) 1.35px, transparent 1.35px);
-    background-size: 20px 20px;
-    background-position: 0 0;
+    background-image:
+      radial-gradient(circle, rgba(8, 10, 13, 0.2) 1.45px, transparent 1.45px),
+      linear-gradient(to right, rgba(8, 10, 13, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(8, 10, 13, 0.04) 1px, transparent 1px);
+    background-size:
+      20px 20px,
+      100px 100px,
+      100px 100px;
     color: var(--rasa-black);
     overflow-x: clip;
     -webkit-font-smoothing: antialiased;
@@ -44,83 +52,133 @@
   }
 }
 
-/* Custom Pixel Mouse-Cursor Arrow (red/white + green pixel dots) on desktop pointers */
-@media (hover: hover) and (pointer: fine) {
-  html,
-  body {
-    cursor:
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Crect x='11' y='1' width='2' height='2' fill='%2322C55E'/%3E%3Crect x='13' y='4' width='2' height='2' fill='%2322C55E'/%3E%3Cpath fill='%230A0A0A' d='M1 0h2v1h1v1h1v1h1v1h1v1h1v1h1v1h1v1h1v2H7v1h1v2h1v2H6v-2H5v-2H4v1H3v1H1V0z'/%3E%3Cpath fill='%23E5252A' d='M2 2h1v1h1v1h1v1h1v1h1v1h1v1h1v1H6v1h1v3H6v-3H5v-1H4v1H3v1H2V2z'/%3E%3Cpath fill='%23FFFFFF' d='M2 2h1v8H2V2zm1 1h1v1H3V3zm1 1h1v1H4V4z'/%3E%3C/svg%3E")
-        2 1,
-      auto;
-  }
-
-  a,
-  button,
-  [role='button'],
-  summary,
-  label[for] {
-    cursor:
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Crect x='0' y='0' width='2' height='2' fill='%2322C55E'/%3E%3Crect x='5' y='0' width='2' height='2' fill='%2322C55E'/%3E%3Crect x='11' y='2' width='2' height='2' fill='%2322C55E'/%3E%3Crect x='13' y='5' width='2' height='2' fill='%2322C55E'/%3E%3Cpath fill='%230A0A0A' d='M2 2h2v1h1v1h1v1h1v1h1v1h1v1h1v1h1v2H8v1h1v3H6v-2H5v-1H4v1H2V2z'/%3E%3Cpath fill='%23FFFFFF' d='M3 4h1v1h1v1h1v1h1v1h1v1h1v1H7v1h1v2H7v-2H6v-1H4v1H3V4z'/%3E%3Cpath fill='%23E5252A' d='M4 5h1v1h1v1h1v1h1v1h1v1H6v1h1v2H6v-3H4V5z'/%3E%3C/svg%3E")
-        3 3,
-      pointer;
-  }
+/* Crisp pixel-art image rendering for the official event logo */
+.pixel-crisp {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
 }
 
-/* Neo-Brutalist Surfaces & Controls */
-.brutal-card {
+/* Architectural dark dot-matrix background for high-contrast poster bands */
+.bg-obsidian-grid {
+  background-color: #080b0f;
+  background-image:
+    radial-gradient(circle, rgba(255, 255, 255, 0.14) 1.3px, transparent 1.3px),
+    radial-gradient(ellipse 65% 50% at 20% 25%, rgba(0, 180, 180, 0.14), transparent 70%),
+    radial-gradient(ellipse 55% 45% at 85% 80%, rgba(229, 37, 42, 0.14), transparent 70%);
+  background-size:
+    22px 22px,
+    100% 100%,
+    100% 100%;
+}
+
+/* Subtle dot pattern inside framed studio panels */
+.bg-studio-dots {
+  background-color: #f1f3f6;
+  background-image: radial-gradient(circle, rgba(8, 10, 13, 0.2) 1.35px, transparent 1.35px);
+  background-size: 14px 14px;
+}
+
+/* Red poster halftone pattern for championship trophy arena */
+.bg-red-poster {
+  background-color: #e5252a;
+  background-image:
+    radial-gradient(circle, rgba(8, 10, 13, 0.22) 1.5px, transparent 1.5px),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(255, 255, 255, 0.05) 0px,
+      rgba(255, 255, 255, 0.05) 8px,
+      transparent 8px,
+      transparent 16px
+    );
+  background-size:
+    14px 14px,
+    100% 100%;
+}
+
+/* Neo-Brutalist Graphic Poster Surfaces */
+.poster-card {
   background-color: var(--rasa-white);
   border: 3px solid var(--rasa-black);
-  box-shadow: -6px 6px 0 var(--rasa-black);
-  border-radius: 8px;
+  box-shadow: -7px 7px 0 var(--rasa-black);
+  border-radius: 10px;
   transition:
-    transform 140ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 140ms cubic-bezier(0.22, 1, 0.36, 1);
+    transform 160ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 160ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @media (hover: hover) {
-  .brutal-card:hover {
-    transform: translate(2px, -2px);
-    box-shadow: -8px 8px 0 var(--rasa-black);
+  .poster-card-lift:hover {
+    transform: translate(3px, -3px);
+    box-shadow: -10px 10px 0 var(--rasa-black);
   }
 }
 
-.brutal-card-lg {
+.poster-card-xl {
   background-color: var(--rasa-white);
-  border: 3px solid var(--rasa-black);
-  box-shadow: -8px 8px 0 var(--rasa-black);
-  border-radius: 10px;
+  border: 3.5px solid var(--rasa-black);
+  box-shadow: -9px 9px 0 var(--rasa-black);
+  border-radius: 12px;
 }
 
-.brutal-card-dark {
-  background-color: var(--rasa-black);
+.poster-card-double {
+  background-color: var(--rasa-white);
+  border: 3.5px solid var(--rasa-black);
+  box-shadow:
+    -7px 7px 0 var(--rasa-red),
+    -13px 13px 0 var(--rasa-black);
+  border-radius: 12px;
+}
+
+.poster-card-obsidian {
+  background-color: #080b0f;
   color: var(--rasa-white);
-  border: 3px solid var(--rasa-black);
-  box-shadow: -7px 7px 0 var(--rasa-red);
-  border-radius: 10px;
+  border: 3.5px solid var(--rasa-black);
+  box-shadow:
+    -7px 7px 0 var(--rasa-red),
+    -12px 12px 0 var(--rasa-black);
+  border-radius: 12px;
 }
 
 .brutal-icon-box {
   background-color: var(--rasa-red);
   color: var(--rasa-white);
   border: 3px solid var(--rasa-black);
-  box-shadow: -3px 3px 0 var(--rasa-black);
-  border-radius: 6px;
+  box-shadow: -4px 4px 0 var(--rasa-black);
+  border-radius: 7px;
+  transition: transform 150ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (hover: hover) {
+  .group:hover .brutal-icon-box {
+    transform: rotate(-4deg) scale(1.05);
+  }
 }
 
 .brutal-chip {
   background-color: var(--rasa-white);
   color: var(--rasa-black);
   border: 3px solid var(--rasa-black);
-  box-shadow: -3px 3px 0 var(--rasa-black);
+  box-shadow: -3.5px 3.5px 0 var(--rasa-black);
   border-radius: 6px;
+  transition:
+    transform 120ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 120ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Pressable buttons: hard shadow collapses on hover/tap */
+@media (hover: hover) {
+  .brutal-chip:hover {
+    transform: translate(1.5px, -1.5px);
+    box-shadow: -5px 5px 0 var(--rasa-black);
+  }
+}
+
+/* Tactile Pressable Buttons — Hard Shadow Collapses Completely on Tap/Click */
 .brutal-press {
+  position: relative;
   border: 3px solid var(--rasa-black);
-  box-shadow: -5px 5px 0 var(--rasa-black);
-  border-radius: 6px;
-  transform: translate(0, 0);
+  box-shadow: -6px 6px 0 var(--rasa-black);
+  border-radius: 7px;
+  transform: translate3d(0, 0, 0);
   transition:
     transform 110ms cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 110ms cubic-bezier(0.22, 1, 0.36, 1),
@@ -131,45 +189,47 @@
 
 @media (hover: hover) {
   .brutal-press:hover {
-    transform: translate(-3px, 3px);
-    box-shadow: -2px 2px 0 var(--rasa-black);
+    transform: translate3d(-3px, 3px, 0);
+    box-shadow: -3px 3px 0 var(--rasa-black);
   }
 }
 
 .brutal-press:active {
-  transform: translate(-5px, 5px) !important;
+  transform: translate3d(-6px, 6px, 0) !important;
   box-shadow: 0 0 0 var(--rasa-black) !important;
 }
 
 .brutal-press-sm {
+  position: relative;
   border: 3px solid var(--rasa-black);
-  box-shadow: -3px 3px 0 var(--rasa-black);
+  box-shadow: -4px 4px 0 var(--rasa-black);
   border-radius: 6px;
-  transform: translate(0, 0);
+  transform: translate3d(0, 0, 0);
   transition:
     transform 100ms cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 100ms cubic-bezier(0.22, 1, 0.36, 1),
-    background-color 120ms ease;
+    background-color 120ms ease,
+    color 120ms ease;
 }
 
 @media (hover: hover) {
   .brutal-press-sm:hover {
-    transform: translate(-2px, 2px);
-    box-shadow: -1px 1px 0 var(--rasa-black);
+    transform: translate3d(-2px, 2px, 0);
+    box-shadow: -2px 2px 0 var(--rasa-black);
   }
 }
 
 .brutal-press-sm:active {
-  transform: translate(-3px, 3px) !important;
+  transform: translate3d(-4px, 4px, 0) !important;
   box-shadow: 0 0 0 var(--rasa-black) !important;
 }
 
-/* Pressable button on dark surfaces (red hard shadow collapses) */
-.brutal-press-red {
+/* Dark-surface pressable button with red offset shadow */
+.brutal-press-neon {
   border: 3px solid var(--rasa-white);
-  box-shadow: -4px 4px 0 var(--rasa-red);
-  border-radius: 6px;
-  transform: translate(0, 0);
+  box-shadow: -5px 5px 0 var(--rasa-red);
+  border-radius: 7px;
+  transform: translate3d(0, 0, 0);
   transition:
     transform 110ms cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 110ms cubic-bezier(0.22, 1, 0.36, 1),
@@ -177,28 +237,55 @@
 }
 
 @media (hover: hover) {
-  .brutal-press-red:hover {
-    transform: translate(-2px, 2px);
+  .brutal-press-neon:hover {
+    transform: translate3d(-3px, 3px, 0);
     box-shadow: -2px 2px 0 var(--rasa-red);
   }
 }
 
-.brutal-press-red:active {
-  transform: translate(-4px, 4px) !important;
+.brutal-press-neon:active {
+  transform: translate3d(-5px, 5px, 0) !important;
   box-shadow: 0 0 0 var(--rasa-red) !important;
 }
 
-/* Neo-brutalist diagonal stripes (accents & skeleton shimmer) */
-.brutal-hazard {
+/* Animated Hazard Tape & Pixel Checkerboard Strips */
+@keyframes hazardSlide {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 34px 0;
+  }
+}
+
+.brutal-hazard-animated {
   background-image: repeating-linear-gradient(
     -45deg,
     #e5252a 0px,
-    #e5252a 10px,
-    #0a0a0a 10px,
-    #0a0a0a 20px
+    #e5252a 12px,
+    #080a0d 12px,
+    #080a0d 24px
   );
+  background-size: 33.94px 33.94px;
+  animation: hazardSlide 1.8s linear infinite;
 }
 
+.pixel-checker-strip {
+  background-color: #ffffff;
+  background-image:
+    linear-gradient(45deg, #080a0d 25%, transparent 25%),
+    linear-gradient(-45deg, #080a0d 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #080a0d 75%),
+    linear-gradient(-45deg, transparent 75%, #080a0d 75%);
+  background-size: 16px 16px;
+  background-position:
+    0 0,
+    0 8px,
+    8px -8px,
+    -8px 0;
+}
+
+/* Neo-Brutalist Loading Skeleton */
 @keyframes brutalSkeletonSlide {
   0% {
     background-position: 0 0;
@@ -210,22 +297,22 @@
 
 .brutal-skeleton {
   border: 3px solid var(--rasa-black);
-  box-shadow: -3px 3px 0 var(--rasa-black);
+  box-shadow: -4px 4px 0 var(--rasa-black);
   border-radius: 6px;
   background-color: #ffffff;
   background-image: repeating-linear-gradient(
     -45deg,
     #ffffff 0px,
     #ffffff 10px,
-    #e5e7eb 10px,
-    #e5e7eb 20px
+    #e2e5ea 10px,
+    #e2e5ea 20px
   );
   background-size: 28.28px 28.28px;
-  animation: brutalSkeletonSlide 0.9s linear infinite;
+  animation: brutalSkeletonSlide 0.85s linear infinite;
 }
 
-/* Seamless GPU Marquee Ticker */
-@keyframes rasaMarquee {
+/* Dual Counter-Rotating Kinetic Marquees */
+@keyframes marqueeLeft {
   0% {
     transform: translate3d(0, 0, 0);
   }
@@ -234,18 +321,148 @@
   }
 }
 
-.rasa-marquee-track {
+@keyframes marqueeRight {
+  0% {
+    transform: translate3d(-50%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.marquee-track-fwd {
   display: flex;
   width: max-content;
-  animation: rasaMarquee 26s linear infinite;
+  animation: marqueeLeft 24s linear infinite;
   will-change: transform;
 }
 
-.rasa-marquee-wrap:hover .rasa-marquee-track {
+.marquee-track-rev {
+  display: flex;
+  width: max-content;
+  animation: marqueeRight 30s linear infinite;
+  will-change: transform;
+}
+
+.marquee-band:hover .marquee-track-fwd,
+.marquee-band:hover .marquee-track-rev {
   animation-play-state: paused;
 }
 
-/* Pixel caret blink for Hero typewriter */
+/* Monumental 3D Extruded Persian Display Headline */
+.hero-title-3d {
+  color: #080a0d;
+  text-shadow:
+    -3px 3px 0 #e5252a,
+    -6px 6px 0 #e5252a,
+    -9px 9px 0 #080a0d;
+}
+
+/* Chromatic RGB/CMY Glitch (matches the official 8th Event cursor logo!) */
+@keyframes glitchSliceRed {
+  0%,
+  84%,
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0;
+    clip-path: inset(0 0 0 0);
+  }
+  85% {
+    transform: translate3d(8px, -3px, 0);
+    opacity: 1;
+    clip-path: inset(8% 0 64% 0);
+  }
+  87% {
+    transform: translate3d(-7px, 2px, 0);
+    opacity: 1;
+    clip-path: inset(58% 0 12% 0);
+  }
+  89% {
+    transform: translate3d(6px, -2px, 0);
+    opacity: 1;
+    clip-path: inset(32% 0 38% 0);
+  }
+  91% {
+    opacity: 0;
+  }
+}
+
+@keyframes glitchSliceCyan {
+  0%,
+  84%,
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0;
+    clip-path: inset(0 0 0 0);
+  }
+  86% {
+    transform: translate3d(-8px, 3px, 0);
+    opacity: 0.95;
+    clip-path: inset(52% 0 16% 0);
+  }
+  88% {
+    transform: translate3d(7px, -3px, 0);
+    opacity: 0.95;
+    clip-path: inset(14% 0 58% 0);
+  }
+  90% {
+    transform: translate3d(-5px, 1px, 0);
+    opacity: 0.9;
+    clip-path: inset(72% 0 6% 0);
+  }
+  92% {
+    opacity: 0;
+  }
+}
+
+@keyframes glitchSliceGreen {
+  0%,
+  85%,
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0;
+    clip-path: inset(0 0 0 0);
+  }
+  87% {
+    transform: translate3d(5px, 4px, 0);
+    opacity: 0.95;
+    clip-path: inset(24% 0 48% 0);
+  }
+  89% {
+    transform: translate3d(-6px, -2px, 0);
+    opacity: 0.95;
+    clip-path: inset(66% 0 8% 0);
+  }
+  91% {
+    opacity: 0;
+  }
+}
+
+.glitch-red {
+  animation: glitchSliceRed 3.4s steps(1, end) infinite;
+}
+
+.glitch-cyan {
+  animation: glitchSliceCyan 3.4s steps(1, end) infinite;
+}
+
+.glitch-green {
+  animation: glitchSliceGreen 3.4s steps(1, end) infinite;
+}
+
+.glitch-now .glitch-red {
+  animation: glitchSliceRed 0.48s steps(1, end) 2;
+}
+
+.glitch-now .glitch-cyan {
+  animation: glitchSliceCyan 0.48s steps(1, end) 2;
+}
+
+.glitch-now .glitch-green {
+  animation: glitchSliceGreen 0.48s steps(1, end) 2;
+}
+
+/* Pixel Caret & LED Blinks */
 @keyframes pixelBlink {
   0%,
   49% {
@@ -258,136 +475,126 @@
 }
 
 .pixel-blink {
-  animation: pixelBlink 0.9s steps(1, end) infinite;
+  animation: pixelBlink 0.85s steps(1, end) infinite;
 }
 
-/* Crisp Pixel Glitch Effect for Hero Title & Mystery Card */
-@keyframes rasaGlitchRed {
+/* Equalizer Bars */
+@keyframes eqBounce {
   0%,
-  86%,
   100% {
-    transform: translate3d(0, 0, 0);
-    opacity: 0;
-    clip-path: inset(0 0 0 0);
+    transform: scaleY(0.28);
   }
-  87% {
-    transform: translate3d(6px, -3px, 0);
-    opacity: 1;
-    clip-path: inset(12% 0 58% 0);
+  35% {
+    transform: scaleY(1);
   }
-  89% {
-    transform: translate3d(-5px, 2px, 0);
-    opacity: 1;
-    clip-path: inset(62% 0 10% 0);
-  }
-  91% {
-    transform: translate3d(4px, -2px, 0);
-    opacity: 1;
-    clip-path: inset(35% 0 35% 0);
-  }
-  93% {
-    transform: translate3d(0, 0, 0);
-    opacity: 0;
+  65% {
+    transform: scaleY(0.55);
   }
 }
 
-@keyframes rasaGlitchGreen {
-  0%,
-  86%,
-  100% {
-    transform: translate3d(0, 0, 0);
-    opacity: 0;
-    clip-path: inset(0 0 0 0);
+.eq-bar {
+  transform-origin: bottom;
+  animation: eqBounce 1.1s steps(4, end) infinite;
+}
+
+/* Rotating Sunburst Rays behind Championship Trophy */
+@keyframes slowSpin {
+  from {
+    transform: rotate(0deg);
   }
-  88% {
-    transform: translate3d(-6px, 3px, 0);
-    opacity: 0.95;
-    clip-path: inset(55% 0 15% 0);
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spin-slow {
+  animation: slowSpin 22s linear infinite;
+}
+
+/* Mystery Card CRT Scanline & Glitch Flicker */
+@keyframes scanSweep {
+  0% {
+    transform: translate3d(0, -100%, 0);
+  }
+  100% {
+    transform: translate3d(0, 320%, 0);
+  }
+}
+
+.radar-scan-beam {
+  animation: scanSweep 2.6s linear infinite;
+}
+
+@keyframes mysteryGlitchFlicker {
+  0%,
+  89%,
+  92%,
+  95%,
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
   }
   90% {
-    transform: translate3d(5px, -2px, 0);
-    opacity: 0.95;
-    clip-path: inset(15% 0 60% 0);
+    opacity: 0.45;
+    transform: translate3d(4px, -2px, 0);
   }
-  92% {
-    transform: translate3d(0, 0, 0);
-    opacity: 0;
-  }
-}
-
-.glitch-layer-red {
-  animation: rasaGlitchRed 3.8s steps(1, end) infinite;
-}
-
-.glitch-layer-green {
-  animation: rasaGlitchGreen 3.8s steps(1, end) infinite;
-}
-
-.glitch-burst .glitch-layer-red {
-  animation: rasaGlitchRed 0.55s steps(1, end) 2;
-}
-
-.glitch-burst .glitch-layer-green {
-  animation: rasaGlitchGreen 0.55s steps(1, end) 2;
-}
-
-/* Mystery Card Flicker & Scanlines */
-@keyframes mysteryFlicker {
-  0%,
-  91%,
-  93%,
-  96%,
-  100% {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-  92% {
-    opacity: 0.55;
-    transform: translate3d(3px, -1px, 0);
+  91% {
+    opacity: 0.9;
+    transform: translate3d(-4px, 1px, 0);
   }
   94% {
-    opacity: 0.85;
-    transform: translate3d(-3px, 1px, 0);
-  }
-  95% {
-    opacity: 0.4;
-    transform: translate3d(2px, 0, 0);
+    opacity: 0.35;
+    transform: translate3d(3px, 2px, 0);
   }
 }
 
 .mystery-flicker {
-  animation: mysteryFlicker 3.2s steps(1, end) infinite;
+  animation: mysteryGlitchFlicker 2.8s steps(1, end) infinite;
 }
 
 .pixel-scanlines {
   background-image: repeating-linear-gradient(
     0deg,
-    rgba(255, 255, 255, 0.04) 0px,
-    rgba(255, 255, 255, 0.04) 2px,
+    rgba(255, 255, 255, 0.045) 0px,
+    rgba(255, 255, 255, 0.045) 2px,
     transparent 2px,
     transparent 5px
   );
 }
 
-/* Respect prefers-reduced-motion across all CSS animations */
+/* Giant Outlined Stroke Numbers */
+.stroke-number {
+  color: transparent;
+  -webkit-text-stroke: 2.5px rgba(8, 10, 13, 0.14);
+}
+
+/* Accessibility: Full prefers-reduced-motion compliance */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
 
-  .rasa-marquee-track,
+  .marquee-track-fwd,
+  .marquee-track-rev,
+  .brutal-hazard-animated,
+  .brutal-skeleton,
+  .glitch-red,
+  .glitch-cyan,
+  .glitch-green,
   .pixel-blink,
-  .glitch-layer-red,
-  .glitch-layer-green,
-  .mystery-flicker,
-  .brutal-skeleton {
+  .eq-bar,
+  .spin-slow,
+  .radar-scan-beam,
+  .mystery-flicker {
     animation: none !important;
   }
 
-  .brutal-card,
+  .poster-card,
+  .brutal-icon-box,
+  .brutal-chip,
   .brutal-press,
   .brutal-press-sm,
-  .brutal-press-red {
+  .brutal-press-neon {
     transition: none !important;
   }
 }
