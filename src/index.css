@@ -3,6 +3,7 @@
 @import "./styles/hero.css";
 @import "./styles/sections.css";
 @import "./styles/kinetic.css";
+@import "./styles/reel.css";
 
 .intro { position: fixed; inset: 0; width: 100%; height: 100dvh; max-width: none; max-height: none; margin: 0; border: 0; padding: 0; background: var(--canvas); color: var(--ink); }
 .intro::backdrop { background: transparent; }
