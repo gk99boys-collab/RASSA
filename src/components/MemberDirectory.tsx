@@ -61,9 +61,9 @@ export function MemberDirectory({ members, loading, teamName }: { members: Membe
   if (!member) return <section id="members" className="page-section paper empty-roster"><h2>اعضای تیم {teamName}</h2><p>هنوز عضوی معرفی نشده است.</p></section>
   return (
     <section ref={track} id="members" className="page-section member-scene" aria-labelledby="members-title">
-      <div ref={stage} className="member-stage">
+      <div className="member-runway"><div ref={stage} className="member-stage">
         <SectionTitle id="members-title" label="اعضا" title={`اعضای تیم ${teamName}`} meta={<><UsersRound size={14} />{toPersianDigits(members.length)} عضو</>} />
-        <div className="directory">
+        <div className="directory" data-journey-anchor>
           <div ref={list} className="roster" data-long={members.length > 5} data-printed={listPrinted} role="tablist" aria-label="فهرست اعضای تیم" aria-orientation={compact ? 'horizontal' : 'vertical'}>
             {members.map((item, i) => {
               const { studio, sealed } = cardDesign(item)
@@ -78,7 +78,7 @@ export function MemberDirectory({ members, loading, teamName }: { members: Membe
               </button>
             })}
           </div>
-          <div className="paper profile" id="member-profile" role="tabpanel" tabIndex={0} aria-busy={loading} aria-labelledby={`seat-${member.sort_order}`}>
+          <div className="paper profile" data-journey-anchor id="member-profile" role="tabpanel" tabIndex={0} aria-busy={loading} aria-labelledby={`seat-${member.sort_order}`}>
             <div className="profile-bar"><span><Contact size={16} />شناسنامه عضو</span>
               <div className="profile-controls">
                 <button type="button" aria-label="عضو قبلی" onClick={() => select((index - 1 + members.length) % members.length, -1)}><ChevronRight size={15} /></button>
@@ -97,7 +97,7 @@ export function MemberDirectory({ members, loading, teamName }: { members: Membe
               <a className="journey-skip" href="#honors">عبور از اعضا <ArrowDown size={13} /></a></div>
           </div>
         </div>
-      </div>
+      </div></div>
     </section>
   )
 }
