@@ -1,0 +1,49 @@
+@import "tailwindcss";
+@import "../styles/shell.css";
+
+html { scroll-behavior: auto; }
+.desk-width { width: min(1080px, calc(100% - 36px)); margin-inline: auto; }
+.desk-head { background: white; border-bottom: 2px solid var(--line); }
+.desk-head .desk-width, .desk-brand, .desk-head nav, .desk-head nav :is(a,button), .desk-key, .desk-fine, .link-heading h3, .desk-list h2 { display: flex; align-items: center; gap: 9px; }
+.desk-head .desk-width { min-height: 66px; justify-content: space-between; }
+.desk-brand { font-size: 18px; font-weight: 900; } .desk-brand img { object-fit: contain; }
+.desk-head nav { gap: 18px; font-weight: 700; font-size: 13px; }
+.desk-main { padding-block: clamp(20px,4vw,52px); }
+.desk-login { max-width: 440px; margin: 5vh auto 0; padding: clamp(20px,4vw,38px); border-top: 5px solid var(--red); }
+.login-seal,.folio,.seat-number { display: grid; place-items: center; border: var(--border); }
+.login-seal { width: 48px; height: 48px; margin-bottom: 24px; background: #ffe2da; box-shadow: var(--shadow); }
+.desk-overline { font-size: 11px; font-weight: 750; color: #973026; }
+.desk-main h1 { font-size: clamp(27px,3vw,40px); font-weight: 900; line-height: 1.5; }
+.desk-lede,.desk-heading p:not(.desk-overline) { font-size: 14px; line-height: 1.9; color: var(--muted); }
+.desk-main label { display: grid; align-content: start; gap: 5px; font-size: 13px; font-weight: 740; min-width: 0; }
+.desk-main :is(input,textarea) { width: 100%; min-width: 0; padding: 8px 10px; background: #fdfdfd; color: var(--ink); border: 1px solid #62666a; border-radius: 1px; font: 500 15px/1.6 var(--font-sans); }
+.desk-main input[dir=ltr] { text-align: left; } .desk-main textarea { resize: vertical; }
+.desk-main label small { font-size: 11px; color: var(--muted); font-weight: 500; }
+.desk-login form { display: grid; gap: 13px; margin-block: 20px; }
+.desk-key { justify-content: center; padding: 7px 14px; min-height: 38px; border: var(--border); box-shadow: 2px 2px var(--line); background: white; font-size: 13px; font-weight: 780; }
+.desk-key.primary { background: var(--red); color: white; } .desk-key.danger { color: #a51620; }
+.desk-main button:disabled { cursor: default; opacity: .65; } .desk-key:not(:disabled):active { box-shadow: none; transform: translate(1px,1px); }
+.desk-fine { align-items: start; font-size: 11px; color: var(--muted); line-height: 1.8; } .desk-fine svg { margin-top: 2px; }
+.desk-error,.desk-success { padding: 9px 12px; border-inline-start: 3px solid currentColor; font-size: 13px; }
+.desk-error { background: #fff1ef; color: #941521; } .desk-success { background: #e1f6eb; color: #14552d; }
+.desk-feedback:not(:empty) { margin-bottom: 15px; }
+.desk-heading,.editor-title,.desk-form-actions,.link-heading { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.desk-heading { padding-bottom: 16px; border-bottom: 2px solid var(--line); margin-bottom: 20px; }
+.desk-grid { display:grid; align-items:start; grid-template-columns: minmax(210px,.68fr) minmax(0,1.7fr); gap:18px; }
+.desk-list { max-height: 78vh; overflow-y:auto; } .desk-list h2 { position: sticky; top:0; padding:11px 14px; font-size:15px; font-weight:800; background:var(--paper); border-bottom:var(--border); }
+.desk-list h2 b { margin-inline-start:auto; } .desk-list button { display:flex; width:100%; align-items:center; gap:11px; padding:11px 14px; text-align:start; border-bottom:1px solid #ddd; }
+.desk-list button[aria-current] { background:#fff1ec; box-shadow:inset -3px 0 var(--red); }
+.seat-number { width:30px; height:34px; background:white; font-size:13px; } .desk-list button strong,.desk-list button small { display:block; }
+.desk-list button strong { font-size:15px; font-weight:800; } .desk-list button small { font-size:11px; color:var(--muted); }
+.desk-list .desk-fine,.desk-box { padding:16px; }
+.desk-editor { min-width:0; } .desk-editor fieldset { padding:clamp(16px,2.5vw,26px); min-width:0; }
+.editor-title { padding-bottom:13px; margin-bottom:14px; border-bottom:1px solid #ccc; } .editor-title h2,.desk-dialog h2 { font-size:22px; font-weight:850; }
+.folio { min-width:35px; height:38px; background:#e4f4f0; color:#175d56; font-weight:850; }
+.desk-fields { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:13px; } .desk-fields .wide { grid-column:1/-1; }
+.desk-links { margin-block:18px; border-block:1px dashed #b7b7b7; padding-block:9px; }
+.link-heading h3 { font-size:14px; font-weight:800; } .link-heading button { display:flex; align-items:center; gap:5px; font-size:12px; text-decoration:underline; }
+.link-row { display:grid; grid-template-columns:minmax(0,.7fr) minmax(0,1fr) auto; align-items:end; gap:6px; margin-top:9px; } .link-row button { padding:7px; min-height:38px; }
+.desk-dialog { margin:auto; max-width:min(390px,calc(100% - 30px)); padding:22px; color:var(--ink); } .desk-dialog::backdrop { background:#181a2080; }
+.desk-dialog p { margin-block:12px 18px; line-height:1.9; } .desk-uid { font-size:12px; overflow-wrap:anywhere; }
+@media(max-width:700px){ .desk-grid{grid-template-columns:minmax(0,1fr)} .desk-list{max-height:180px} .desk-login{margin-top:2vh} .desk-head nav{gap:9px} .desk-brand{font-size:15px} }
+@media(max-width:450px){ .desk-width{width:calc(100% - 26px)} .desk-fields{grid-template-columns:minmax(0,1fr)} .desk-key{padding-inline:9px} .desk-head nav{font-size:11px} .desk-brand img{width:30px} .desk-heading{align-items:end} .desk-heading h1{font-size:25px} }

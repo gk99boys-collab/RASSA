@@ -80,3 +80,16 @@
   .studio-lettering { inset-inline-start: 4%; } .studio-lettering p { margin-top: 4px; }
   .bio { font-size: 13px; margin-block: 12px; } .skills { gap: 7px 12px; } .skills li { padding: 2px 6px; font-size: 10.5px; }
 }
+
+/* The sticky sheet has a finite runway; browser scrolling and anchors stay native. */
+.member-scene[data-pinned="true"]::after { content: ''; display: block; height: var(--member-travel); }
+.member-scene[data-pinned="true"] .member-stage { position: sticky; top: var(--member-top); }
+.member-scene { overflow-anchor: none; }
+.profile-foot { gap: 12px; min-height: 33px; font-size: 11px; }
+.journey-caption, .member-scene[data-pinned="true"] .manual-caption { display: none; }
+.member-scene[data-pinned="true"] .journey-caption, .journey-skip { display: inline-flex; align-items: center; gap: 6px; }
+.journey-caption i { width: 5px; height: 5px; background: var(--red); }
+.journey-skip { min-height: 24px; font-weight: 730; color: var(--ink); border-bottom: 1px solid #b8b9be; }
+.empty-roster { padding: 24px; } .empty-roster h2 { font-size: 22px; font-weight: 850; }
+@media (min-width: 701px) { .roster[data-long="true"] { max-height: max(360px, calc(100svh - 195px)); overflow-y: auto; padding: 4px; margin: -4px; scrollbar-width: thin; } }
+@media print { .member-scene[data-pinned="true"]::after { display: none; } .member-scene[data-pinned="true"] .member-stage { position: static; } }
