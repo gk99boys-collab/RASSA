@@ -1,74 +1,64 @@
-import { StrictMode, useEffect, useState, type FormEvent } from 'react'
+import { StrictMode, useCallback, useEffect, useState, type FormEvent } from 'react'
 import { createRoot } from 'react-dom/client'
-import { ArrowRight, KeyRound, LockKeyhole, LogIn, LogOut } from 'lucide-react'
-import type { User } from '@supabase/supabase-js'
-import { desk } from './client'
+import { ArrowRight, LockKeyhole, LogIn, LogOut } from 'lucide-react'
+import { lock, unlock, LoginError, type DeskSession } from './client'
 import { MemberDesk } from './MemberDesk'
 import '../fonts.css'
 import './style.css'
 
-function SignIn() {
+function SignIn({ message, enter }: { message: string; enter: (s: DeskSession) => void }) {
   const [busy, setBusy] = useState(false)
+  const [notice, setNotice] = useState(message)
   const [error, setError] = useState('')
   async function login(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    if (!desk || busy) return
-    const values = new FormData(e.currentTarget)
-    setBusy(true); setError('')
+    if (busy) return
+    const form = e.currentTarget
+    const pin = String(new FormData(form).get('pin') ?? '')
+    setBusy(true); setNotice(''); setError('')
     try {
-      const result = await desk.auth.signInWithPassword({ email: String(values.get('email')).trim(), password: String(values.get('password')) })
-      if (result.error) setError('ورود انجام نشد. ایمیل، رمز حساب و اتصال اینترنت را بررسی کنید.')
-    } catch { setError('اتصال برقرار نشد. دوباره تلاش کنید.') }
-    finally { setBusy(false) }
+      const session = await unlock(pin)
+      form.reset(); enter(session)
+    } catch (problem) {
+      form.reset()
+      setError(problem instanceof LoginError ? problem.message : 'ارتباط برقرار نشد. دوباره تلاش کنید.')
+    } finally { setBusy(false) }
   }
   return <section className="desk-login paper"><div className="login-seal"><LockKeyhole size={26} /></div>
-    <p className="desk-overline">ورود به میز تحریریه</p><h1>مدیریت اعضای رَسا</h1>
-    <p className="desk-lede">با حساب مدیریت تیم وارد شوید. این میز برای ویرایش کارت‌های سایت است.</p>
-    {desk ? <form onSubmit={login}><label>ایمیل مدیر<input type="email" name="email" required autoComplete="username" dir="ltr" /></label>
-      <label>رمز عبور<input type="password" name="password" required autoComplete="current-password" dir="ltr" /></label>
+    <p className="desk-overline">میز خصوصی تحریریه</p><h1>مدیریت اعضای رَسا</h1>
+    <p className="desk-lede">برای باز کردن دفتر اعضا، رمز چهاررقمی مدیریت را وارد کنید.</p>
+    <form method="post" onSubmit={login}><label>رمز مدیریت<input className="desk-pin" type="password" name="pin" inputMode="numeric" required
+      disabled={busy} minLength={4} maxLength={4} pattern="[0-9۰-۹٠-٩]{4}" autoComplete="current-password" dir="ltr" /></label>
+      {notice && <p className="desk-fine" role="status">{notice}</p>}
       {error && <p className="desk-error" role="alert">{error}</p>}
-      <button className="desk-key primary" disabled={busy}><LogIn size={16} />{busy ? 'در حال ورود…' : 'ورود به پنل'}</button>
-    </form> : <p className="desk-error" role="alert">اتصال مدیریت تنظیم نشده است. دو متغیر عمومی Supabase را در تنظیمات انتشار سایت قرار دهید و دوباره منتشر کنید.</p>}
-    <p className="desk-fine"><KeyRound size={14} />ثبت‌نام عمومی ندارد. با بستن یا تازه‌کردن این صفحه، ورود دوباره لازم است.</p>
-  </section>
-}
-
-function Access({ user }: { user: User }) {
-  const [state, setState] = useState<'checking' | 'allowed' | 'denied' | 'error'>('checking')
-  const [attempt, setAttempt] = useState(0)
-  useEffect(() => {
-    let alive = true
-    const controller = new AbortController()
-    async function check() {
-      try {
-        const { data, error } = await desk!.rpc('rassa_is_member_admin').abortSignal(controller.signal)
-        if (alive) setState(error ? 'error' : data === true ? 'allowed' : 'denied')
-      } catch { if (alive) setState('error') }
-    }
-    void check()
-    return () => { alive = false; controller.abort() }
-  }, [attempt])
-  if (state === 'allowed') return <MemberDesk onDenied={() => setState('denied')} />
-  return <section className="desk-login paper"><div className="login-seal"><KeyRound /></div><h1>{state === 'checking' ? 'بررسی دسترسی…' : state === 'denied' ? 'این حساب مجوز مدیریت ندارد' : 'بررسی دسترسی انجام نشد'}</h1>
-    {state !== 'checking' && <><p className="desk-lede">{state === 'denied' ? 'مالک پروژه باید شناسهٔ این حساب را در فهرست مدیران تأیید کند.' : 'اتصال یا راه‌اندازی میز مدیریت را بررسی کنید.'}</p>
-      {state === 'denied' && <p>شناسهٔ حساب: <bdi className="desk-uid">{user.id}</bdi></p>}
-      <button className="desk-key" onClick={() => { setState('checking'); setAttempt(n => n + 1) }}>بررسی دوباره</button></>}
+      <button className="desk-key primary" disabled={busy}><LogIn size={16} />{busy ? 'در حال بررسی…' : 'ورود به پنل'}</button>
+    </form>
   </section>
 }
 
 function Admin() {
-  const [user, setUser] = useState<User | null>(null)
+  const [session, setSession] = useState<DeskSession | null>(null)
+  const [message, setMessage] = useState('')
+  const [closing, setClosing] = useState(false)
+  const expired = useCallback(() => { setSession(null); setMessage('نشست مدیریت پایان یافت. دوباره رمز را وارد کنید.') }, [])
   useEffect(() => {
-    const sub = desk?.auth.onAuthStateChange((_event, session) => setUser(session?.user ?? null))
-    return () => sub?.data.subscription.unsubscribe()
-  }, [])
+    if (!session) return
+    const timer = window.setTimeout(expired, session.lifetime)
+    return () => window.clearTimeout(timer)
+  }, [session, expired])
   async function logout() {
-    try { await desk?.auth.signOut({ scope: 'local' }) } finally { window.location.replace(window.location.pathname) }
+    if (!session) return
+    setClosing(true); setSession(null)
+    try { await lock(session); setMessage('از پنل خارج شدید.') }
+    catch { setMessage('از این صفحه خارج شدید، اما سرور پاسخ نداد. ورود دوباره، نشست قبلی را می‌بندد.') }
+    finally { setClosing(false) }
   }
   return <><header className="desk-head"><div className="desk-width"><a href="../" className="desk-brand"><img src="../logo-rasa-mark.png" alt="" width="45" height="22" />میز مدیریت رَسا</a>
     <nav aria-label="ابزار مدیریت"><a href="../#members"><ArrowRight size={15} />بازگشت به سایت</a>
-      {user && <button type="button" onClick={logout}><LogOut size={15} />خروج</button>}</nav></div></header>
-    <main className="desk-width desk-main">{user ? <Access key={user.id} user={user} /> : <SignIn />}</main></>
+      {session && <button type="button" onClick={logout}><LogOut size={15} />خروج</button>}</nav></div></header>
+    <main className="desk-width desk-main">{session ? <MemberDesk session={session} onDenied={expired} /> : closing
+      ? <section className="desk-login paper" role="status">در حال بستن نشست…</section>
+      : <SignIn message={message} enter={setSession} />}</main></>
 }
 
 createRoot(document.getElementById('desk')!).render(<StrictMode><Admin /></StrictMode>)

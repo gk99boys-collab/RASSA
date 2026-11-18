@@ -14,7 +14,7 @@ export default defineConfig({
   },
   webServer: {
     command: `vite build --outDir ${outDir} && vite preview --outDir ${outDir} --base /RASSA/ --port 4174 --strictPort`,
-    env: { VITE_SUPABASE_URL: 'https://rassa-fixture.invalid', VITE_SUPABASE_ANON_KEY: 'public-test-fixture' },
+    env: { VITE_SUPABASE_URL: 'https://rassa-fixture.invalid', VITE_SUPABASE_ANON_KEY: '' },
     url: baseURL,
   },
 })
