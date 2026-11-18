@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - arena/9c98800b-rassa
   workflow_dispatch:
 
 permissions:
