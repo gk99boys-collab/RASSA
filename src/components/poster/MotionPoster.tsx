@@ -74,7 +74,7 @@ export function MotionPoster({ ready }: { ready: boolean }) {
     <div className="reel-console" role="group" aria-label="کنترل موشن‌پوستر">
       {enabled ? <button type="button" className="transport-key" onClick={toggle} aria-label={paused ? 'پخش پوستر' : 'مکث پوستر'} title={paused ? 'پخش پوستر' : 'مکث پوستر'}>
         {paused ? <Play size={14} fill="currentColor" /> : <Pause size={14} fill="currentColor" />}
-      </button> : <span className="still-key" aria-label="نمایش ثابت"><Clapperboard size={15} /></span>}
+      </button> : <span className="still-key"><Clapperboard size={15} aria-hidden="true" /><span className="sr-only">نمایش ثابت</span></span>}
       <span className="reel-label"><small>قاب {formatOrderBadge(frame + 1)}</small><strong>{shot.name}</strong></span>
       <div className="reel-keys">{FRAMES.map(({ name }, i) => <FrameKey key={name} index={i} current={frame} time={time} seek={seek} />)}</div>
     </div>

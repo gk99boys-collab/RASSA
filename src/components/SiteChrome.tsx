@@ -118,7 +118,7 @@ export function PageCaption() {
   return <div className="page-caption">
     <span className="breadcrumbs"><Home size={13} /><a href="#home">صفحه اصلی</a><ChevronLeft size={12} /><strong>معرفی تیم</strong></span>
     <div className="caption-tools"><span className="print-id" dir="ltr"><bdi className="mono" lang="en">RASSA–08</bdi><b>/</b><span dir="rtl">پرونده تیم</span></span>
-      <button type="button" onClick={toggle} disabled={systemQuiet} aria-pressed={enabled} aria-label="انیمیشن‌های سایت"
+      <button type="button" onClick={toggle} disabled={systemQuiet} aria-pressed={enabled} aria-label={`انیمیشن‌های سایت: ${enabled ? 'حالت پویا' : 'حالت آرام'}`}
         title={systemQuiet ? 'حرکت طبق تنظیمات دستگاه غیرفعال است' : enabled ? 'تغییر به حالت آرام' : 'روشن کردن انیمیشن‌ها'} className="motion-switch">
         <span aria-hidden="true" className="meter-glyph"><i /><i /><i /></span>{enabled ? 'حالت پویا' : 'حالت آرام'}
       </button>

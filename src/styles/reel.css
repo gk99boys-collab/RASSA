@@ -9,8 +9,8 @@
 .poster-type strong { display: block; }
 .ink-mask, .ink-mask > span { display: block; }
 .ink-mask { overflow: clip; padding-block: .065em; margin-block: -.065em; }
-.reel[data-running="true"] .ink-mask > span { animation: ink-line-in .55s cubic-bezier(.16, 1, .3, 1) backwards; }
-.ink-mask:nth-child(2) > span { animation-delay: .045s !important; } .ink-mask:nth-child(3) > span { animation-delay: .09s !important; }
+.reel[data-running="true"] .ink-mask > span { animation: ink-line-in .55s var(--line-delay, 0s) cubic-bezier(.16, 1, .3, 1) backwards; }
+.ink-mask:nth-child(2) > span { --line-delay: .045s; } .ink-mask:nth-child(3) > span { --line-delay: .09s; }
 .reel[data-running="true"] .ink-plate { animation: ink-arrive .45s cubic-bezier(.16, 1, .3, 1); }
 @keyframes ink-line-in { from { transform: translateY(68%) skewY(2deg); opacity: .35; } to { transform: none; opacity: 1; } }
 @keyframes ink-arrive { from { opacity: .15; } to { opacity: 1; } }
