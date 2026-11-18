@@ -1,5 +1,6 @@
+import { useSiteMotion } from '../motion/MotionPreferences'
 import { useEffect, useRef } from 'react'
-import { animate, motion, useInView, useMotionValue, useReducedMotion, useTransform } from 'framer-motion'
+import { animate, motion, useInView, useMotionValue, useTransform } from 'framer-motion'
 import { Archive, Trophy } from 'lucide-react'
 import { formatOrderBadge } from '../lib/supabase'
 import { EASE, Reveal, SectionTitle, Skeleton } from './PrintUI'
@@ -7,15 +8,15 @@ import { EASE, Reveal, SectionTitle, Skeleton } from './PrintUI'
 function Count({ value }: { value: number }) {
   const ref = useRef<HTMLSpanElement>(null)
   const visible = useInView(ref, { once: true, amount: .6 })
-  const reduced = useReducedMotion()
+  const { enabled } = useSiteMotion()
   const count = useMotionValue(value)
   const display = useTransform(count, (n) => formatOrderBadge(Math.round(n)))
   useEffect(() => {
-    if (!visible || reduced) { count.set(value); return }
+    if (!visible || !enabled) { count.set(value); return }
     count.set(0)
     const animation = animate(count, value, { duration: .85, ease: EASE })
     return () => animation.stop()
-  }, [visible, reduced, count, value])
+  }, [visible, enabled, count, value])
   return <span ref={ref} className="metric-value"><span className="sr-only">{formatOrderBadge(value)}</span><motion.span aria-hidden="true">{display}</motion.span></span>
 }
 

@@ -1,0 +1,19 @@
+/* The ink register: motion has one switch, including native smooth scrolling. */
+html[data-motion="quiet"] { scroll-behavior: auto; }
+html[data-motion="quiet"] *, html[data-motion="quiet"] *::before, html[data-motion="quiet"] *::after {
+  animation: none !important; transition-duration: 0s !important;
+}
+.reading-line { position: absolute; inset: auto 0 -2px; height: 3px; background: var(--red); transform-origin: right; pointer-events: none; }
+.caption-tools { display: flex; align-items: center; gap: 13px; }
+.motion-switch { display: inline-flex; align-items: center; gap: 7px; border: 1px solid #b2b3b7; background: white; padding: 2px 8px; min-height: 25px; font-size: 11px; font-weight: 720; color: var(--ink); }
+.motion-switch:hover:not(:disabled) { border-color: var(--ink); }
+.motion-switch:disabled { cursor: default; }
+.meter-glyph { color: var(--red); height: 12px; display: flex; align-items: flex-end; gap: 2px; }
+.meter-glyph i { width: 2px; height: 6px; background: currentColor; }
+.meter-glyph i:nth-child(2) { height: 12px; } .meter-glyph i:nth-child(3) { height: 9px; }
+.motion-switch[aria-pressed="false"] .meter-glyph i { height: 3px; background: #696a70; }
+.intro-proof { width: 240px; height: 160px; position: relative; display: grid; place-items: center; border: var(--border); box-shadow: 4px 4px var(--line); background: white radial-gradient(#e1e3e5 1px, transparent 1px) 0 0/11px 11px; }
+.proof-id { position: absolute; top: 9px; left: 9px; font-size: 8px; }
+.proof-guide { position: absolute; inset: 0; width: 100%; height: 100%; color: #ad3038; }
+.proof-ink { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: var(--red); transform-origin: right; }
+@media (max-width: 445px) { .caption-tools { gap: 8px; } .caption-tools .print-id b, .caption-tools .print-id span { display: none; } .motion-switch { font-size: 10px; } }

@@ -26,10 +26,10 @@ function EventPoster() {
   )
 }
 
-export function Hero({ team, count }: { team: Team; count: number }) {
+export function Hero({ team, count, ready }: { team: Team; count: number; ready: boolean }) {
   const facts = ['رشته نرم‌افزارهای ویژه تلفن همراه', `تیم ${toPersianDigits(count)} نفره`, 'رتبه اول دوره هفتم']
   return (
-    <section id="home" className="paper hero" aria-labelledby="home-title">
+    <section id="home" className="paper hero" data-cued={ready} aria-labelledby="home-title">
       <Reveal className="hero-copy">
         <div className="badge-row"><span className="badge badge-red"><Radio size={14} />{EVENT_NAME}</span>
           <span className="badge badge-green"><i className="status-dot" />دوره هشتم</span></div>

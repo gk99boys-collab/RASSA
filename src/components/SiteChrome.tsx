@@ -1,5 +1,6 @@
+import { useSiteMotion } from '../motion/MotionPreferences'
 import { useEffect, useRef, useState } from 'react'
-import { motion, useReducedMotion } from 'framer-motion'
+import { motion, useScroll } from 'framer-motion'
 import { ArrowUp, ChevronLeft, ExternalLink, Home, Menu, UsersRound, X } from 'lucide-react'
 import type { Team } from '../types'
 import { EventLogo, RasaLogo, RasaMark } from './BrandMarks'
@@ -55,9 +56,14 @@ function useCurrentSection() {
   return active
 }
 
+function ReadingLine() {
+  const { scrollYProgress } = useScroll()
+  return <motion.i className="reading-line" aria-hidden="true" style={{ scaleX: scrollYProgress }} />
+}
+
 export function SiteHeader({ name }: { name: string }) {
   const active = useCurrentSection()
-  const reduced = useReducedMotion()
+  const { enabled } = useSiteMotion()
   const [menu, setMenu] = useState(false)
   const header = useRef<HTMLElement>(null)
   const trigger = useRef<HTMLButtonElement>(null)
@@ -92,7 +98,7 @@ export function SiteHeader({ name }: { name: string }) {
           {SECTIONS.map(({ id, label }) => <a key={id} href={`#${id}`}
             aria-current={id === active ? 'location' : undefined}>
             {label}{id === active && <motion.span aria-hidden="true" className="nav-underline"
-              layoutId={reduced ? undefined : 'current-section'} transition={SPRING} />}
+              layoutId={!enabled ? undefined : 'current-section'} transition={SPRING} />}
           </a>)}
         </nav>
         <div className="masthead-actions">
@@ -102,14 +108,21 @@ export function SiteHeader({ name }: { name: string }) {
           <ActionLink href="#members" className="header-cta"><UsersRound size={16} />اعضای تیم</ActionLink>
         </div>
       </div>
+      {enabled && <ReadingLine />}
     </header>
   )
 }
 
 export function PageCaption() {
+  const { enabled, systemQuiet, toggle } = useSiteMotion()
   return <div className="page-caption">
     <span className="breadcrumbs"><Home size={13} /><a href="#home">صفحه اصلی</a><ChevronLeft size={12} /><strong>معرفی تیم</strong></span>
-    <span className="print-id" dir="ltr"><i aria-hidden="true" /><bdi className="mono" lang="en">RASSA–08</bdi><b>/</b><span dir="rtl">پرونده تیم</span></span>
+    <div className="caption-tools"><span className="print-id" dir="ltr"><bdi className="mono" lang="en">RASSA–08</bdi><b>/</b><span dir="rtl">پرونده تیم</span></span>
+      <button type="button" onClick={toggle} disabled={systemQuiet} aria-pressed={enabled} aria-label="انیمیشن‌های سایت"
+        title={systemQuiet ? 'حرکت طبق تنظیمات دستگاه غیرفعال است' : enabled ? 'تغییر به حالت آرام' : 'روشن کردن انیمیشن‌ها'} className="motion-switch">
+        <span aria-hidden="true" className="meter-glyph"><i /><i /><i /></span>{enabled ? 'حالت پویا' : 'حالت آرام'}
+      </button>
+    </div>
   </div>
 }
 

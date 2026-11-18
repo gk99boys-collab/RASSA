@@ -1,5 +1,6 @@
+import { useSiteMotion } from '../motion/MotionPreferences'
 import { useEffect, useRef, useState } from 'react'
-import { motion, useReducedMotion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { BriefcaseBusiness, ChevronLeft, ChevronRight, Contact, Database, Fingerprint, Layers2, LockKeyhole, Mic, Smartphone, UserRound, UsersRound } from 'lucide-react'
 import { formatOrderBadge, isMysteryMember, resolveMemberPhotoUrl, toPersianDigits } from '../lib/supabase'
 import { tabKeys } from '../lib/tabKeys'
@@ -50,7 +51,7 @@ export function MemberDirectory({ members, loading, teamName }: { members: Membe
   const [seat, setSeat] = useState<number | null>(null)
   const [compact, setCompact] = useState(() => window.matchMedia(MOBILE_LIST).matches)
   const list = useRef<HTMLDivElement>(null)
-  const reduced = useReducedMotion()
+  const { enabled } = useSiteMotion()
   const index = Math.max(0, members.findIndex((member) => member.sort_order === seat))
   const member = members[index]
   const select = (i: number) => setSeat(members[i].sort_order)
@@ -66,8 +67,8 @@ export function MemberDirectory({ members, loading, teamName }: { members: Membe
     if (!compact || !list.current) return
     const item = list.current.querySelector('[aria-selected="true"]')?.getBoundingClientRect()
     const view = list.current.getBoundingClientRect()
-    if (item) list.current.scrollBy({ left: Math.min(item.left - view.left, 0) + Math.max(item.right - view.right, 0), behavior: reduced ? 'instant' : 'smooth' })
-  }, [compact, index, reduced])
+    if (item) list.current.scrollBy({ left: Math.min(item.left - view.left, 0) + Math.max(item.right - view.right, 0), behavior: enabled ? 'smooth' : 'instant' })
+  }, [compact, index, enabled])
 
   if (!member) return null
   return (
@@ -81,7 +82,7 @@ export function MemberDirectory({ members, loading, teamName }: { members: Membe
             return <button className={`member-tab ${mystery ? 'mystery-tab' : ''}`} type="button" key={item.sort_order}
               role="tab" id={`seat-${item.sort_order}`} aria-selected={index === i} aria-controls="member-profile"
               tabIndex={index === i ? 0 : -1} onClick={() => select(i)} onKeyDown={(e) => tabKeys(e, i, members.length, select, !compact)}>
-              {i === index && <motion.span className="roster-selection" aria-hidden="true" layoutId={reduced ? undefined : 'selected-member'} transition={SPRING} />}
+              {i === index && <motion.span className="roster-selection" aria-hidden="true" layoutId={!enabled ? undefined : 'selected-member'} transition={SPRING} />}
               <span className="member-icon"><Icon size={19} strokeWidth={1.8} /></span>
               <span className="member-label"><strong>{item.name}</strong><small>{item.role}</small></span><ChevronLeft size={16} className="list-chevron" />
             </button>
