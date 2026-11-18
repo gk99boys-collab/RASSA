@@ -1,0 +1,393 @@
+@import "tailwindcss";
+
+:root {
+  --rasa-red: #e5252a;
+  --rasa-red-hover: #c91d22;
+  --rasa-red-soft: #fff1f2;
+  --rasa-green: #22c55e;
+  --rasa-black: #0a0a0a;
+  --rasa-white: #ffffff;
+  --rasa-bg: #f1f2f4;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    font-family: 'Vazirmatn', Tahoma, sans-serif;
+    background-color: var(--rasa-bg);
+    color: var(--rasa-black);
+    direction: rtl;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: 'Vazirmatn', Tahoma, sans-serif;
+    background-color: var(--rasa-bg);
+    background-image: radial-gradient(circle, rgba(10, 10, 10, 0.17) 1.35px, transparent 1.35px);
+    background-size: 20px 20px;
+    background-position: 0 0;
+    color: var(--rasa-black);
+    overflow-x: clip;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: var(--rasa-red);
+    color: var(--rasa-white);
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--rasa-red);
+    outline-offset: 3px;
+  }
+}
+
+/* Custom Pixel Mouse-Cursor Arrow (red/white + green pixel dots) on desktop pointers */
+@media (hover: hover) and (pointer: fine) {
+  html,
+  body {
+    cursor:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Crect x='11' y='1' width='2' height='2' fill='%2322C55E'/%3E%3Crect x='13' y='4' width='2' height='2' fill='%2322C55E'/%3E%3Cpath fill='%230A0A0A' d='M1 0h2v1h1v1h1v1h1v1h1v1h1v1h1v1h1v1h1v2H7v1h1v2h1v2H6v-2H5v-2H4v1H3v1H1V0z'/%3E%3Cpath fill='%23E5252A' d='M2 2h1v1h1v1h1v1h1v1h1v1h1v1h1v1H6v1h1v3H6v-3H5v-1H4v1H3v1H2V2z'/%3E%3Cpath fill='%23FFFFFF' d='M2 2h1v8H2V2zm1 1h1v1H3V3zm1 1h1v1H4V4z'/%3E%3C/svg%3E")
+        2 1,
+      auto;
+  }
+
+  a,
+  button,
+  [role='button'],
+  summary,
+  label[for] {
+    cursor:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Crect x='0' y='0' width='2' height='2' fill='%2322C55E'/%3E%3Crect x='5' y='0' width='2' height='2' fill='%2322C55E'/%3E%3Crect x='11' y='2' width='2' height='2' fill='%2322C55E'/%3E%3Crect x='13' y='5' width='2' height='2' fill='%2322C55E'/%3E%3Cpath fill='%230A0A0A' d='M2 2h2v1h1v1h1v1h1v1h1v1h1v1h1v1h1v2H8v1h1v3H6v-2H5v-1H4v1H2V2z'/%3E%3Cpath fill='%23FFFFFF' d='M3 4h1v1h1v1h1v1h1v1h1v1h1v1H7v1h1v2H7v-2H6v-1H4v1H3V4z'/%3E%3Cpath fill='%23E5252A' d='M4 5h1v1h1v1h1v1h1v1h1v1H6v1h1v2H6v-3H4V5z'/%3E%3C/svg%3E")
+        3 3,
+      pointer;
+  }
+}
+
+/* Neo-Brutalist Surfaces & Controls */
+.brutal-card {
+  background-color: var(--rasa-white);
+  border: 3px solid var(--rasa-black);
+  box-shadow: -6px 6px 0 var(--rasa-black);
+  border-radius: 8px;
+  transition:
+    transform 140ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 140ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (hover: hover) {
+  .brutal-card:hover {
+    transform: translate(2px, -2px);
+    box-shadow: -8px 8px 0 var(--rasa-black);
+  }
+}
+
+.brutal-card-lg {
+  background-color: var(--rasa-white);
+  border: 3px solid var(--rasa-black);
+  box-shadow: -8px 8px 0 var(--rasa-black);
+  border-radius: 10px;
+}
+
+.brutal-card-dark {
+  background-color: var(--rasa-black);
+  color: var(--rasa-white);
+  border: 3px solid var(--rasa-black);
+  box-shadow: -7px 7px 0 var(--rasa-red);
+  border-radius: 10px;
+}
+
+.brutal-icon-box {
+  background-color: var(--rasa-red);
+  color: var(--rasa-white);
+  border: 3px solid var(--rasa-black);
+  box-shadow: -3px 3px 0 var(--rasa-black);
+  border-radius: 6px;
+}
+
+.brutal-chip {
+  background-color: var(--rasa-white);
+  color: var(--rasa-black);
+  border: 3px solid var(--rasa-black);
+  box-shadow: -3px 3px 0 var(--rasa-black);
+  border-radius: 6px;
+}
+
+/* Pressable buttons: hard shadow collapses on hover/tap */
+.brutal-press {
+  border: 3px solid var(--rasa-black);
+  box-shadow: -5px 5px 0 var(--rasa-black);
+  border-radius: 6px;
+  transform: translate(0, 0);
+  transition:
+    transform 110ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 110ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 120ms ease,
+    color 120ms ease;
+  will-change: transform, box-shadow;
+}
+
+@media (hover: hover) {
+  .brutal-press:hover {
+    transform: translate(-3px, 3px);
+    box-shadow: -2px 2px 0 var(--rasa-black);
+  }
+}
+
+.brutal-press:active {
+  transform: translate(-5px, 5px) !important;
+  box-shadow: 0 0 0 var(--rasa-black) !important;
+}
+
+.brutal-press-sm {
+  border: 3px solid var(--rasa-black);
+  box-shadow: -3px 3px 0 var(--rasa-black);
+  border-radius: 6px;
+  transform: translate(0, 0);
+  transition:
+    transform 100ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 100ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 120ms ease;
+}
+
+@media (hover: hover) {
+  .brutal-press-sm:hover {
+    transform: translate(-2px, 2px);
+    box-shadow: -1px 1px 0 var(--rasa-black);
+  }
+}
+
+.brutal-press-sm:active {
+  transform: translate(-3px, 3px) !important;
+  box-shadow: 0 0 0 var(--rasa-black) !important;
+}
+
+/* Pressable button on dark surfaces (red hard shadow collapses) */
+.brutal-press-red {
+  border: 3px solid var(--rasa-white);
+  box-shadow: -4px 4px 0 var(--rasa-red);
+  border-radius: 6px;
+  transform: translate(0, 0);
+  transition:
+    transform 110ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 110ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 120ms ease;
+}
+
+@media (hover: hover) {
+  .brutal-press-red:hover {
+    transform: translate(-2px, 2px);
+    box-shadow: -2px 2px 0 var(--rasa-red);
+  }
+}
+
+.brutal-press-red:active {
+  transform: translate(-4px, 4px) !important;
+  box-shadow: 0 0 0 var(--rasa-red) !important;
+}
+
+/* Neo-brutalist diagonal stripes (accents & skeleton shimmer) */
+.brutal-hazard {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    #e5252a 0px,
+    #e5252a 10px,
+    #0a0a0a 10px,
+    #0a0a0a 20px
+  );
+}
+
+@keyframes brutalSkeletonSlide {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 40px 0;
+  }
+}
+
+.brutal-skeleton {
+  border: 3px solid var(--rasa-black);
+  box-shadow: -3px 3px 0 var(--rasa-black);
+  border-radius: 6px;
+  background-color: #ffffff;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    #ffffff 0px,
+    #ffffff 10px,
+    #e5e7eb 10px,
+    #e5e7eb 20px
+  );
+  background-size: 28.28px 28.28px;
+  animation: brutalSkeletonSlide 0.9s linear infinite;
+}
+
+/* Seamless GPU Marquee Ticker */
+@keyframes rasaMarquee {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.rasa-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: rasaMarquee 26s linear infinite;
+  will-change: transform;
+}
+
+.rasa-marquee-wrap:hover .rasa-marquee-track {
+  animation-play-state: paused;
+}
+
+/* Pixel caret blink for Hero typewriter */
+@keyframes pixelBlink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.pixel-blink {
+  animation: pixelBlink 0.9s steps(1, end) infinite;
+}
+
+/* Crisp Pixel Glitch Effect for Hero Title & Mystery Card */
+@keyframes rasaGlitchRed {
+  0%,
+  86%,
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0;
+    clip-path: inset(0 0 0 0);
+  }
+  87% {
+    transform: translate3d(6px, -3px, 0);
+    opacity: 1;
+    clip-path: inset(12% 0 58% 0);
+  }
+  89% {
+    transform: translate3d(-5px, 2px, 0);
+    opacity: 1;
+    clip-path: inset(62% 0 10% 0);
+  }
+  91% {
+    transform: translate3d(4px, -2px, 0);
+    opacity: 1;
+    clip-path: inset(35% 0 35% 0);
+  }
+  93% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0;
+  }
+}
+
+@keyframes rasaGlitchGreen {
+  0%,
+  86%,
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0;
+    clip-path: inset(0 0 0 0);
+  }
+  88% {
+    transform: translate3d(-6px, 3px, 0);
+    opacity: 0.95;
+    clip-path: inset(55% 0 15% 0);
+  }
+  90% {
+    transform: translate3d(5px, -2px, 0);
+    opacity: 0.95;
+    clip-path: inset(15% 0 60% 0);
+  }
+  92% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0;
+  }
+}
+
+.glitch-layer-red {
+  animation: rasaGlitchRed 3.8s steps(1, end) infinite;
+}
+
+.glitch-layer-green {
+  animation: rasaGlitchGreen 3.8s steps(1, end) infinite;
+}
+
+.glitch-burst .glitch-layer-red {
+  animation: rasaGlitchRed 0.55s steps(1, end) 2;
+}
+
+.glitch-burst .glitch-layer-green {
+  animation: rasaGlitchGreen 0.55s steps(1, end) 2;
+}
+
+/* Mystery Card Flicker & Scanlines */
+@keyframes mysteryFlicker {
+  0%,
+  91%,
+  93%,
+  96%,
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  92% {
+    opacity: 0.55;
+    transform: translate3d(3px, -1px, 0);
+  }
+  94% {
+    opacity: 0.85;
+    transform: translate3d(-3px, 1px, 0);
+  }
+  95% {
+    opacity: 0.4;
+    transform: translate3d(2px, 0, 0);
+  }
+}
+
+.mystery-flicker {
+  animation: mysteryFlicker 3.2s steps(1, end) infinite;
+}
+
+.pixel-scanlines {
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 0.04) 0px,
+    rgba(255, 255, 255, 0.04) 2px,
+    transparent 2px,
+    transparent 5px
+  );
+}
+
+/* Respect prefers-reduced-motion across all CSS animations */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .rasa-marquee-track,
+  .pixel-blink,
+  .glitch-layer-red,
+  .glitch-layer-green,
+  .mystery-flicker,
+  .brutal-skeleton {
+    animation: none !important;
+  }
+
+  .brutal-card,
+  .brutal-press,
+  .brutal-press-sm,
+  .brutal-press-red {
+    transition: none !important;
+  }
+}
