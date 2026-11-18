@@ -36,15 +36,15 @@ export const App: React.FC = () => {
 
   return (
     <MotionConfig reducedMotion="user">
-      {/* Skip-to-content accessibility link */}
+      {/* Keyboard accessibility skip link */}
       <a
         href="#hero"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:right-3 focus:z-50 bg-[#E5252A] text-white border-[3px] border-[#0A0A0A] px-4 py-2 font-black rounded-[6px]"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:right-3 focus:z-50 bg-[#E5252A] text-white border-[3px] border-[#080A0D] px-4 py-2 font-black rounded-[6px]"
       >
         پرش به محتوای اصلی
       </a>
 
-      {/* Section 1: Pixel-Cursor Click & Pixel-Block Dissolve Intro */}
+      {/* Section 1: Official Event Cursor Smash-Click + Pixel-Matrix Dissolve Intro */}
       {showIntro && (
         <IntroOverlay
           key={introRunId}
@@ -53,16 +53,16 @@ export const App: React.FC = () => {
         />
       )}
 
-      {/* Subtle Parallax Pixel Decorations & 60fps Pixel Cursor Trail */}
+      {/* Multi-Layer Scroll Parallax World & 60fps Chromatic Pixel Cursor FX */}
       <ParallaxPixels />
       <PixelCursorTrail />
 
-      {/* Main RTL Page Shell */}
+      {/* Main RTL Poster Page */}
       <div className="relative min-h-screen flex flex-col">
         <Navbar teamName={team.name} />
 
         <main className="flex-1">
-          {/* Section 2: Hero */}
+          {/* Section 2: Monumental 3D-Extruded Hero + Interactive 3D Brand Card */}
           <HeroSection
             name={team.name}
             tagline={team.tagline}
@@ -70,27 +70,27 @@ export const App: React.FC = () => {
             ready={heroReady}
           />
 
-          {/* Skills Marquee Ticker */}
-          <SkillsMarquee members={members} />
+          {/* Dual Counter-Rotating Criss-Cross Marquee Ribbons */}
+          <SkillsMarquee members={members} tagline={team.tagline} />
 
-          {/* Section 3: Achievement */}
+          {/* Section 3: Championship Trophy Arena & Arcade Scoreboard */}
           <AchievementSection
             achievementText={team.achievement_text}
             loading={loading}
           />
 
-          {/* Section 4: About the Team */}
+          {/* Section 4: High-Contrast Obsidian Blueprint Bento (About) */}
           <AboutSection
             teamName={team.name}
             description={team.description}
             loading={loading}
           />
 
-          {/* Section 5: Members (5 Scroll-Triggered Stacking Cards incl. Mystery Card #5) */}
+          {/* Section 5: Collectible Character-Select & Stacking Member Dossiers */}
           <MembersSection members={members} loading={loading} />
         </main>
 
-        {/* Section 6: Footer */}
+        {/* Section 6: Grand Official Closing Poster Footer */}
         <FooterSection
           teamName={team.name}
           tagline={team.tagline}
