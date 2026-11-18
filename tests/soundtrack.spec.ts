@@ -44,6 +44,21 @@ test('music starts on entry, loops, and stays paused after an explicit pause and
   await expect(page.locator('.soundtrack-key')).toHaveAttribute('data-playing', 'true')
 })
 
+test('entry starts the audible player even while the React bundle is still loading', async ({ page }) => {
+  let release!: () => void
+  const hold = new Promise<void>(resolve => { release = resolve })
+  await withTrack(page)
+  await page.route('**/assets/site-*.js', async route => { await hold; await route.continue() })
+  try {
+    await page.goto('./#home', { waitUntil: 'commit' })
+    await expect(page.locator('audio')).toHaveJSProperty('paused', false)
+    await expect(page.locator('audio')).toHaveJSProperty('muted', false)
+    await expect(page.locator('#root')).toBeEmpty()
+  } finally { release() }
+  await expect(page.locator('.soundtrack-key')).toHaveAttribute('data-playing', 'true')
+  await expect(page.locator('audio')).toHaveCount(1)
+})
+
 test('a media error disables the control without blocking navigation', async ({ page }) => {
   await withTrack(page, true)
   await page.goto('./#home')
