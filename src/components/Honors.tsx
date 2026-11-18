@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import { animate, motion, useInView, useMotionValue, useReducedMotion, useTransform } from 'framer-motion'
 import { Archive, Trophy } from 'lucide-react'
 import { formatOrderBadge } from '../lib/supabase'
-import { EASE, SectionTitle, Skeleton } from './PrintUI'
+import { EASE, Reveal, SectionTitle, Skeleton } from './PrintUI'
 
 function Count({ value }: { value: number }) {
   const ref = useRef<HTMLSpanElement>(null)
@@ -24,11 +24,11 @@ export function Honors({ text, count, loading }: { text: string; count: number; 
   return (
     <section id="honors" className="page-section" aria-labelledby="honors-title">
       <SectionTitle id="honors-title" label="افتخار" title="کارنامه تیم" red meta={<><Archive size={14} />بایگانی افتخارات</>} />
-      <div className="honors-grid"><div className="honor-story paper"><div className="trophy-box"><Trophy size={31} strokeWidth={1.65} /></div>
+      <Reveal className="honors-grid"><div className="honor-story paper"><div className="trophy-box"><Trophy size={31} strokeWidth={1.65} /></div>
         <div><span className="honor-eyebrow">افتخار ثبت‌شده تیم</span>
           {loading ? <Skeleton label="در حال دریافت افتخار تیم" /> : <h3>{text}</h3>}</div></div>
         {metrics.map(({ value, label }) => <div className="metric paper" key={label}><Count value={value} /><span>{label}</span></div>)}
-      </div>
+      </Reveal>
     </section>
   )
 }

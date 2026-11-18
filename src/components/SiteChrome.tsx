@@ -74,18 +74,22 @@ export function SiteHeader({ name }: { name: string }) {
     return () => { document.removeEventListener('keydown', key); document.removeEventListener('pointerdown', outside) }
   }, [menu])
   return (
-    <header className="masthead" ref={header}>
+    <header className="masthead" ref={header} onClick={(event) => {
+      if ((event.target as Element).closest('a')) setMenu(false)
+    }} onBlur={(event) => {
+      if (!event.currentTarget.contains(event.relatedTarget)) setMenu(false)
+    }}>
       <div className="page-width masthead-inner">
         <button type="button" className="menu-button" aria-label={menu ? 'بستن فهرست' : 'فهرست بخش‌ها'}
           ref={trigger} aria-controls="site-nav" aria-expanded={menu} onClick={() => setMenu(!menu)}>
           {menu ? <X size={19} /> : <Menu size={19} />}
         </button>
-        <a className="brand" href="#home" onClick={() => setMenu(false)}>
+        <a className="brand" href="#home">
           <RasaMark className="brand-mark" /><span className="brand-text"><strong>تیم نرم‌افزاری {name}</strong>
-          <small dir="ltr" lang="en" className="mono">RASSA SOFTWARE TEAM</small></span>
+          <small>شناسنامه تیم <i>/</i> <bdi className="mono" lang="en">RASSA</bdi></small></span>
         </a>
         <nav id="site-nav" aria-label="ناوبری اصلی" className={`main-nav ${menu ? 'nav-open' : ''}`}>
-          {SECTIONS.map(({ id, label }) => <a key={id} href={`#${id}`} onClick={() => setMenu(false)}
+          {SECTIONS.map(({ id, label }) => <a key={id} href={`#${id}`}
             aria-current={id === active ? 'location' : undefined}>
             {label}{id === active && <motion.span aria-hidden="true" className="nav-underline"
               layoutId={reduced ? undefined : 'current-section'} transition={SPRING} />}
@@ -105,7 +109,7 @@ export function SiteHeader({ name }: { name: string }) {
 export function PageCaption() {
   return <div className="page-caption">
     <span className="breadcrumbs"><Home size={13} /><a href="#home">صفحه اصلی</a><ChevronLeft size={12} /><strong>معرفی تیم</strong></span>
-    <span className="print-id mono" dir="ltr" lang="en"><i aria-hidden="true" />RASSA <b>/</b> TEAM PROFILE</span>
+    <span className="print-id" dir="ltr"><i aria-hidden="true" /><bdi className="mono" lang="en">RASSA–08</bdi><b>/</b><span dir="rtl">پرونده تیم</span></span>
   </div>
 }
 
@@ -125,7 +129,7 @@ export function SiteFooter({ team }: { team: Team }) {
         </div>
       </div>
       <div className="page-width footer-bottom"><a href={EVENT_URL} target="_blank" rel="noopener noreferrer">وب‌سایت رسمی رویداد <ExternalLink size={12} /></a>
-        <span className="mono" dir="ltr" lang="en">RASSA <b>/</b> SOFTWARE TEAM</span>
+        <span dir="ltr"><bdi className="mono" lang="en">RASSA</bdi> <b>/</b> دوره هشتم</span>
       </div>
     </footer>
   )

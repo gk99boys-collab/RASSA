@@ -4,7 +4,7 @@ import { CornerDownLeft, Layers3, Route, Sparkles } from 'lucide-react'
 import { formatOrderBadge } from '../lib/supabase'
 import { tabKeys } from '../lib/tabKeys'
 import type { Team } from '../types'
-import { EASE, SPRING } from './PrintUI'
+import { EASE, Reveal, SPRING } from './PrintUI'
 
 const STEPS = [
   { title: 'می‌رسیم', icon: Route, note: 'نیاز کاربر را می‌شناسیم و مسیر ایده را پیدا می‌کنیم.' },
@@ -17,9 +17,9 @@ export function About({ team, loading }: { team: Team; loading: boolean }) {
   const reduced = useReducedMotion()
   return (
     <section id="about" className="paper about" aria-labelledby="about-title">
-      <div className="about-copy"><div className="heading-pair"><span className="flag flag-red">معرفی</span><h2 id="about-title">درباره تیم {team.name}</h2></div>
+      <Reveal className="about-copy"><div className="heading-pair"><span className="flag flag-red">معرفی</span><h2 id="about-title">درباره تیم {team.name}</h2></div>
         <p aria-busy={loading}>{team.description}</p>
-      </div>
+      </Reveal>
       <div className="values">
         <div role="tablist" aria-label="سه گام رَسا" className="value-tabs">
           {STEPS.map(({ title, icon: Icon }, i) => <button key={title} type="button" role="tab" id={`value-${i}`}

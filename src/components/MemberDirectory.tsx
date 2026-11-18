@@ -21,7 +21,7 @@ function Portrait({ member }: { member: Member }) {
     .filter((_, i, parts) => i === 0 || i === parts.length - 1).map((part) => part[0]).join('‌')
   return <div className={`portrait tone-${(member.sort_order - 1) % 4}`}>
     {src && src !== failed ? <img src={src} alt={member.name} decoding="async" loading="lazy" onError={() => setFailed(src)} /> :
-      <><strong aria-hidden="true">{initials}</strong><span aria-hidden="true" dir="ltr" className="portrait-id mono">ID / {String(member.sort_order).padStart(2, '0')}</span></>}
+      <><strong aria-hidden="true">{initials}</strong><span aria-hidden="true" dir="ltr" className="portrait-id mono"># {formatOrderBadge(member.sort_order)}</span></>}
   </div>
 }
 
@@ -97,7 +97,7 @@ export function MemberDirectory({ members, loading, teamName }: { members: Membe
           </div>
           <MemberProfile key={member.id} member={member} loading={loading} />
           <div className="profile-foot" aria-hidden="true"><Fingerprint size={19} strokeWidth={1.4} />
-            <span className="mono" dir="ltr">RASSA / TEAM FILE — {String(member.sort_order).padStart(2, '0')}</span></div>
+            <span className="mono" dir="ltr">RASSA / {formatOrderBadge(member.sort_order)}</span></div>
         </div>
       </div>
     </section>

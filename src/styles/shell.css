@@ -24,7 +24,7 @@ svg.lucide { flex-shrink: 0; }
 ::selection { background: #ffcecf; color: var(--ink); }
 :focus-visible { outline: 3px solid #007c79; outline-offset: 4px; }
 .page-width { width: min(1240px, calc(100% - clamp(36px, 9vw, 128px))); margin-inline: auto; }
-.mono { font-family: ui-monospace, 'SFMono-Regular', Consolas, 'Liberation Mono', monospace; font-weight: 500; letter-spacing: .095em; }
+.mono { font-family: ui-monospace, 'SFMono-Regular', Consolas, 'Liberation Mono', Vazirmatn, monospace; font-weight: 500; letter-spacing: .095em; }
 .paper { background: var(--paper); border: var(--border); box-shadow: var(--shadow); }
 .skip-link { position: fixed; z-index: 50; top: 6px; right: 8px; transform: translateY(-160%); padding: 8px 14px; background: #fff; border: var(--border); }
 .skip-link:focus { transform: none; }
@@ -55,7 +55,7 @@ svg.lucide { flex-shrink: 0; }
 .brand-mark { width: 55px; height: 32px; }
 .brand-text { align-items: flex-start; flex-direction: column; border-inline-start: 1px solid #cdd0d2; padding-inline-start: 13px; gap: 2px; }
 .brand strong { font-size: 18px; font-weight: 900; line-height: 1.45; }
-.brand small { font-size: 8.5px; color: #62666d; letter-spacing: .12em; }
+.brand small { color: #62666d; font-size: 10px; } .brand small i { font-style: normal; color: #a4a5a9; margin-inline: 3px; } .brand small bdi { font-size: .85em; }
 .main-nav { height: 100%; gap: clamp(18px, 2.3vw, 32px); }
 .main-nav a { position: relative; padding: 10px 2px; font-size: 14px; font-weight: 620; color: #44464d; }
 .main-nav a[aria-current], .main-nav a:hover { color: var(--red); }
@@ -87,7 +87,7 @@ svg.lucide { flex-shrink: 0; }
 .back-top:hover { background: #f5f5f5; }
 .footer-bottom { border-top: 1px solid #d5d5d8; display: flex; justify-content: space-between; align-items: center; padding-block: 13px; color: var(--muted); }
 .footer-bottom a { display: flex; align-items: center; gap: 6px; font-size: 12px; }
-.footer-bottom .mono { font-size: 9px; }
+.footer-bottom > span { font-size: 10px; } .footer-bottom .mono { font-size: 9px; }
 
 @media (max-width: 800px) {
   html { scroll-padding-top: 84px; }
@@ -96,14 +96,14 @@ svg.lucide { flex-shrink: 0; }
   .main-nav { display: none; } .main-nav.nav-open { display: grid; position: absolute; top: calc(100% + 6px); right: 0; width: min(240px, 100%); height: auto; padding: 8px 14px; gap: 3px; border: var(--border); box-shadow: var(--shadow); background: var(--paper); }
   .nav-open a { width: fit-content; min-width: 50%; }
   .brand { gap: 7px; } .brand-mark { width: 41px; } .brand-text { padding-inline-start: 9px; }
-  .brand strong { font-size: 15px; } .brand small { font-size: 7px; }
+  .brand strong { font-size: 15px; } .brand small { font-size: 9px; }
   .masthead-actions { margin-inline-start: auto; gap: 8px; } .masthead-event { height: 26px; }
   .footer-main { flex-wrap: wrap; gap: 16px; }
 }
 @media (max-width: 540px) {
   .page-width { width: calc(100% - 32px); }
   .masthead-inner { height: 61px; gap: 8px; } .brand-mark { width: 33px; } .brand-text { border: 0; padding: 0; }
-  .brand strong { font-size: 13.5px; } .brand small { font-size: 6.5px; }
+  .brand strong { font-size: 13.5px; } .brand small { font-size: 8px; }
   .masthead-actions { gap: 5px; } .header-cta { font-size: 11.5px; gap: 6px; min-height: 34px; padding: 6px 9px; }
   .header-cta svg { width: 14px; } .menu-button { width: 29px; height: 33px; } .event-link { width: 21px; }
   .page-caption { padding-block: 15px 11px; } .breadcrumbs { font-size: 10px; gap: 5px; } .print-id { font-size: 8px; gap: 6px; }

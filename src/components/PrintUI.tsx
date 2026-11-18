@@ -12,8 +12,9 @@ export const EVENT_URL = 'https://event.bsjmajazi.ir/'
 export function Reveal({ children, className = '' }: { children: ReactNode; className?: string }) {
   const reduced = useReducedMotion()
   return (
-    <motion.div className={className} initial={reduced ? false : { opacity: 0, y: 8, filter: 'blur(2px)' }}
-      animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }} transition={{ duration: reduced ? 0 : 0.42, ease: EASE }}>
+    <motion.div className={className} initial={false} viewport={{ once: true, amount: .1 }}
+      whileInView={reduced ? undefined : { opacity: [.45, 1], y: [7, 0], filter: ['blur(1.5px)', 'blur(0px)'], transitionEnd: { filter: 'none' } }}
+      transition={{ duration: .42, ease: EASE }}>
       {children}
     </motion.div>
   )

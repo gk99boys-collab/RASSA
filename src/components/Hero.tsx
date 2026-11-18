@@ -9,7 +9,7 @@ function EventPoster() {
   return (
     <figure className="poster" aria-label="پوستر تیم رَسا در هشتمین رویداد ملی تولید محتوای دیجیتال بسیج">
       <div className="poster-art">
-        <span className="poster-edition mono" aria-hidden="true" dir="ltr">NATIONAL DIGITAL EVENT</span>
+        <span className="poster-edition mono" aria-hidden="true" dir="ltr">RASSA × 08</span>
         <span className="poster-eight" aria-hidden="true" dir="ltr">08</span>
         <i aria-hidden="true" className="reg-mark reg-tl" /><i aria-hidden="true" className="reg-mark reg-tr" />
         <i aria-hidden="true" className="reg-mark reg-bl" /><i aria-hidden="true" className="reg-mark reg-br" />
@@ -19,9 +19,9 @@ function EventPoster() {
         </div>
         <div className="cursor-print"><EventLogo className="poster-cursor" alt="نشان پیکسلی رویداد هشتم" /></div>
         <div className="poster-stamp"><RasaLogo className="stamp-logo" /></div>
-        <span className="poster-code mono" aria-hidden="true" dir="ltr">RASSA × EVENT 08</span>
+        <span className="poster-code" aria-hidden="true">نرم‌افزارهای ویژه تلفن همراه</span>
       </div>
-      <figcaption><span><i aria-hidden="true" />پوستر رویداد هشتم</span><span className="poster-serial mono" dir="ltr" aria-hidden="true"><i className="barcode" />FIG. 08</span></figcaption>
+      <figcaption><span><i aria-hidden="true" />پوستر رویداد هشتم</span><span className="poster-serial mono" dir="ltr" aria-hidden="true"><i className="barcode" />R–08</span></figcaption>
     </figure>
   )
 }
