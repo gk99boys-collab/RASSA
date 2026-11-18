@@ -4,6 +4,7 @@ import { motion, useScroll } from 'framer-motion'
 import { ArrowUp, ChevronLeft, ExternalLink, Home, Menu, UsersRound, X } from 'lucide-react'
 import type { Team } from '../types'
 import { EventLogo, RasaLogo, RasaMark } from './BrandMarks'
+import { SoundtrackControl } from './SoundtrackControl'
 import { ActionLink, DataLinks, EVENT_NAME, EVENT_URL, SPRING } from './PrintUI'
 
 const SECTIONS = [
@@ -102,6 +103,7 @@ export function SiteHeader({ name }: { name: string }) {
           </a>)}
         </nav>
         <div className="masthead-actions">
+          <SoundtrackControl />
           <a className="event-link" href={EVENT_URL} target="_blank" rel="noopener noreferrer" aria-label={`وب‌سایت ${EVENT_NAME}`}>
             <EventLogo className="masthead-event" />
           </a>
