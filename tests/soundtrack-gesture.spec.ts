@@ -31,3 +31,12 @@ test('keyboard activation of the music button unlocks audio across section navig
   await expect(page).toHaveURL(/#members$/)
   await expect(page.locator('audio')).toHaveJSProperty('paused', false)
 })
+
+test('a normal navigation key can start blocked entry audio without overriding a deliberate pause', async ({ page }) => {
+  await withTrack(page); await page.goto('./#home')
+  await expect(page.getByRole('button', { name: 'پخش موسیقی خراسانی' })).toBeVisible()
+  await page.keyboard.press('ArrowDown')
+  await expect(page.locator('.soundtrack-key')).toHaveAttribute('data-playing', 'true')
+  await page.getByRole('button', { name: 'مکث موسیقی خراسانی' }).tap()
+  await page.keyboard.press('ArrowDown'); await expect(page.locator('audio')).toHaveJSProperty('paused', true)
+})

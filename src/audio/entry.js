@@ -27,9 +27,16 @@
   audio.addEventListener('playing', () => { if (!audio.paused) change('playing') })
   audio.addEventListener('pause', () => { if (audio.paused && ['starting', 'playing'].includes(state)) change('paused') })
   audio.addEventListener('error', () => { ++attempt; change('unavailable') })
-  document.addEventListener('click', event => {
-    if (state === 'blocked' && event.isTrusted && !event.target.closest?.('.soundtrack-key')) void play(false)
-  }, true)
+  // A tap or a real keypress can grant activation even without a synthesized
+  // click. A scroll alone cannot. Don't interfere with the user's navigation,
+  // the dedicated music toggle, or a pause they explicitly chose.
+  function retry(event) {
+    if (state !== 'blocked' || !event.isTrusted || event.target.closest?.('.soundtrack-key')) return
+    if (event.type === 'keydown' && (event.repeat || event.ctrlKey || event.metaKey || event.altKey || event.key === 'Escape')) return
+    if (navigator.userActivation && !navigator.userActivation.isActive) return
+    void play(true)
+  }
+  for (const type of ['click', 'touchend', 'keydown']) document.addEventListener(type, retry, { capture: true, passive: true })
   window.rassaMusic = {
     read: () => state,
     subscribe(fn) { listeners.add(fn); return () => listeners.delete(fn) },
