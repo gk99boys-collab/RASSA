@@ -37,7 +37,7 @@ html[data-motion="on"] .hero[data-cued="true"] :is(.badge-row, .tagline, .hero-f
 .file-deck { position: relative; flex: 1; display: grid; min-width: 0; perspective: 1200px; overflow: clip; isolation: isolate; }
 .file-leaf { display: flex; flex-direction: column; grid-area: 1 / 1; min-width: 0; background: white; z-index: 1; }
 .file-leaf[aria-hidden="true"] { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
-html[data-motion="on"] .file-leaf .member-identity .badge { animation: ink-stamp .42s .07s backwards; }
+html[data-motion="on"] .file-leaf .member-role { animation: ink-stamp .42s .07s backwards; }
 html[data-motion="on"] .file-leaf .lock-print svg { animation: lock-settle .54s ease-out; transform-origin: 50% 25%; }
 html[data-motion="on"] .file-leaf .skills li { animation: ink-lift .36s var(--chip-delay, .07s) cubic-bezier(.16,1,.3,1) backwards; }
 .skills li:nth-child(2) { --chip-delay: .105s; } .skills li:nth-child(3) { --chip-delay: .14s; } .skills li:nth-child(4) { --chip-delay: .175s; }
@@ -56,8 +56,8 @@ html[data-motion="on"] .value-tabs button:nth-child(3)[aria-selected="true"] .va
 @keyframes tool-settle { 25% { transform: translateY(-3px) rotate(-7deg); } 65% { transform: translateY(1px) rotate(2deg); } }
 @keyframes star-settle { 0% { transform: rotate(-22deg) scale(.82); } 55% { transform: rotate(8deg) scale(1.14); } }
 @media (hover: hover) and (pointer: fine) {
-  html[data-motion="on"] :is(.hero-actions .action, .member-tab, .back-top) > svg { transition: transform .25s cubic-bezier(.16,1,.3,1); }
-  html[data-motion="on"] .action-red:hover > .lucide-arrow-left, html[data-motion="on"] .member-tab:hover > .list-chevron { transform: translateX(-3px); }
+  html[data-motion="on"] :is(.hero-actions .action, .back-top) > svg { transition: transform .25s cubic-bezier(.16,1,.3,1); }
+  html[data-motion="on"] .action-red:hover > .lucide-arrow-left { transform: translateX(-3px); }
   html[data-motion="on"] .back-top:hover > svg { transform: translateY(-3px); }
 }
 @media (max-width: 800px) { html[data-motion="on"] .main-nav.nav-open { animation: ink-lift .21s ease-out; } }
