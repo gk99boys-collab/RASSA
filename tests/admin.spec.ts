@@ -46,7 +46,7 @@ async function enter(page: Page, pin: string) {
 test('a private link still needs the PIN; the bare desk, incorrect PIN and cooldown expose no editor', async ({page}) => {
   const f = await backend(page)
   await page.goto('./#home'); await expect(page.locator('a[href*="admin/"]')).toHaveCount(0)
-  await page.goto('./admin/'); await enter(page,fixturePin); await expect(page.getByRole('alert')).toContainText('درست نیست')
+  await page.goto('./admin/'); await enter(page,fixturePin); await expect(page.getByRole('alert')).toContainText('لینک خصوصی کامل')
   await page.goto(`./admin/#k=${f.link}`)
   await expect(page.locator('input')).toHaveCount(1)
   await expect(page.locator('audio, input[type=email]')).toHaveCount(0)

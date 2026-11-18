@@ -11,7 +11,8 @@ export async function unlock(typed: string): Promise<DeskSession> {
   const pin = typed.trim().replace(/[۰-۹]/g, c => String(c.charCodeAt(0) - 0x06f0))
     .replace(/[٠-٩]/g, c => String(c.charCodeAt(0) - 0x0660))
   const denied = 'رمز یا لینک خصوصی درست نیست.'
-  if (!/^[a-f0-9]{64}$/.test(link) || !/^\d{4}$/.test(pin)) throw new LoginError(denied)
+  if (!/^[a-f0-9]{64}$/.test(link)) throw new LoginError('این نشانی کامل نیست. پنل را با لینک خصوصی کامل باز کنید.')
+  if (!/^\d{4}$/.test(pin)) throw new LoginError(denied)
 
   const db = await connectPublic()
   const { data, error } = await db.rpc('rassa_open_desk', { p_link: link, p_pin: pin }).abortSignal(AbortSignal.timeout(15000))
