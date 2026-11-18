@@ -1,0 +1,31 @@
+/* One small film bed: a stationary hit area and transport, independently printed planes. */
+.poster.reel { padding: 0 6px 6px; }
+.reel figcaption { min-height: 29px; }
+.reel figcaption svg { color: var(--red); }
+.poster-window { perspective: 840px; }
+.poster-art { aspect-ratio: 1.92; }
+.poster-plates { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.poster-type { left: 6%; width: 44%; }
+.poster-type strong { display: block; }
+.ink-mask, .ink-mask > span { display: block; }
+.ink-mask { overflow: clip; padding-block: .065em; margin-block: -.065em; }
+.reel[data-running="true"] .ink-mask > span { animation: ink-line-in .55s var(--line-delay, 0s) cubic-bezier(.16, 1, .3, 1) backwards; }
+.ink-mask:nth-child(2) > span { --line-delay: .045s; } .ink-mask:nth-child(3) > span { --line-delay: .09s; }
+.reel[data-running="true"] .ink-plate { animation: ink-arrive .45s cubic-bezier(.16, 1, .3, 1); }
+@keyframes ink-line-in { from { transform: translateY(68%) skewY(2deg); opacity: .35; } to { transform: none; opacity: 1; } }
+@keyframes ink-arrive { from { opacity: .15; } to { opacity: 1; } }
+.reel-console { min-height: 46px; display: flex; align-items: center; gap: 10px; padding: 5px 10px; background: #19191d; color: white; }
+.transport-key, .still-key { width: 31px; height: 31px; display: grid; place-items: center; flex: none; border: 1px solid #8b8c91; }
+.transport-key { background: #faf6ec; color: #1c1c21; border-color: #faf6ec; }
+.transport-key:hover { background: white; } .transport-key:active { transform: translateY(1px); }
+.reel-console :focus-visible { outline-color: #a3f0b9; outline-offset: 2px; }
+.reel-label { display: flex; flex-direction: column; line-height: 1.4; min-width: 63px; }
+.reel-label small { color: #c5c5cb; font-weight: 530; font-size: 9px; } .reel-label strong { font-size: 13px; font-weight: 800; }
+.reel-keys { display: flex; align-items: center; gap: 7px; margin-inline-start: auto; width: min(49%, 210px); }
+.frame-key { display: flex; flex: 1; align-items: center; gap: 4px; height: 31px; color: #bcbcc3; font-size: 10px; font-variant-numeric: tabular-nums; }
+.reel-rail { display: block; position: relative; flex: 1; height: 4px; background: #616269; }
+.reel-rail > i { display: block; width: 100%; height: 100%; background: #f05557; transform-origin: right; }
+.frame-key[aria-pressed="true"] { color: #fff; } .frame-key[aria-pressed="true"] .reel-rail { background: #9d8184; }
+.frame-key:hover .reel-rail { box-shadow: 0 0 0 1px #cbc0c1; }
+@media (max-width: 1080px) and (min-width: 801px) { .poster-art { aspect-ratio: 1.67; } }
+@media (max-width: 540px) { .poster.reel { padding: 0 4px 4px; } .reel figcaption { min-height: 24px; } .reel-console { gap: 7px; min-height: 42px; padding: 4px 7px; } .reel-label { min-width: 46px; } .reel-label strong { font-size: 11px; } .reel-keys { gap: 6px; } }

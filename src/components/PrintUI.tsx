@@ -1,6 +1,7 @@
-import { motion, useReducedMotion } from 'framer-motion'
+import { useSiteMotion } from '../motion/MotionPreferences'
+import { motion, useInView } from 'framer-motion'
 import { ArrowUpLeft, Globe, Link2, Mail, Phone } from 'lucide-react'
-import type { ReactNode } from 'react'
+import { useRef, type ReactNode } from 'react'
 import { normalizeLinks } from '../lib/supabase'
 import type { RawLinks } from '../types'
 
@@ -10,10 +11,10 @@ export const EVENT_NAME = 'هشتمین رویداد ملی تولید محتو�
 export const EVENT_URL = 'https://event.bsjmajazi.ir/'
 
 export function Reveal({ children, className = '' }: { children: ReactNode; className?: string }) {
-  const reduced = useReducedMotion()
+  const { enabled } = useSiteMotion()
   return (
     <motion.div className={className} initial={false} viewport={{ once: true, amount: .1 }}
-      whileInView={reduced ? undefined : { opacity: [.45, 1], y: [7, 0], filter: ['blur(1.5px)', 'blur(0px)'], transitionEnd: { filter: 'none' } }}
+      whileInView={!enabled ? undefined : { opacity: [.45, 1], y: [7, 0], filter: ['blur(1.5px)', 'blur(0px)'], transitionEnd: { filter: 'none' } }}
       transition={{ duration: .42, ease: EASE }}>
       {children}
     </motion.div>
@@ -23,10 +24,11 @@ export function Reveal({ children, className = '' }: { children: ReactNode; clas
 export function ActionLink({ href, children, secondary = false, className = '' }: {
   href: string; children: ReactNode; secondary?: boolean; className?: string
 }) {
-  const reduced = useReducedMotion()
+  const { enabled } = useSiteMotion()
   return (
     <motion.a href={href} className={`action ${secondary ? 'action-paper' : 'action-red'} ${className}`}
-      whileTap={reduced ? undefined : { x: 2, y: 2, scale: 0.985 }} transition={SPRING}>
+      whileHover={enabled ? { x: -1.5, y: -2 } : undefined}
+      whileTap={enabled ? { x: 2, y: 2, scale: .97 } : undefined} transition={SPRING}>
       {children}
     </motion.a>
   )
@@ -52,8 +54,10 @@ export function DataLinks({ links, label }: { links: RawLinks; label: string }) 
 export function SectionTitle({ id, label, title, meta, red = false }: {
   id: string; label: string; title: string; meta: ReactNode; red?: boolean
 }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const printed = useInView(ref, { once: true, amount: .6 })
   return (
-    <div className="section-title">
+    <div className="section-title" ref={ref} data-printed={printed}>
       <span className={`flag ${red ? 'flag-red' : 'flag-ink'}`}>{label}</span>
       <h2 id={id}>{title}</h2><span className="title-rule" aria-hidden="true" />
       <span className="section-meta">{meta}</span>
