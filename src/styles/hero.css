@@ -1,6 +1,7 @@
-.hero { position: relative; display: grid; grid-template-columns: 1.08fr 1fr; align-items: center; gap: clamp(24px, 3.3vw, 48px); padding: clamp(28px, 3.1vw, 44px); border-top: 4px solid var(--red); }
+.hero { scroll-margin-block-start: 60px; position: relative; display: grid; grid-template-columns: 1.08fr 1fr; align-items: center; gap: clamp(24px, 3.3vw, 48px); padding: clamp(28px, 3.1vw, 44px); border-top: 4px solid var(--red); }
 .hero-copy { min-width: 0; }
 .badge-row { gap: 8px; }
+.hero .badge-green { background: #97ecac; }
 .hero h1 { font-weight: 900; line-height: 1.38; font-size: clamp(44px, 4.65vw, 68px); letter-spacing: -.047em; margin: 16px 0 0; }
 .hero h1 em { color: var(--red); font-style: normal; white-space: nowrap; }
 .tagline { font-size: clamp(17px, 1.55vw, 22px); font-weight: 560; line-height: 1.8; color: #393b42; }

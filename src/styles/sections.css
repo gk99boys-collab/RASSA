@@ -3,7 +3,6 @@
 .heading-pair, .section-title { display: flex; align-items: center; gap: 11px; }
 .heading-pair h2, .section-title h2 { font-size: clamp(23px, 2vw, 29px); line-height: 1.5; font-weight: 900; letter-spacing: -.045em; }
 .about-copy p { margin-top: 8px; font-size: 15px; font-weight: 450; line-height: 2; color: #414249; }
-.about-copy .skeleton { margin-block: 12px; }
 .value-tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
 .value-tabs button { position: relative; isolation: isolate; display: flex; flex-direction: column; align-items: stretch; padding: 12px 15px 10px; gap: 8px; text-align: right; background: #fff; border: var(--border); box-shadow: 2px 2px 0 var(--line); }
 .value-fill { position: absolute; inset: 0; z-index: -1; background: #fff3f2; box-shadow: inset 0 -2px var(--red); pointer-events: none; }

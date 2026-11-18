@@ -15,16 +15,42 @@ type SectionId = (typeof SECTIONS)[number]['id']
 function useCurrentSection() {
   const [active, setActive] = useState<SectionId>('home')
   useEffect(() => {
-    // A reading line below the sticky masthead; ordinary scrolling, anchors and
-    // browser history all drive the same nav indicator without hijacking gestures.
-    const sections = SECTIONS.map(({ id }) => document.getElementById(id)).filter((el) => el !== null)
-    const observer = new IntersectionObserver(() => {
-      const line = window.innerHeight * 0.3
-      const current = sections.filter((el) => el.getBoundingClientRect().top <= line).at(-1)
-      setActive((current?.id as SectionId) || 'home')
-    }, { rootMargin: '0px 0px -70% 0px' })
-    sections.forEach((el) => observer.observe(el))
-    return () => observer.disconnect()
+    const sections = SECTIONS.flatMap(({ id }) => {
+      const el = document.getElementById(id)
+      return el ? [{ el, id, top: 0 }] : []
+    })
+    let maxScroll = 0
+    let readingLine = 0
+    function update() {
+      const y = window.scrollY
+      let current = sections.filter(({ top }) => top <= y + readingLine).at(-1)
+      // Short final sections cannot always reach the reading line. Two different
+      // anchor links may even land at the same physical scroll position.
+      if (y > 0 && y >= maxScroll - 2) {
+        current = sections.find(({ id, top }) => `#${id}` === window.location.hash && top >= y - 1) ?? sections.at(-1)
+      }
+      setActive(current?.id ?? 'home')
+    }
+    function measure() {
+      for (const item of sections) item.top = item.el.getBoundingClientRect().top + window.scrollY
+      maxScroll = document.documentElement.scrollHeight - window.innerHeight
+      readingLine = Math.min(window.innerHeight * .3, 180)
+      update()
+    }
+    // Measure only when layout changes, not on every frame of a scroll gesture.
+    const observer = new ResizeObserver(measure)
+    sections.forEach(({ el }) => observer.observe(el))
+    observer.observe(document.body)
+    measure()
+    window.addEventListener('resize', measure)
+    window.addEventListener('scroll', update, { passive: true })
+    window.addEventListener('hashchange', update)
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('resize', measure)
+      window.removeEventListener('scroll', update)
+      window.removeEventListener('hashchange', update)
+    }
   }, [])
   return active
 }

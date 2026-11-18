@@ -1,32 +1,8 @@
-/* Self-hosted Vazirmatn Persian font (Medium, Bold, ExtraBold, Black) */
+/* One self-hosted variable font covers body copy, print captions and display weights. */
 @font-face {
-  font-family: 'Vazirmatn';
-  src: url('vazirmatn/fonts/webfonts/Vazirmatn-Medium.woff2') format('woff2');
-  font-weight: 500;
+  font-family: Vazirmatn;
+  src: url('vazirmatn/fonts/webfonts/Vazirmatn[wght].woff2') format('woff2');
   font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Vazirmatn';
-  src: url('vazirmatn/fonts/webfonts/Vazirmatn-Bold.woff2') format('woff2');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Vazirmatn';
-  src: url('vazirmatn/fonts/webfonts/Vazirmatn-ExtraBold.woff2') format('woff2');
-  font-weight: 800;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Vazirmatn';
-  src: url('vazirmatn/fonts/webfonts/Vazirmatn-Black.woff2') format('woff2');
-  font-weight: 900;
-  font-style: normal;
+  font-weight: 100 900;
   font-display: swap;
 }
