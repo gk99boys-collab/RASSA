@@ -13,4 +13,15 @@ export default defineConfig({
     host: '0.0.0.0',
     allowedHosts: true,
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          react: ['react', 'react-dom'],
+          motion: ['framer-motion'],
+          supabase: ['@supabase/supabase-js'],
+        },
+      },
+    },
+  },
 })
