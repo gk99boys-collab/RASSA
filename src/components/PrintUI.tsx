@@ -1,7 +1,7 @@
 import { useSiteMotion } from '../motion/MotionPreferences'
-import { motion } from 'framer-motion'
+import { motion, useInView } from 'framer-motion'
 import { ArrowUpLeft, Globe, Link2, Mail, Phone } from 'lucide-react'
-import type { ReactNode } from 'react'
+import { useRef, type ReactNode } from 'react'
 import { normalizeLinks } from '../lib/supabase'
 import type { RawLinks } from '../types'
 
@@ -27,7 +27,8 @@ export function ActionLink({ href, children, secondary = false, className = '' }
   const { enabled } = useSiteMotion()
   return (
     <motion.a href={href} className={`action ${secondary ? 'action-paper' : 'action-red'} ${className}`}
-      whileTap={!enabled ? undefined : { x: 2, y: 2, scale: 0.985 }} transition={SPRING}>
+      whileHover={enabled ? { x: -1.5, y: -2 } : undefined}
+      whileTap={enabled ? { x: 2, y: 2, scale: .97 } : undefined} transition={SPRING}>
       {children}
     </motion.a>
   )
@@ -53,8 +54,10 @@ export function DataLinks({ links, label }: { links: RawLinks; label: string }) 
 export function SectionTitle({ id, label, title, meta, red = false }: {
   id: string; label: string; title: string; meta: ReactNode; red?: boolean
 }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const printed = useInView(ref, { once: true, amount: .6 })
   return (
-    <div className="section-title">
+    <div className="section-title" ref={ref} data-printed={printed}>
       <span className={`flag ${red ? 'flag-red' : 'flag-ink'}`}>{label}</span>
       <h2 id={id}>{title}</h2><span className="title-rule" aria-hidden="true" />
       <span className="section-meta">{meta}</span>

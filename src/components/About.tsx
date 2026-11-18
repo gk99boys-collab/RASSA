@@ -27,13 +27,13 @@ export function About({ team, loading }: { team: Team; loading: boolean }) {
             aria-controls="value-note" aria-selected={step === i} tabIndex={step === i ? 0 : -1}
             onClick={() => setStep(i)} onKeyDown={(e) => tabKeys(e, i, STEPS.length, setStep)}>
             {step === i && <motion.span className="value-fill" aria-hidden="true" layoutId={!enabled ? undefined : 'value-selection'} transition={SPRING} />}
-            <span className="value-iconline"><Icon size={23} strokeWidth={1.8} /><small>{formatOrderBadge(i + 1)}</small></span>
+            <span className="value-iconline"><Icon className="value-symbol" size={23} strokeWidth={1.8} /><small>{formatOrderBadge(i + 1)}</small></span>
             <strong>{title}</strong>
           </button>)}
         </div>
         <div className="value-note" id="value-note" role="tabpanel" tabIndex={0} aria-labelledby={`value-${step}`}>
-          <CornerDownLeft size={14} aria-hidden="true" /><motion.p key={step} initial={!enabled ? false : { opacity: 0, y: 3 }}
-            animate={{ opacity: 1, y: 0 }} transition={{ duration: !enabled ? 0 : .25, ease: EASE }}>{STEPS[step].note}</motion.p>
+          <CornerDownLeft size={14} aria-hidden="true" /><motion.p key={step} initial={!enabled ? false : { opacity: .25, x: 8, y: 4 }}
+            animate={{ opacity: 1, x: 0, y: 0 }} transition={{ duration: !enabled ? 0 : .25, ease: EASE }}>{STEPS[step].note}</motion.p>
         </div>
       </div>
     </section>
