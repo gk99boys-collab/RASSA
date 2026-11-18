@@ -45,7 +45,7 @@ export function PosterPlates({ frame, time }: { frame: number; time: MotionValue
         <path d="m331 149-13 69 23-13 16 21 14-69" fill="#9aefb0" /><path d="m360 157 15 66 15-20 22 10-16-68" fill="#f5ddbc" />
         <polygon points={rosette} transform="translate(4 5)" fill="#181718" /><polygon points={rosette} fill="#fff3d9" />
         <circle cx="365" cy="117" r="49" fill="none" strokeWidth="1.3" strokeDasharray="2 3" />
-        <text x="365" y="144" textAnchor="middle" fill="#cf1a2c" stroke="none" fontFamily="Vazirmatn, sans-serif" fontSize="83" fontWeight="900">۱</text>
+        <text x="365" y="144" textAnchor="middle" fill="#cf1a2c" stroke="none" fontSize="83" fontWeight="900">۱</text>
       </g>
     </g>}
   </svg>

@@ -1,18 +1,13 @@
 # فونت‌های محلی رَسا
 
-فایل‌های فونت را با همین نام‌ها مستقیماً در پوشهٔ `public/fonts/` قرار دهید:
+خانوادهٔ `Kalameh` (نسخهٔ FaNum کلمه) فونت اصلی متن، تیترها و اعداد فارسی سایت است. فایل‌ها از همین پوشه و بدون CDN بارگذاری می‌شوند. تعریف‌ها در [`src/fonts.css`](../../src/fonts.css) قرار دارند و وزیرمتن پشتیبان محلی متن است.
 
-**فونت متن (کلمه با ارقام فارسی)**
+| وزن CSS | فایل |
+| ---: | --- |
+| 400 | `KalamehWeb(FaNum)-Regular.woff2` |
+| 600 | `KalamehWeb(FaNum)-SemiBold.woff2` |
+| 700 | `KalamehWeb(FaNum)-Bold.woff2` |
+| 800 | `KalamehWeb(FaNum)-ExtraBold.woff2` |
+| 900 | `KalamehWeb(FaNum)-Black.woff2` |
 
-- `KalamehWeb(FaNum)-Regular.woff2`
-- `KalamehWeb(FaNum)-SemiBold.woff2`
-- `KalamehWeb(FaNum)-Bold.woff2`
-- `KalamehWeb(FaNum)-ExtraBold.woff2`
-- `KalamehWeb(FaNum)-Black.woff2`
-
-**فونت آیکون (Bootstrap Icons)**
-
-- `bootstrap-icons.woff2`
-- `bootstrap-icons.woff`
-
-افزودن فایل‌ها به این پوشه، فونت فعلی سایت (وزیرمتن) را تغییر نمی‌دهد.
+خانوادهٔ `bootstrap-icons` جداگانه با `bootstrap-icons.woff2` و جایگزین `bootstrap-icons.woff` ثبت شده است. این فونت فقط برای نمادهای Bootstrap Icons است و به متن یا آیکون‌های SVG فعلی اعمال نمی‌شود.

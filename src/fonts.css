@@ -1,8 +1,55 @@
-/* One self-hosted variable font covers body copy, print captions and display weights. */
+/* Vite rebases these public URLs to the Pages subpath in the production CSS. */
+@font-face {
+  font-family: Kalameh;
+  src: url('/fonts/KalamehWeb(FaNum)-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: Kalameh;
+  src: url('/fonts/KalamehWeb(FaNum)-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: Kalameh;
+  src: url('/fonts/KalamehWeb(FaNum)-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: Kalameh;
+  src: url('/fonts/KalamehWeb(FaNum)-ExtraBold.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: Kalameh;
+  src: url('/fonts/KalamehWeb(FaNum)-Black.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Local fallback for missing glyphs or a failed text-font request. */
 @font-face {
   font-family: Vazirmatn;
   src: url('vazirmatn/fonts/webfonts/Vazirmatn[wght].woff2') format('woff2');
   font-style: normal;
   font-weight: 100 900;
   font-display: swap;
+}
+
+/* Opt-in icon face. Never part of the text stack or preloaded for the SVG icons. */
+@font-face {
+  font-family: 'bootstrap-icons';
+  src: url('/fonts/bootstrap-icons.woff2') format('woff2'),
+       url('/fonts/bootstrap-icons.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
 }
