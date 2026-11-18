@@ -35,25 +35,13 @@ jobs:
         run: npm run test:policy
 
       - name: Build static site
-        id: bundle
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL || vars.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY || vars.VITE_SUPABASE_ANON_KEY }}
-        run: |
-          npm run build
-          if [[ -n "$VITE_SUPABASE_URL" && -n "$VITE_SUPABASE_ANON_KEY" ]]; then
-            echo 'desk_ready=true' >> "$GITHUB_OUTPUT"
-          else
-            echo '::warning::Member desk sign-in is unavailable: configure both public VITE_SUPABASE settings and redeploy. The profile will use its local fallback.'
-          fi
+        run: npm run build
 
-      - name: Verify configured member desk bundle
-        if: steps.bundle.outputs.desk_ready == 'true'
-        env:
-          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL || vars.VITE_SUPABASE_URL }}
-        run: |
-          test -s dist/admin/index.html
-          grep -Fq -- "$VITE_SUPABASE_URL" dist/assets/*.js
+      - name: Verify public site and private desk entries
+        run: test -s dist/index.html && test -s dist/admin/index.html
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
@@ -67,9 +55,19 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
+      - name: Checkout release check
+        uses: actions/checkout@v4
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Check published PIN entry and read-only API
+        env:
+          PAGES_URL: ${{ steps.deployment.outputs.page_url }}
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL || vars.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY || vars.VITE_SUPABASE_ANON_KEY }}
+        run: node scripts/check-pages.mjs
