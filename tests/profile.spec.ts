@@ -57,7 +57,65 @@ test('a renamed fifth seat, real bucket paths and edited team/member links use r
   await expect(panel).toContainText('طراحی رابط')
   await expect(panel.getByRole('link', { name: 'نمونه‌کار' })).toHaveAttribute('href', 'https://example.org/portfolio')
   await expect(panel.getByRole('img', { name: 'عضو تازه' })).toHaveJSProperty('naturalWidth', 512)
+  await expect(page.locator('#seat-5 .portrait-mini img')).toHaveAttribute('src', `${api}/storage/v1/object/public/member-photos/fifth.png`)
+  await expect(panel.locator('.studio-illustration')).toHaveAttribute('src', /member-covers\/studio-756\.webp$/)
+  await expect(panel.locator('.studio-lettering')).not.toContainText('فصل بعد')
   await expect(page.locator('.locked-profile')).toHaveCount(0)
+})
+
+test('each member has a distinct illustrated jacket and a matching small proof under the Pages subpath', async ({ page }) => {
+  const fullPrints = new Set<string>()
+  page.on('request', req => {
+    const print = /\/member-covers\/(\w+)-(?:756|1404)\.webp$/.exec(req.url())
+    if (print) fullPrints.add(print[1])
+  })
+  await page.route(`${api}/rest/v1/**`, route => route.fulfill({ status: 403, json: {} }))
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto('./#members')
+  const tabs = page.getByRole('tablist', { name: 'فهرست اعضای تیم' }).getByRole('tab')
+  const panel = page.locator('#member-profile')
+  const cover = panel.locator('.studio-illustration')
+  for (const [i, studio] of ['planning', 'mobile', 'data', 'editorial', 'studio'].entries()) {
+    await tabs.nth(i).click()
+    await expect(tabs.nth(i).locator('.proof-thumb img')).toHaveJSProperty('naturalWidth', 192)
+    await expect(tabs.nth(i).locator('.proof-thumb img')).toHaveAttribute('src', new RegExp(`/${studio}-thumb\\.webp$`))
+    await expect(panel.getByRole('heading', { level: 3 })).toHaveText(FALLBACK_MEMBERS[i].name)
+    await expect(cover).toHaveAccessibleName(/تصویرسازی/)
+    await expect.poll(() => cover.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth && new URL(el.currentSrc).pathname))
+      .toBe(`/RASSA/member-covers/${studio}-756.webp`)
+    // Thumbnails for the index, a full-resolution print only for opened cards.
+    expect(fullPrints.size).toBe(i + 1)
+  }
+  await expect(panel.locator('.lock-print')).toBeVisible()
+  await expect(panel.locator('.portrait img')).toHaveCount(0)
+})
+
+test('seat five keeps its portrait sealed, then a name edit alone reveals the right portrait and role artwork', async ({ page }) => {
+  const members = FALLBACK_MEMBERS.map(m => ({ ...m }))
+  members[4] = { ...members[4], role: 'مسئول محتوا و ارائه', photo_url: 'fifth.png', links: { locked: true } }
+  await fixture(page, FALLBACK_TEAM, members)
+  let photoRequests = 0
+  await page.route(`${api}/storage/v1/object/public/member-photos/fifth.png`, route => {
+    photoRequests++
+    return route.fulfill({ path: 'public/logo-rasa-mark.png', contentType: 'image/png' })
+  })
+  await page.goto('./#members')
+  const tab = page.locator('#seat-5')
+  const panel = page.locator('#member-profile')
+  await tab.click()
+  await expect(panel.locator('.locked-profile')).toBeVisible()
+  await expect(tab).toHaveAttribute('data-studio', 'studio')
+  expect(photoRequests).toBe(0)
+
+  members[4].name = 'عضو تازه'
+  await page.reload()
+  await expect(tab).toContainText('عضو تازه')
+  await tab.click()
+  await expect(panel.locator('.member-sheet')).toHaveAttribute('data-studio', 'editorial')
+  await expect(panel.getByRole('img', { name: /میکروفن/ })).toBeVisible()
+  await expect(panel.getByRole('img', { name: 'عضو تازه' })).toHaveJSProperty('naturalWidth', 512)
+  await expect(tab.locator('.portrait-mini img')).toHaveJSProperty('naturalWidth', 512)
+  await expect(panel.locator('.lock-print')).toHaveCount(0)
 })
 
 test('section anchors, RTL values tabs, member keyboard navigation and counters', async ({ page }) => {
