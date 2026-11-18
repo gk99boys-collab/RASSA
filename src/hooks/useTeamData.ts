@@ -71,7 +71,7 @@ export function useTeamData(): TeamDataState {
             : FALLBACK_TEAM
 
         const resolvedMembers: Member[] =
-          membersData && membersData.length > 0
+          membersData !== null
             ? membersData.map((row) => ({
                 id: String(row.id),
                 sort_order: Number(row.sort_order) || 0,
@@ -89,7 +89,7 @@ export function useTeamData(): TeamDataState {
           members: resolvedMembers,
           loading: false,
           source:
-            (teamData && teamData.name) || (membersData && membersData.length > 0)
+            (teamData && teamData.name) || membersData !== null
               ? 'supabase'
               : 'fallback',
         })
