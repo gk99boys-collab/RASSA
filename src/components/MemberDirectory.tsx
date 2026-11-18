@@ -1,51 +1,15 @@
 import { useSiteMotion } from '../motion/MotionPreferences'
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useInView, useIsPresent, type Variants } from 'framer-motion'
-import { BriefcaseBusiness, ChevronLeft, ChevronRight, Contact, Database, Fingerprint, Layers2, LockKeyhole, Mic, Smartphone, UserRound, UsersRound } from 'lucide-react'
-import { formatOrderBadge, isMysteryMember, resolveMemberPhotoUrl, toPersianDigits } from '../lib/supabase'
+import { ChevronLeft, ChevronRight, Contact, Fingerprint, UsersRound } from 'lucide-react'
+import { formatOrderBadge, toPersianDigits } from '../lib/supabase'
 import { tabKeys } from '../lib/tabKeys'
 import type { Member } from '../types'
-import { DataLinks, EASE, SectionTitle, Skeleton, SPRING } from './PrintUI'
+import { EASE, SectionTitle, SPRING } from './PrintUI'
+import { MemberCard, Portrait } from './members/MemberCard'
+import { artwork, cardDesign } from './members/studios'
 
-const ICONS = [BriefcaseBusiness, Smartphone, Database, Mic]
 const MOBILE_LIST = '(max-width: 700px)'
-
-function locked(member: Member) {
-  // The fifth seat opens on a name edit alone, even if old links metadata had a lock flag.
-  return isMysteryMember(member.sort_order === 5 ? { ...member, links: null } : member)
-}
-
-function Portrait({ member }: { member: Member }) {
-  const src = resolveMemberPhotoUrl(member.photo_url)
-  const [failed, setFailed] = useState<string | null>(null)
-  const initials = member.name.trim().replace(/^سید\s+/, '').split(/\s+/).filter(Boolean)
-    .filter((_, i, parts) => i === 0 || i === parts.length - 1).map((part) => part[0]).join('‌')
-  return <div className={`portrait tone-${(member.sort_order - 1) % 4}`}>
-    {src && src !== failed ? <img src={src} alt={member.name} decoding="async" loading="lazy" onError={() => setFailed(src)} /> :
-      <><strong aria-hidden="true">{initials}</strong><span aria-hidden="true" dir="ltr" className="portrait-id mono"># {formatOrderBadge(member.sort_order)}</span></>}
-  </div>
-}
-
-function MemberProfile({ member, loading }: { member: Member; loading: boolean }) {
-  if (locked(member)) return (
-    <div className="locked-profile"><div className="lock-print" aria-hidden="true"><LockKeyhole size={30} strokeWidth={1.6} /></div>
-      <span className="badge mystery-badge">در انتظار معرفی</span><h3>{member.name}</h3><p>{member.bio}</p></div>
-  )
-  return (
-    <div className="profile-body">
-      <div className="member-intro"><Portrait member={member} /><div className="member-identity">
-        <span className="member-eyebrow"><i />عضو شماره {formatOrderBadge(member.sort_order)}</span>
-        <h3>{member.name}</h3><span className="badge badge-green"><i className="status-dot" />{member.role}</span>
-      </div></div>
-      {loading ? <Skeleton label="در حال دریافت مشخصات عضو" /> : <>
-        <p className="bio">{member.bio}</p>
-        {member.skills.length > 0 && <div className="skills"><h4><Layers2 size={15} />مهارت‌ها</h4>
-          <ul>{member.skills.map((skill) => <li key={skill}>{skill}</li>)}</ul></div>}
-        <DataLinks links={member.links} label={`پیوندهای ${member.name}`} />
-      </>}
-    </div>
-  )
-}
 
 const sheet: Variants = {
   enter: (dir: number) => ({ x: -dir * 36, y: 5, rotateY: dir * 12, rotate: -dir * 1.1, opacity: .32 }),
@@ -57,7 +21,7 @@ function FileLeaf({ member, loading, direction }: { member: Member; loading: boo
   const present = useIsPresent()
   return <motion.div className="file-leaf" variants={sheet} initial="enter" animate="read" exit="leave" custom={direction}
     aria-hidden={present ? undefined : true} inert={!present} style={{ originX: direction > 0 ? 1 : 0 }}>
-    <MemberProfile member={member} loading={loading} />
+    <MemberCard member={member} loading={loading} />
   </motion.div>
 }
 
@@ -94,14 +58,15 @@ export function MemberDirectory({ members, loading, teamName }: { members: Membe
       <div className="directory">
         <div ref={list} className="roster" data-printed={listPrinted} role="tablist" aria-label="فهرست اعضای تیم" aria-orientation={compact ? 'horizontal' : 'vertical'}>
           {members.map((item, i) => {
-            const mystery = locked(item)
-            const Icon = mystery ? LockKeyhole : ICONS[item.sort_order - 1] || UserRound
-            return <button className={`member-tab ${mystery ? 'mystery-tab' : ''}`} type="button" key={item.sort_order}
+            const { studio, sealed } = cardDesign(item)
+            return <button className="member-tab" data-studio={studio} type="button" key={item.sort_order}
               role="tab" id={`seat-${item.sort_order}`} aria-selected={index === i} aria-controls="member-profile"
               tabIndex={index === i ? 0 : -1} onClick={() => select(i)} onKeyDown={(e) => tabKeys(e, i, members.length, select, !compact)}>
               {i === index && <motion.span className="roster-selection" aria-hidden="true" layoutId={!enabled ? undefined : 'selected-member'} transition={SPRING} />}
-              <span className="member-icon"><Icon size={19} strokeWidth={1.8} /></span>
-              <span className="member-label"><strong>{item.name}</strong><small>{item.role}</small></span><ChevronLeft size={16} className="list-chevron" />
+              <Portrait member={item} sealed={sealed} mini />
+              <span className="member-label"><strong>{item.name}</strong><small>{item.role}</small></span>
+              <span className="proof-thumb" aria-hidden="true"><img src={artwork(studio, 'thumb')} width={192} height={192} alt="" loading="lazy" decoding="async" />
+                <span>{formatOrderBadge(item.sort_order)}</span></span>
             </button>
           })}
         </div>
@@ -117,7 +82,7 @@ export function MemberDirectory({ members, loading, teamName }: { members: Membe
             ? <AnimatePresence initial={false} custom={selection.dir}>
               <FileLeaf key={member.id} member={member} loading={loading} direction={selection.dir} />
             </AnimatePresence>
-            : <MemberProfile key={member.id} member={member} loading={loading} />}
+            : <MemberCard key={member.id} member={member} loading={loading} />}
           </div>
           <div className="profile-foot" aria-hidden="true"><Fingerprint size={19} strokeWidth={1.4} />
             <span className="mono" dir="ltr">RASSA / {formatOrderBadge(member.sort_order)}</span></div>
