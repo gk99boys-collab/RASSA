@@ -6,10 +6,15 @@ const base = new URL(process.env.PAGES_URL)
 base.pathname = base.pathname.replace(/\/?$/, '/')
 const project = (process.env.VITE_SUPABASE_URL || 'https://gshcslntlndqfzudxhub.supabase.co').replace(/\/+$/, '')
 const origin = base.origin
+class HttpFailure extends Error {}
 let phase = 'published desk HTML'
 const get = async (url, init) => {
   const response = await fetch(url, { signal: AbortSignal.timeout(15000), ...init })
-  assert.ok(response.ok, `HTTP ${response.status}: ${new URL(url).pathname}`)
+  if (!response.ok) {
+    const { code } = await response.json().catch(() => ({}))
+    const known = ['BOOT_ERROR', 'WORKER_ERROR', 'PUBLIC_CONFIG_UNAVAILABLE', 'NOT_FOUND', 'PGRST202']
+    throw new HttpFailure(`HTTP ${response.status}${known.includes(code) ? ': ' + code : ''}`)
+  }
   return response
 }
 async function check() {
@@ -57,7 +62,7 @@ for (let i=0; ; i++) {
   } catch (e) {
     if (i < 3) { await delay(5000); continue }
     // Surface only the failed phase/status, never a response body or credentials.
-    const status = /^HTTP \d{3}:/u.exec(e.message)?.[0].slice(0, -1)
+    const status = e instanceof HttpFailure ? e.message : ''
     console.error(`::error title=Published desk check::Failed: ${phase}${status ? ' (' + status + ')' : ''}`)
     process.exitCode = 1
     break

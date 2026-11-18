@@ -1,13 +1,12 @@
-// This endpoint serves ONLY a browser-safe key, just as a configured Vite build would.
-// It never receives the desk link/PIN, reads database rows, or uses a privileged client.
-Deno.serve((request: Request) => {
-  const headers = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'GET, OPTIONS', 'X-Content-Type-Options': 'nosniff' }
+// Only the browser-safe key is public. Never accept owner credentials or use a privileged client here.
+Deno.serve(request => {
+  const headers = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'GET, OPTIONS', 'X-Content-Type-Options': 'nosniff', 'Content-Type': 'application/json' }
   if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers })
   if (request.method !== 'GET') return new Response(null, { status: 405, headers })
   try {
-    const key = Deno.env.get('SUPABASE_ANON_KEY') ?? ''
-    const payload = JSON.parse(atob(key.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')))
-    if (payload.role !== 'anon') throw new Error('Not a public key')
-    return Response.json({ anonKey: key }, { headers: { ...headers, 'Cache-Control': 'public, max-age=600' } })
-  } catch { return new Response(null, { status: 503, headers }) }
+    const key = Deno.env.get('RASSA_BROWSER_ANON') || Deno.env.get('SUPABASE_ANON_KEY') || ''
+    const claims = JSON.parse(atob(key.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')))
+    if (claims.role !== 'anon' || claims.ref !== 'gshcslntlndqfzudxhub') throw new Error('Invalid browser key')
+    return new Response(JSON.stringify({ anonKey: key }), { headers: { ...headers, 'Cache-Control': 'public, max-age=600' } })
+  } catch { return new Response('{"code":"PUBLIC_CONFIG_UNAVAILABLE"}', { status: 503, headers }) }
 })
