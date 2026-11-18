@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Plus, UsersRound } from 'lucide-react'
 import type { Member } from '../types'
-import { desk, numberFa } from './client'
+import { numberFa, ticketHeader, type DeskSession } from './client'
 import { MemberForm } from './MemberForm'
 import type { SavedFields } from './memberDraft'
 
@@ -15,7 +15,7 @@ function Confirm({ value, close }: { value: Confirmation; close: () => void }) {
       <button className="desk-key danger" onClick={() => { close(); value.accept() }}>{value.action}</button></div></dialog>
 }
 
-export function MemberDesk({ onDenied }: { onDenied: () => void }) {
+export function MemberDesk({ session, onDenied }: { session: DeskSession; onDenied: () => void }) {
   const [rows,setRows] = useState<Member[] | null>(null)
   const [selected,select] = useState<string | null>(null)
   const [revision,revise] = useState(0)
@@ -27,7 +27,7 @@ export function MemberDesk({ onDenied }: { onDenied: () => void }) {
   const load = useCallback(async (preferred?: string | null, signal?: AbortSignal) => {
     setError('')
     try {
-      let q = desk!.from('members').select('id,sort_order,name,role,skills,bio,photo_url,links').order('sort_order')
+      let q = session.db.from('members').select('id,sort_order,name,role,skills,bio,photo_url,links').order('sort_order')
       if (signal) q = q.abortSignal(signal)
       const { data, error } = await q
       if (signal?.aborted) return
@@ -36,7 +36,7 @@ export function MemberDesk({ onDenied }: { onDenied: () => void }) {
       setRows(next); select(next.find(m => m.id === preferred)?.id ?? next[0]?.id ?? null)
       setDirty(false); revise(n => n+1)
     } catch { if (!signal?.aborted) { setRows(null); setError('فهرست از سرور دریافت نشد. اتصال را بررسی و دوباره تلاش کنید.') } }
-  }, [])
+  }, [session.db])
   useEffect(() => { const c = new AbortController(); void load(null, c.signal); return () => c.abort() }, [load])
 
   const member = rows?.find(m => m.id === selected)
@@ -50,9 +50,9 @@ export function MemberDesk({ onDenied }: { onDenied: () => void }) {
     inFlight.current = true; setBusy(true); setError(''); setNotice('')
     try {
       const result = value === 'delete'
-        ? await desk!.rpc('rassa_delete_member',{p_id:member!.id})
-        : await desk!.rpc('rassa_save_member',{p_id:member?.id ?? null, p_sort_order:value.sort_order,
-          p_name:value.name,p_role:value.role,p_skills:value.skills,p_bio:value.bio,p_photo_url:value.photo_url,p_links:value.links})
+        ? await session.db.rpc('rassa_delete_member',{p_id:member!.id}).setHeader(ticketHeader, session.ticket)
+        : await session.db.rpc('rassa_save_member',{p_id:member?.id ?? null, p_sort_order:value.sort_order,
+          p_name:value.name,p_role:value.role,p_skills:value.skills,p_bio:value.bio,p_photo_url:value.photo_url,p_links:value.links}).setHeader(ticketHeader, session.ticket)
       if (result.error || !result.data) {
         const code = result.error?.code
         if (code === '42501' || result.status === 401) { onDenied(); return }
