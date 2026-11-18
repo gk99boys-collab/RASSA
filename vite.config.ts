@@ -34,6 +34,7 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
+      input: { site: 'index.html', desk: 'admin/index.html' },
       output: {
         manualChunks: {
           react: ['react', 'react-dom'],

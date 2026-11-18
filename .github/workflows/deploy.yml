@@ -31,11 +31,29 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Test member desk authorization (isolated database)
+        run: npm run test:policy
+
       - name: Build static site
+        id: bundle
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL || vars.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY || vars.VITE_SUPABASE_ANON_KEY }}
-        run: npm run build
+        run: |
+          npm run build
+          if [[ -n "$VITE_SUPABASE_URL" && -n "$VITE_SUPABASE_ANON_KEY" ]]; then
+            echo 'desk_ready=true' >> "$GITHUB_OUTPUT"
+          else
+            echo '::warning::Member desk sign-in is unavailable: configure both public VITE_SUPABASE settings and redeploy. The profile will use its local fallback.'
+          fi
+
+      - name: Verify configured member desk bundle
+        if: steps.bundle.outputs.desk_ready == 'true'
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL || vars.VITE_SUPABASE_URL }}
+        run: |
+          test -s dist/admin/index.html
+          grep -Fq -- "$VITE_SUPABASE_URL" dist/assets/*.js
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
