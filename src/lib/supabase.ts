@@ -97,7 +97,7 @@ export function normalizeLinks(raw: RawLinks): NormalizedLink[] {
  * Updating row 5's `name` in Supabase to the new teammate's real name automatically
  * unlocks and renders a full member card without changing any code.
  */
-export function isMysteryMember(member: Member): boolean {
+export function isMysteryMember(member: Pick<Member, 'name' | 'links'>): boolean {
   if (
     member.links &&
     !Array.isArray(member.links) &&

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { FALLBACK_MEMBERS, FALLBACK_TEAM } from '../data/fallbackData'
 import { connectPublic } from '../lib/connection'
+import { MEMBER_COLUMNS } from '../lib/memberMedia'
 import type { DataSource, Member, Team } from '../types'
 
 interface TeamDataState {
@@ -38,9 +39,10 @@ export function useTeamData(): TeamDataState {
             .maybeSingle(),
           client
             .from('members')
-            .select('id, sort_order, name, role, skills, bio, photo_url, links')
+            .select(MEMBER_COLUMNS)
             .order('sort_order', { ascending: true })
-            .abortSignal(controller.signal),
+            .abortSignal(controller.signal)
+            .overrideTypes<Member[], { merge: false }>(),
         ])
 
         if (cancelled) return
@@ -71,6 +73,7 @@ export function useTeamData(): TeamDataState {
                 skills: Array.isArray(row.skills) ? row.skills.filter(Boolean) : [],
                 bio: row.bio || '',
                 photo_url: row.photo_url ?? null,
+                media: row.media ?? null,
                 links: row.links ?? [],
               }))
             : FALLBACK_MEMBERS

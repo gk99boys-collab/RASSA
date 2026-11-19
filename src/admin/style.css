@@ -47,3 +47,23 @@ html { scroll-behavior: auto; }
 .desk-dialog p { margin-block:12px 18px; line-height:1.9; } .desk-login input.desk-pin { text-align:center; letter-spacing:.5em; font-size:22px; }
 @media(max-width:700px){ .desk-grid{grid-template-columns:minmax(0,1fr)} .desk-list{max-height:180px} .desk-login{margin-top:2vh} .desk-head nav{gap:9px} .desk-brand{font-size:15px} }
 @media(max-width:450px){ .desk-width{width:calc(100% - 26px)} .desk-fields{grid-template-columns:minmax(0,1fr)} .desk-key{padding-inline:9px} .desk-head nav{font-size:11px} .desk-brand img{width:30px} .desk-heading{align-items:end} .desk-heading h1{font-size:25px} }
+
+/* Two independent image slots; the file inputs remain keyboard accessible. */
+.desk-media { margin-block: 20px 12px; padding-block-start: 12px; border-top: 1px dashed #b7b7b7; }
+.desk-media h3 { font-size: 16px; font-weight: 850; }
+.desk-media > p, .desk-media details small { color: var(--muted); font-size: 12px; line-height: 1.8; }
+.image-pickers { display: grid; grid-template-columns: minmax(0,.84fr) minmax(0,1.16fr); gap: 10px; margin-block: 8px; }
+.image-picker { padding: 10px; min-width: 0; border: 1px solid var(--line); box-shadow: 2px 2px var(--line); background: #fafafa; }
+.image-picker h4 { font-size: 13px; font-weight: 800; }
+.image-proof { height: 84px; display: grid; place-items: center; margin-block: 7px; overflow: hidden; background: #f0f2f1 radial-gradient(#cfd4d3 1px, transparent 1px) 0 0 / 8px 8px; color: #586360; }
+.image-proof img { width: 100%; height: 84px; object-fit: contain; }
+.image-picker[data-slot="cover"] img { object-fit: cover; }
+.image-actions, .desk-media .file-key, .image-actions button { display: flex; align-items: center; gap: 5px; }
+.image-actions { flex-wrap: wrap; justify-content: space-between; }
+.desk-media .file-key { position: relative; padding: 4px 9px; min-height: 32px; background: white; border: 1px solid var(--line); font-size: 12px; cursor: pointer; }
+.desk-media .file-key:focus-within { outline: 3px solid #007c79; outline-offset: 2px; }
+.image-actions button, .desk-media summary { text-decoration: underline; font-size: 11px; }
+.image-picker > small { display: block; margin-top: 4px; overflow-wrap: anywhere; color: var(--muted); font-size: 11px; }
+.desk-media summary { cursor: pointer; font-size: 12px; width: fit-content; }
+.desk-media details label { margin-block-start: 8px; }
+@media(max-width:500px){ .image-pickers { grid-template-columns: minmax(0,1fr); } }

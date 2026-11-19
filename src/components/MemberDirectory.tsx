@@ -6,8 +6,8 @@ import { formatOrderBadge, toPersianDigits } from '../lib/supabase'
 import { tabKeys } from '../lib/tabKeys'
 import type { Member } from '../types'
 import { EASE, SectionTitle, SPRING } from './PrintUI'
-import { MemberCard, Portrait } from './members/MemberCard'
-import { artwork, cardDesign } from './members/studios'
+import { CoverThumb, MemberCard, Portrait } from './members/MemberCard'
+import { cardDesign } from './members/studios'
 import { useMemberJourney } from '../motion/useMemberJourney'
 
 const MOBILE_LIST = '(max-width: 700px)'
@@ -73,7 +73,7 @@ export function MemberDirectory({ members, loading, teamName }: { members: Membe
                 {i === index && <motion.span className="roster-selection" aria-hidden="true" layoutId={!enabled ? undefined : 'selected-member'} transition={SPRING} />}
                 <Portrait member={item} sealed={sealed} mini />
                 <span className="member-label"><strong>{item.name}</strong><small>{item.role}</small></span>
-                <span className="proof-thumb" aria-hidden="true"><img src={artwork(studio, 'thumb')} width={192} height={192} alt="" loading="lazy" decoding="async" />
+                <span className="proof-thumb" aria-hidden="true"><CoverThumb member={item} studio={studio} sealed={sealed} />
                   <span>{formatOrderBadge(item.sort_order)}</span></span>
               </button>
             })}
