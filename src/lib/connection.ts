@@ -7,6 +7,9 @@ const project = (url || hostedProject).replace(/\/+$/, '')
 const anon = import.meta.env.VITE_SUPABASE_ANON_KEY?.trim()
 const client = (origin: string, key: string) => createClient(origin, key, {
   auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
+  db: { timeout: 20000 },
+  // Bound file transfers too (the Storage SDK has no per-upload abortSignal).
+  global: { fetch: (input, init) => fetch(input, { ...init, signal: init?.signal ?? AbortSignal.timeout(60000) }) },
 })
 export let publicDb: SupabaseClient | null = url && anon ? client(url, anon) : null
 let pending: Promise<SupabaseClient> | undefined

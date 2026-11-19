@@ -27,6 +27,7 @@ export interface Member {
   skills: string[]
   bio: string
   photo_url: string | null
+  media?: { portrait_path: string | null; cover_path: string | null } | null
   links: RawLinks
 }
 

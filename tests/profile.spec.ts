@@ -120,6 +120,24 @@ test('seat five keeps its portrait sealed, then a name edit alone reveals the ri
   await expect(panel.locator('.lock-print')).toHaveCount(0)
 })
 
+test('the sealed card never fetches either override; a broken custom cover and portrait fall back independently',async({page})=>{
+  const media = {portrait_path:`portrait/${'a'.repeat(32)}.webp`,cover_path:`cover/${'b'.repeat(32)}.webp`}
+  const members = FALLBACK_MEMBERS.map(m => ({...m}))
+  members[4] = {...members[4], media, photo_url:'fallback.png', role:'مسئول محتوا و ارائه'}
+  await fixture(page,FALLBACK_TEAM,members)
+  const requested = new Set<string>()
+  await page.route(`${api}/storage/v1/object/public/rassa-member-media/**`,route=>{
+    requested.add(route.request().url().split('/').slice(-2).join('/')); return route.fulfill({status:404})
+  })
+  await page.route(`${api}/storage/v1/object/public/member-photos/fallback.png`,route=>route.fulfill({path:'public/logo-rasa-mark.png',contentType:'image/png'}))
+  await page.goto('./#members'); await page.locator('#seat-5').click(); await expect(page.locator('.locked-profile')).toBeVisible(); expect(requested.size).toBe(0)
+  members[4].name='عضو تازه'; await page.reload(); await page.locator('#seat-5').click()
+  await expect(page.locator('.studio-illustration')).toHaveAccessibleName(/میکروفن/)
+  await expect(page.locator('#seat-5 .proof-thumb img')).toHaveAttribute('src',/editorial-thumb.webp$/)
+  await expect(page.locator('#member-profile .portrait img')).toHaveJSProperty('naturalWidth',512)
+  expect([...requested].sort()).toEqual([media.cover_path,media.portrait_path])
+})
+
 test('section anchors, RTL values tabs, member keyboard navigation and counters', async ({ page }) => {
   await fixture(page)
   await page.goto('./')

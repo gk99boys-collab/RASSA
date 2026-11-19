@@ -11,7 +11,7 @@ export const STUDIOS = {
 } as const
 export type Studio = keyof typeof STUDIOS
 
-export function cardDesign(member: Member): { studio: Studio; sealed: boolean } {
+export function cardDesign(member: Pick<Member, 'name' | 'role' | 'sort_order' | 'links'>): { studio: Studio; sealed: boolean } {
   // A name edit alone opens seat five, even if its old links still contain a lock flag.
   const sealed = isMysteryMember(member.sort_order === 5 ? { ...member, links: null } : member)
   if (sealed) return { studio: 'studio', sealed }
@@ -26,5 +26,5 @@ export function cardDesign(member: Member): { studio: Studio; sealed: boolean } 
   return { studio, sealed }
 }
 
-export const artwork = (studio: Studio, size: 'thumb' | 756 | 1404) =>
-  `${import.meta.env.BASE_URL}member-covers/${studio}-${size}.webp`
+export const artwork = (studio: Studio, size: 'thumb' | 756 | 1404, base = import.meta.env.BASE_URL) =>
+  `${base}member-covers/${studio}-${size}.webp`

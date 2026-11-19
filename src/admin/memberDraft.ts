@@ -11,7 +11,7 @@ export function newDraft(m: Member | undefined, order: number) {
     skills: (m?.skills ?? []).join('\n'), photo: m?.photo_url ?? '', links: linkRows(m?.links) }
 }
 export type Draft = ReturnType<typeof newDraft>
-export type SavedFields = Omit<Member, 'id'>
+export type SavedFields = Omit<Member, 'id' | 'media'>
 export function fields(d: Draft, original: Member | undefined, rows: Member[]): SavedFields {
   const sort_order = Number(d.order), photo_url = d.photo.trim() || null
   if (!d.name.trim() || !d.role.trim()) throw Error('نام و نقش عضو را وارد کنید.')
