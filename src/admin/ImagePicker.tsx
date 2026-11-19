@@ -29,13 +29,13 @@ export function ImagePicker({ slot, saved, fallback, value, change, preparing }:
   const src = value ? preview : value === null ? fallback : saved ?? fallback
   const label = slotLabel[slot]
   return <div className="image-picker" data-slot={slot}>
-    <h4>{label}</h4>
+    <div className="proof-heading"><h4>{label}</h4><small>{slot === 'portrait' ? 'قاب عکس' : 'بالای کارت'}</small></div>
     <div className="image-proof">{src && failed !== src ? <img src={src} alt={`پیش‌نمایش ${label}`} onError={() => setFailed(src)} /> : <ImageIcon aria-hidden="true" size={24} />}</div>
     <div className="image-actions"><label className="file-key" htmlFor={input}><ImagePlus size={15} />انتخاب فایل
       <input id={input} type="file" className="sr-only" accept="image/jpeg,image/png,image/webp" aria-label={`انتخاب فایل ${label}`} onChange={e => void pick(e)} /></label>
       {value !== undefined || saved ? <button type="button" disabled={busy} onClick={() => { setIssue(''); change(value !== undefined ? undefined : null) }}>
         <Undo2 size={13} />{value !== undefined ? 'لغو تغییر' : 'بازگشت به پیش‌فرض'}</button> : null}</div>
     <small aria-live="polite">{busy ? 'آماده‌سازی تصویر…' : value ? <bdi>{value.name}</bdi> : value === null ? 'پس از ذخیره: پیش‌فرض' : saved ? 'تصویر ذخیره‌شده' : 'پیش‌فرض'}</small>
-    {issue && <p className="desk-error" role="alert">{issue}</p>}
+    {issue && <p className="desk-error" role="alert">{issue} انتخاب قبلی تغییر نکرد.</p>}
   </div>
 }

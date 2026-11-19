@@ -25,7 +25,13 @@ async function check() {
   const entry = html.match(/<script\b[^>]*\bsrc="([^"]+)"[^>]*>/)?.[1]
   assert.ok(entry && html.includes('noindex'), 'Missing private desk entry')
   phase = 'published PIN bundle'
-  assert.ok((await (await get(new URL(entry,desk))).text()).includes('rassa_open_desk'), 'PIN bundle not yet served')
+  const bundle = await (await get(new URL(entry,desk))).text()
+  assert.ok(bundle.includes('rassa_open_desk'), 'PIN bundle not yet served')
+  // A manual branch run checks the API before Pages serves the new build.
+  if (process.env.GITHUB_REF === 'refs/heads/main') {
+    phase = 'published member upload editor'
+    assert.ok(bundle.includes('rassa_save_member_card'), 'Upload editor not yet served')
+  }
 
   const permitsPages = res => ['*', origin].includes(res.headers.get('access-control-allow-origin'))
   phase = 'public anon configuration'
@@ -37,16 +43,31 @@ async function check() {
   }
   assert.equal(JSON.parse(Buffer.from(key.split('.')[1], 'base64url')).role, 'anon')
   phase = 'cross-origin session preflight'
-  const preflight = await get(`${project}/rest/v1/rpc/rassa_close_desk`, {
-    method: 'OPTIONS', headers: { origin, 'access-control-request-method': 'POST',
-      'access-control-request-headers': 'apikey,authorization,content-type,x-client-info,x-rassa-desk-session' },
-  })
-  const allowed = (preflight.headers.get('access-control-allow-headers') ?? '').toLowerCase().split(/\s*,\s*/)
-  assert.ok(permitsPages(preflight) && (allowed.includes('*') || allowed.includes('x-rassa-desk-session')), 'Desk request header not allowed')
+  async function preflight(path, method, names) {
+    const res = await get(project + path, { method:'OPTIONS', headers:{ origin,
+      'access-control-request-method':method,'access-control-request-headers':names.join(',') } })
+    const allowed = (res.headers.get('access-control-allow-headers') ?? '').toLowerCase().split(/\s*,\s*/)
+    const methods = (res.headers.get('access-control-allow-methods') ?? '').toUpperCase().split(/\s*,\s*/)
+    assert.ok(permitsPages(res) && (methods.includes(method) || methods.includes('*')) && names.every(name =>
+      allowed.includes(name) || (name !== 'authorization' && allowed.includes('*'))), 'Pages preflight rejected')
+  }
+  const common = ['apikey','authorization','content-type','x-client-info','x-rassa-desk-session']
+  await preflight('/rest/v1/rpc/rassa_close_desk', 'POST', common)
+  phase = 'Storage preflight for upload and cleanup'
+  const objects = '/storage/v1/object/rassa-member-media'
+  await preflight(objects + '/cover/preflight.png','POST',[...common,'x-upsert','cache-control'])
+  await preflight(objects,'DELETE',common)
   const headers = { origin, apikey: key, authorization: `Bearer ${key}` }
   phase = 'anonymous public roster read'
-  const members = await get(`${project}/rest/v1/members?select=id&limit=1`, { headers })
-  assert.ok(Array.isArray(await members.json()), 'Anonymous roster read failed')
+  const members = await get(`${project}/rest/v1/members?select=id,media:rassa_member_media(portrait_path,cover_path)&limit=1`, { headers })
+  const sample = await members.json()
+  assert.ok(Array.isArray(sample) && sample.every(row => Object.hasOwn(row,'media') &&
+    (row.media === null || (!Array.isArray(row.media) && Object.hasOwn(row.media,'cover_path') && Object.hasOwn(row.media,'portrait_path')))), 'Member media join failed')
+  phase = 'anonymous media session check'
+  const session = await get(`${project}/rest/v1/rpc/rassa_is_member_admin`, {
+    method:'POST', headers:{...headers,'content-type':'application/json'}, body:'{}',
+  })
+  assert.equal(await session.json(),false)
   phase = 'closed-by-default login endpoint'
   const login = await get(`${project}/rest/v1/rpc/rassa_open_desk`, {
     method:'POST', headers: { ...headers, 'content-type': 'application/json' }, body: JSON.stringify({p_link:'',p_pin:''}),
@@ -57,7 +78,7 @@ async function check() {
 for (let i=0; ; i++) {
   try {
     await check()
-    console.log('Live Pages PIN entry, anonymous member read and closed-by-default login verified.')
+    console.log('Live Pages desk, member media readback, upload/cleanup preflights and closed-by-default access verified.')
     break
   } catch (e) {
     if (i < 3) { await delay(5000); continue }

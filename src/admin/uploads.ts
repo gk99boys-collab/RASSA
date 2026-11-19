@@ -3,7 +3,7 @@ import { MEDIA_BUCKET, type ImageSlot } from '../lib/memberMedia'
 import { ticketHeader, type DeskSession } from './client'
 
 export const slots = ['portrait', 'cover'] as const
-export const slotLabel = { portrait: 'لوگو یا عکس عضو', cover: 'تصویر اختصاصی کارت' }
+export const slotLabel = { portrait: 'لوگو یا عکس عضو', cover: 'کاور کارت عضو' }
 export type PickedImage = { name: string; blob: Blob }
 // Missing = keep; null = remove the override; a decoded file = replace on Save.
 export type ImageEdits = Partial<Record<ImageSlot, PickedImage | null>>
@@ -56,8 +56,10 @@ export async function stageImages(session: DeskSession, edits: ImageEdits, stage
     const { error } = await storage(session).upload(path, bytes, { contentType: image.blob.type, cacheControl: '3600', upsert: false })
     signal.throwIfAborted()
     if (error) {
-      const access = await session.db.rpc('rassa_is_member_admin').setHeader(ticketHeader,session.ticket).abortSignal(signal)
-      if (!access.error && access.data === false) throw new ExpiredUpload()
+      if ([error.status, Number(error.statusCode)].some(status => status === 401 || status === 403)) {
+        const access = await session.db.rpc('rassa_is_member_admin').setHeader(ticketHeader,session.ticket).abortSignal(signal)
+        if (!access.error && access.data === false) throw new ExpiredUpload()
+      }
       throw new ImageIssue(`آپلود ${slotLabel[slot]} کامل نشد. تغییرات عضو ذخیره نشده است؛ دوباره تلاش کنید.`)
     }
     patch[slot] = path

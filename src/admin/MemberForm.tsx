@@ -1,4 +1,4 @@
-import { useRef, useState, type FormEvent } from 'react'
+import { useRef, useState, type FormEvent, type ReactNode } from 'react'
 import { Link2, Plus, Save, Trash2, X } from 'lucide-react'
 import type { Member } from '../types'
 import { fields, newDraft, type Draft, type SavedFields } from './memberDraft'
@@ -9,8 +9,8 @@ import { mediaUrl } from '../lib/memberMedia'
 import { resolveMemberPhotoUrl } from '../lib/supabase'
 import { artwork, cardDesign } from '../components/members/studios'
 
-export function MemberForm({ member, members, busy, onDirty, onSave, onDelete }: {
-  member?: Member; members: Member[]; busy: boolean; onDirty: () => void
+export function MemberForm({ member, members, busy, feedback, onDirty, onSave, onDelete }: {
+  member?: Member; members: Member[]; busy: boolean; feedback: ReactNode; onDirty: () => void
   onSave: (v: SavedFields, edits: ImageEdits) => void; onDelete: () => void
 }) {
   const [draft, setDraft] = useState(() => newDraft(member, members.reduce((max, m) => Math.max(max, m.sort_order), 0) + 1))
@@ -39,7 +39,7 @@ export function MemberForm({ member, members, busy, onDirty, onSave, onDelete }:
     <section className="desk-media" aria-label="تصاویر عضو"><h3>تصاویر عضو</h3>
       <p>هر فایل JPG، PNG یا WebP تا ۵ مگابایت. فایل‌ها فقط با ذخیرهٔ فرم آپلود می‌شوند.</p>
       <div className="image-pickers">{slots.map(slot => <ImagePicker key={slot} slot={slot} value={images[slot]}
-        saved={mediaUrl(pathOf(member,slot))} fallback={slot === 'portrait' ? resolveMemberPhotoUrl(member?.photo_url) : artwork(studio,756,'../')}
+        saved={mediaUrl(pathOf(member,slot))} fallback={slot === 'portrait' ? resolveMemberPhotoUrl(draft.photo) : artwork(studio,756,'../')}
         change={image => { onDirty(); setImages(old => ({ ...old, [slot]:image })) }}
         preparing={active => { if (active) onDirty(); setPreparing(old => ({ ...old, [slot]:active })) }} />)}</div>
       {sealed && <p>تصاویر این عضو تا زمان معرفی با نام واقعی روی کارت نمایش داده نمی‌شوند.</p>}
@@ -53,6 +53,7 @@ export function MemberForm({ member, members, busy, onDirty, onSave, onDelete }:
         <button type="button" aria-label={`برداشتن پیوند ${numberFa(i+1)}`} onClick={() => update('links',draft.links.filter(v => v.key!==l.key))}><X size={16} /></button></div>)}
     </div>
     {issue && <p className="desk-error" role="alert">{issue}</p>}
+    {feedback}
     <div className="desk-form-actions"><button className="desk-key primary" disabled={busy || pending}><Save size={16} />{member ? 'ذخیرهٔ تغییرات' : 'ثبت عضو'}</button>
       {member && <button className="desk-key danger" type="button" onClick={onDelete}><Trash2 size={15} />حذف عضو</button>}</div>
   </fieldset></form>

@@ -85,15 +85,16 @@ export function MemberDesk({ session, onDenied }: { session: DeskSession; onDeni
       if (!signal.aborted) { setProgress(''); setBusy(false) }
     }
   }
+  const feedback = <div className="desk-feedback" aria-live="polite">{progress && <p className="desk-fine" role="status">{progress}</p>}{notice && <p className="desk-success">{notice}</p>}{error && <p className="desk-error" role="alert">{error}</p>}</div>
   return <><div className="desk-heading"><div><p className="desk-overline">میز تحریریه / اعضا</p><h1>دفتر اعضای رَسا</h1><p>کارت‌ها را به ترتیب نمایش در سایت مدیریت کنید.</p></div>
     <button className="desk-key primary" disabled={busy || !rows} onClick={() => choose(null)}><Plus size={17} />عضو جدید</button></div>
-    <div className="desk-feedback" aria-live="polite">{progress && <p className="desk-fine" role="status">{progress}</p>}{notice && <p className="desk-success">{notice}</p>}{error && <p className="desk-error" role="alert">{error}</p>}</div>
+    {!rows && feedback}
     {!rows ? <div className="desk-box paper">{error ? <button className="desk-key" onClick={() => void load(selected)}>دریافت دوبارهٔ فهرست</button> : <p role="status">در حال دریافت اعضا…</p>}</div> :
       <div className="desk-grid"><aside className="desk-list paper" aria-label="فهرست ویرایش اعضا"><h2><UsersRound size={16} />فهرست اعضا <b>{numberFa(rows.length)}</b></h2>
         {rows.length === 0 && <p className="desk-fine">هنوز عضوی ثبت نشده است.</p>}
         {rows.map(m => <button type="button" key={m.id} disabled={busy} aria-current={m.id===selected ? 'true' : undefined} onClick={() => { if (m.id !== selected) choose(m.id) }}>
           <span className="seat-number">{numberFa(m.sort_order)}</span><span><strong>{m.name}</strong><small>{m.role}</small></span></button>)}
-      </aside><MemberForm key={revision} member={member} members={rows} busy={busy} onDirty={() => setDirty(true)} onSave={(v, edits) => void write(v, edits)}
+      </aside><MemberForm key={revision} member={member} members={rows} busy={busy} feedback={feedback} onDirty={() => setDirty(true)} onSave={(v, edits) => void write(v, edits)}
         onDelete={() => { if (member) setConfirm({ message:`کارت «${member.name}» از سایت حذف شود؟ این کار قابل بازگشت نیست.`, action:'تأیید حذف', accept:() => void write('delete') }) }} /></div>}
     {confirm && <Confirm value={confirm} close={() => setConfirm(null)} />}
   </>

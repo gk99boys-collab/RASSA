@@ -144,7 +144,7 @@ const logo = 'public/logo-rasa-mark.png', jacket = 'public/member-covers/mobile-
 async function prepareCard(page: Page) {
   const f=await backend(page); await page.goto(`./admin/#k=${f.link}`); await enter(page,fixturePin)
   await page.getByLabel('نام و نام خانوادگی').fill('عضو نمونه'); await page.getByLabel('نقش در تیم').fill('طراح موبایل')
-  const portrait = page.getByLabel('انتخاب فایل لوگو یا عکس عضو'), cover = page.getByLabel('انتخاب فایل تصویر اختصاصی کارت')
+  const portrait = page.getByLabel('انتخاب فایل لوگو یا عکس عضو'), cover = page.getByLabel('انتخاب فایل کاور کارت عضو')
   const proof = (slot:'portrait'|'cover') => page.locator(`.image-picker[data-slot="${slot}"] .image-proof img`)
   return { ...f, portrait,cover,proof,save:page.getByRole('button',{name:'ثبت عضو',exact:true}),edit:page.getByRole('button',{name:'ذخیرهٔ تغییرات'}),
     async pickBoth() {
@@ -171,7 +171,7 @@ test('mobile: preview both files locally, save once, preserve them on a text edi
 
 test('a second-file failure leaves the member unchanged and the form retryable; a later cover replacement and removal leave the portrait alone',async({page})=>{
   const f=await prepareCard(page); await f.pickBoth(); f.failCoverOnce(); await f.save.click()
-  await expect(page.getByRole('alert')).toContainText('آپلود تصویر اختصاصی کارت کامل نشد'); expect(f.rows).toEqual([])
+  await expect(page.getByRole('alert')).toContainText('آپلود کاور کارت عضو کامل نشد'); expect(f.rows).toEqual([])
   await expect.poll(()=>f.objects.size).toBe(0); await expect(f.proof('portrait')).toHaveAttribute('src',/^blob:/)
   await f.save.click(); await expect(f.edit).toBeEnabled(); const {portrait_path:avatar,cover_path:first} = f.rows[0].media!
   await f.cover.setInputFiles('public/member-covers/data-756.webp'); await expect(f.proof('cover')).toHaveAttribute('src',/^blob:/)
