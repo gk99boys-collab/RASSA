@@ -18,9 +18,11 @@ export async function prepareImage(file: File, slot: ImageSlot): Promise<PickedI
   const matches = (bytes: number[], at = 0) => bytes.every((v, i) => head[at + i] === v)
   const mime = matches([137,80,78,71,13,10,26,10]) ? 'image/png' : matches([255,216,255]) ? 'image/jpeg'
     : matches([82,73,70,70]) && matches([87,69,66,80], 8) ? 'image/webp' : null
-  if (!mime || (file.type && mime !== file.type)) throw new ImageIssue('یک تصویر واقعی JPG، PNG یا WebP انتخاب کنید.')
+  if (!mime) throw new ImageIssue('یک تصویر واقعی JPG، PNG یا WebP انتخاب کنید.')
 
-  const url = URL.createObjectURL(file)
+  // Some phone file providers return a generic MIME. Decode the detected raster
+  // type, not the provider's label, and only ever send the re-encoded pixels.
+  const url = URL.createObjectURL(file.slice(0, file.size, mime))
   try {
     const image = new Image(); image.src = url
     await image.decode()

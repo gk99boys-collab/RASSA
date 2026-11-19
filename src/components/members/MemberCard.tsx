@@ -8,14 +8,15 @@ import { artwork, cardDesign, STUDIOS, type Studio } from './studios'
 
 export function Portrait({ member, sealed, mini = false }: { member: Member; sealed: boolean; mini?: boolean }) {
   const [failed, setFailed] = useState<string[]>([])
-  const src = sealed ? null : [mediaUrl(member.media?.portrait_path), resolveMemberPhotoUrl(member.photo_url)]
+  const uploaded = sealed ? null : mediaUrl(member.media?.portrait_path)
+  const src = sealed ? null : [uploaded, resolveMemberPhotoUrl(member.photo_url)]
     .find(url => url && !failed.includes(url))
   const initials = member.name.trim().replace(/^سید\s+/, '').split(/\s+/).filter(Boolean)
     .filter((_, i, words) => i === 0 || i === words.length - 1).map(word => word[0]).join('‌')
   return <span className={`portrait${mini ? ' portrait-mini' : ''}${sealed ? ' lock-print' : ''}`}
     aria-hidden={mini || !src ? true : undefined}>
     {sealed ? <LockKeyhole size={mini ? 18 : 28} strokeWidth={1.7} />
-      : src ? <img src={src} alt={mini ? '' : member.name} loading="lazy" decoding="async" onError={() => setFailed(old => [...old, src])} />
+      : src ? <img className={src === uploaded ? 'uploaded-portrait' : undefined} src={src} alt={mini ? '' : member.name} loading="lazy" decoding="async" onError={() => setFailed(old => [...old, src])} />
       : <><strong>{initials || '—'}</strong>{!mini && <span className="portrait-id mono" dir="ltr"># {formatOrderBadge(member.sort_order)}</span>}</>}
   </span>
 }

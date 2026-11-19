@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs'
 import { randomBytes, randomUUID } from 'node:crypto'
 import { expect, test, type Page } from '@playwright/test'
 import { FALLBACK_TEAM } from '../src/data/fallbackData'
@@ -13,7 +14,7 @@ async function backend(page: Page) {
   let ticket: string | null = null, tries = 0, closes = 0
   const rows: Member[] = [], writes: string[] = []
   const objects = new Map<string, {body:Buffer; contentType:string}>(), uploads: string[] = []
-  let failCover = false
+  let failCover = false, dropSaveReply = false
   await page.route(`${api}/**`, route => {
     const request = route.request(), url = new URL(request.url()), path = url.pathname
     expect(url.href).not.toContain(link); expect(url.searchParams.has('p_pin')).toBe(false)
@@ -65,13 +66,14 @@ async function backend(page: Page) {
         const row = { id, sort_order:p.p_sort_order, name:p.p_name, role:p.p_role, skills:p.p_skills, bio:p.p_bio, photo_url:p.p_photo_url, links:p.p_links, media:{portrait_path:media.portrait_path ?? null,cover_path:media.cover_path ?? null} }
         if (p.p_id) Object.assign(rows.find(r=>r.id===id)!,row); else rows.push(row)
         writes.push(p.p_id ? 'edit' : 'add')
+        if (dropSaveReply) { dropSaveReply=false; return route.abort('connectionclosed') }
       } else if (path.endsWith('/rassa_delete_member')) { rows.splice(rows.findIndex(r=>r.id===id),1); writes.push('delete') }
       else throw new Error(`Unexpected procedure: ${path}`)
       return route.fulfill({json:id})
     }
     return route.abort()
   })
-  return { link,rows,writes,objects,uploads,failCoverOnce(){failCover=true},revoke() { ticket=null },closed:()=>closes }
+  return { link,rows,writes,objects,uploads,loseSaveReply(){dropSaveReply=true},failCoverOnce(){failCover=true},revoke() { ticket=null },closed:()=>closes }
 }
 async function enter(page: Page, pin: string) {
   await page.getByLabel('رمز مدیریت').fill(pin)
@@ -156,7 +158,11 @@ async function prepareCard(page: Page) {
 
 test('mobile: preview both files locally, save once, preserve them on a text edit and display both in the public roster',async({page})=>{
   await page.setViewportSize({width:375,height:667})
-  const f=await prepareCard(page); await f.pickBoth(); expect(f.uploads).toEqual([]); expect(f.rows).toEqual([])
+  const f=await prepareCard(page)
+  const [chooser] = await Promise.all([page.waitForEvent('filechooser'),page.locator('[data-slot=portrait] .file-key').click()])
+  await chooser.setFiles({name:'لوگو.png',mimeType:'application/octet-stream',buffer:readFileSync(logo)})
+  await f.cover.setInputFiles(jacket); await expect(f.proof('portrait')).toHaveAttribute('src',/^blob:/); await expect(f.proof('cover')).toHaveAttribute('src',/^blob:/)
+  expect(f.uploads).toEqual([]); expect(f.rows).toEqual([])
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)
   await f.save.click(); await expect(page.getByRole('heading',{name:'ویرایش عضو نمونه'})).toBeVisible()
   const [avatar,cover]=f.uploads; expect(f.rows[0].media).toEqual({portrait_path:avatar,cover_path:cover})
@@ -166,6 +172,7 @@ test('mobile: preview both files locally, save once, preserve them on a text edi
   for (const selector of ['.portrait-mini img','#member-profile .portrait img']) await expect(page.locator(selector)).toHaveJSProperty('currentSrc',publicMedia+avatar)
   for (const selector of ['.proof-thumb img','.studio-illustration']) await expect(page.locator(selector)).toHaveJSProperty('currentSrc',publicMedia+cover)
   await expect(page.locator('.studio-illustration')).toHaveJSProperty('naturalWidth',756)
+  await expect(page.locator('#member-profile .portrait img')).toHaveCSS('object-fit','contain')
   expect(f.uploads).toHaveLength(2); expect(f.objects.size).toBe(2); expect(f.writes).toEqual(['add','edit'])
 })
 
@@ -202,4 +209,14 @@ test('wrong format, oversized and undecodable files never upload; discarding a p
   await f.portrait.setInputFiles(logo); await expect(f.proof('portrait')).toHaveAttribute('src',/^blob:/)
   f.revoke(); await f.save.click(); await expect(page.getByRole('status')).toContainText('نشست مدیریت پایان یافت')
   expect(f.objects.size).toBe(0); expect(f.rows).toEqual([])
+})
+
+
+test('a lost save acknowledgement does not remove images that the server already attached',async({page})=>{
+  const f=await prepareCard(page); await f.pickBoth(); f.loseSaveReply(); await f.save.click()
+  await expect(page.getByRole('alert')).toContainText('پاسخ ذخیره دریافت نشد'); expect(f.writes).toEqual(['add'])
+  await page.getByRole('link',{name:'بازگشت به سایت'}).click()
+  await expect(page.locator('.studio-illustration')).toHaveJSProperty('naturalWidth',756)
+  await expect(page.locator('#member-profile .portrait img')).toHaveJSProperty('naturalWidth',512)
+  expect(f.objects.size).toBe(2)
 })

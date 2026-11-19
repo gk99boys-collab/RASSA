@@ -69,7 +69,7 @@ export function MemberDesk({ session, onDenied }: { session: DeskSession; onDeni
       if (result.error || !result.data) {
         const code = result.error?.code
         if (code === '42501' || result.status === 401) { onDenied(); return }
-        setError(code === '23505' ? 'این شمارهٔ نمایش توسط عضو دیگری استفاده شده است.' : code === 'P0002' ? 'این عضو دیگر وجود ندارد؛ صفحه را تازه کنید.' : 'ذخیره تأیید نشد. اتصال و مقادیر فرم را بررسی کنید.'); return
+        setError(result.status === 0 ? 'پاسخ ذخیره دریافت نشد. پیش از تلاش مجدد، فهرست اعضا را تازه کنید.' : code === '23505' ? 'این شمارهٔ نمایش توسط عضو دیگری استفاده شده است.' : code === 'P0002' ? 'این عضو دیگر وجود ندارد؛ صفحه را تازه کنید.' : 'ذخیره تأیید نشد. اتصال و مقادیر فرم را بررسی کنید.'); return
       }
       committed = true
       if (signal.aborted) return
