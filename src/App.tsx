@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react'
 import { About } from './components/About'
+import { Projects } from './components/Projects'
 import { Hero } from './components/Hero'
 import { Honors } from './components/Honors'
 import { MemberDirectory } from './components/MemberDirectory'
@@ -22,6 +23,7 @@ function Profile() {
       <About team={team} loading={loading} />
       <MemberDirectory members={members} loading={loading} teamName={team.name} />
       <Honors text={team.achievement_text} count={members.length} loading={loading} />
+      <Projects />
     </main>
     <SiteFooter team={team} />
     {intro && <MinimalIntro onFinish={finishIntro} />}
