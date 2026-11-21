@@ -10,6 +10,7 @@ import { ActionLink, DataLinks, EVENT_NAME, EVENT_URL, SPRING } from './PrintUI'
 const SECTIONS = [
   { id: 'home', label: 'صفحه اصلی' }, { id: 'about', label: 'درباره تیم' },
   { id: 'members', label: 'اعضای تیم' }, { id: 'honors', label: 'افتخارات' },
+  { id: 'projects', label: 'پروژه‌ها' },
 ] as const
 
 type SectionId = (typeof SECTIONS)[number]['id']
