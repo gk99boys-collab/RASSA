@@ -23,29 +23,20 @@
 .profile { background: #0d1017; }
 .file-deck .file-leaf { background: #0d1017; }
 .profile-bar, .profile-foot { display: flex; align-items: center; justify-content: space-between; }
-.profile-bar { min-height: 38px; padding: 3px 16px; background: rgba(255, 255, 255, .04); border-bottom: 1px solid rgba(255, 255, 255, .12); gap: 10px; color: #eef1f6; }
+.profile-bar { min-height: 38px; padding: 3px 16px; background: var(--paper); border-bottom: var(--border); gap: 10px; color: var(--ink); }
 .profile-bar > span { display: flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 740; }
 .profile-bar > span svg { color: var(--red); }
 .profile-controls { display: flex; align-items: center; gap: 6px; }
-.profile-controls button { display: grid; place-items: center; width: 32px; height: 32px; color: #c7cdd9; transition: background-color .15s, color .15s; }
-.profile-controls button:hover { background: rgba(255, 255, 255, .09); color: #fff; }
-.page-index { font-size: 11px; font-weight: 650; font-variant-numeric: tabular-nums; color: #aeb6c4; }
-.page-index b { color: #6b7280; font-weight: 400; margin-inline: 2px; }
-/* The sheet is a real card: rounded corners, foil gradient border, clipped foil. */
-.member-sheet { flex: 1; position: relative; transform-style: preserve-3d; will-change: transform; border: 2px solid transparent; border-radius: 18px; overflow: hidden;
-  background: linear-gradient(#0d1017, #0d1017) padding-box,
-    linear-gradient(135deg, color-mix(in srgb, var(--neon) 75%, transparent), rgba(255, 255, 255, .28) 45%, color-mix(in srgb, var(--neon) 75%, transparent)) border-box;
-  box-shadow: 0 18px 44px rgba(5, 8, 14, .45), 0 0 0 1px rgba(255, 255, 255, .06); }
-/* Holographic foil + cursor glare over the whole card. */
-.member-glare { position: absolute; inset: 0; z-index: 5; pointer-events: none; opacity: 0; transition: opacity .3s; mix-blend-mode: screen;
-  background:
-    radial-gradient(560px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, .18), transparent 46%),
-    linear-gradient(115deg, transparent 32%, rgba(255, 0, 128, .10) 44%, rgba(0, 255, 255, .10) 52%, rgba(255, 255, 0, .08) 60%, transparent 72%);
-  background-size: 100% 100%, 260% 260%; background-position: 0 0, var(--mx, 50%) var(--my, 50%); }
+.profile-controls button { display: grid; place-items: center; width: 32px; height: 32px; color: var(--ink); transition: background-color .15s, color .15s; }
+.profile-controls button:hover { background: var(--file-wash); color: var(--file-ink); }
+.page-index { font-size: 11px; font-weight: 650; font-variant-numeric: tabular-nums; color: var(--muted); }
+.page-index b { color: var(--line); font-weight: 400; margin-inline: 2px; }
+/* Light paper card with 3D tilt and cursor glare. */
+.member-sheet { flex: 1; position: relative; transform-style: preserve-3d; will-change: transform; background: var(--paper); overflow: hidden; }
+/* Cursor-following light glare over the light paper card. */
+.member-glare { position: absolute; inset: 0; z-index: 5; pointer-events: none; opacity: 0; transition: opacity .3s;
+  background: radial-gradient(520px circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--neon) 16%, rgba(255, 255, 255, .45)), transparent 48%); }
 .member-sheet:hover .member-glare { opacity: 1; }
-/* Gold smart-card chip, like a real ID card. */
-.member-chip { position: absolute; top: 12px; inset-inline-start: 14px; width: 36px; height: 26px; border-radius: 5px; border: 1.5px solid #8a6d1f; background: linear-gradient(135deg, #f6d365, #d4a017 55%, #f6d365); box-shadow: 0 0 14px rgba(212, 160, 23, .45), inset 0 0 0 1px rgba(255, 255, 255, .35); display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; overflow: hidden; pointer-events: none; }
-.member-chip i { border: .75px solid rgba(90, 65, 10, .65); }
 /* Floating sparkles inside the jacket header. */
 .spark { position: absolute; width: 6px; height: 6px; background: #fff; transform: rotate(45deg); opacity: .55; pointer-events: none; animation: spark-float 5s ease-in-out infinite; }
 .spark-a { top: 18%; inset-inline-start: 58%; animation-delay: 0s; }
@@ -71,10 +62,9 @@
 .studio-kicker i { width: 5px; height: 5px; background: var(--neon); box-shadow: 0 0 8px var(--neon); }
 .studio-lettering p { margin: 7px 0 0; font-size: clamp(30px, 6.5cqw, 54px); font-weight: 900; line-height: 1.06; letter-spacing: -.045em; text-shadow: 0 2px 18px rgba(0, 0, 0, .55), 0 0 26px color-mix(in srgb, var(--neon) 40%, transparent); }
 .studio-lettering b { display: block; font-weight: inherit; }
-.profile-body { --gutter: clamp(18px, 2.5vw, 32px); flex: 1; padding: 12px var(--gutter) 16px; color: #eef1f6; background:
-  radial-gradient(620px 320px at 88% -6%, color-mix(in srgb, var(--neon) 16%, transparent), transparent 70%),
-  radial-gradient(520px 300px at 4% 112%, color-mix(in srgb, var(--neon) 10%, transparent), transparent 70%),
-  linear-gradient(165deg, #10141d 0%, #171d2a 55%, #0d1017 100%); }
+.profile-body { --gutter: clamp(18px, 2.5vw, 32px); flex: 1; padding: 14px var(--gutter) 18px; color: var(--ink); background:
+  radial-gradient(420px circle at 10% 0%, color-mix(in srgb, var(--file-wash) 75%, transparent), transparent 65%),
+  var(--paper); }
 .member-intro { display: flex; align-items: center; gap: 18px; }
 /* --- Big neon-framed portrait with an experience caption strip over the photo. --- */
 .portrait { width: 150px; height: 175px; display: inline-grid; place-items: center; position: relative; flex: none; color: var(--neon); border: 2px solid var(--neon); border-radius: 12px; background: var(--file-wash) radial-gradient(var(--file-grain) 1px, transparent 1px) 0 0 / 7px 7px; overflow: hidden; }
@@ -94,8 +84,8 @@
 .member-identity { min-width: 0; }
 .member-eyebrow { display: flex; align-items: center; gap: 6px; font-weight: 600; color: var(--neon); font-size: 10.5px; text-shadow: 0 0 12px color-mix(in srgb, var(--neon) 55%, transparent); }
 .member-eyebrow i { width: 12px; height: 2px; background: currentColor; box-shadow: 0 0 8px var(--neon); }
-.member-identity h3 { margin-block: 2px; font-size: clamp(26px, 2.6vw, 38px); font-weight: 900; letter-spacing: -.035em; line-height: 1.4; background: linear-gradient(120deg, #ffffff 35%, var(--neon)); -webkit-background-clip: text; background-clip: text; color: transparent; }
-@supports not ((background-clip: text) or (-webkit-background-clip: text)) { .member-identity h3 { color: #fff; } }
+.member-identity h3 { margin-block: 2px; font-size: clamp(26px, 2.6vw, 38px); font-weight: 900; letter-spacing: -.035em; line-height: 1.4; background: linear-gradient(120deg, var(--ink) 40%, var(--file-ink)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+@supports not ((background-clip: text) or (-webkit-background-clip: text)) { .member-identity h3 { color: var(--ink); } }
 .member-role { display: inline-flex; align-items: center; gap: 6px; background: rgba(255, 255, 255, .06); color: var(--neon); border: 1.5px solid var(--neon); padding: 2px 9px; font-size: 12px; font-weight: 780; box-shadow: 0 0 16px color-mix(in srgb, var(--neon) 30%, transparent); }
 .member-role::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; box-shadow: 0 0 8px currentColor; animation: role-pulse 2.2s ease-in-out infinite; }
 @keyframes role-pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .35; transform: scale(.72); } }
@@ -104,7 +94,7 @@
 .member-facts li { display: flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 600; line-height: 1.6; color: #b9c1cf; }
 .member-facts svg { color: var(--neon); flex: none; }
 /* --- Bio as a glass quote card with a giant quotation mark. --- */
-.bio { position: relative; margin-block: 12px 10px; padding: 10px 14px 10px 14px; padding-inline-start: 36px; font-size: 14px; color: #dbe1ec; line-height: 1.95; background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .12); border-inline-start: 4px solid var(--neon); backdrop-filter: blur(6px); }
+.bio { position: relative; margin-block: 12px 10px; padding: 10px 14px 10px 14px; padding-inline-start: 36px; font-size: 14px; color: #3d4048; line-height: 1.95; background: var(--file-wash); border: 1px solid var(--file-grain); border-inline-start: 4px solid var(--file-ink); }
 .bio::before { content: '❝'; position: absolute; top: 0; inset-inline-start: 9px; font-size: 30px; line-height: 1.4; color: var(--neon); opacity: .55; font-weight: 900; text-shadow: 0 0 14px var(--neon); }
 .locked-profile .bio { color: #8b93a3; }
 .profile-body .skeleton i { background: rgba(255, 255, 255, .12); }
@@ -117,11 +107,11 @@
 .skills li svg { color: var(--neon); transition: transform .2s cubic-bezier(.16,1,.3,1); }
 .skills li:hover { background: color-mix(in srgb, var(--neon) 14%, transparent); border-color: var(--neon); transform: translateY(-2px); box-shadow: 0 0 16px color-mix(in srgb, var(--neon) 40%, transparent); }
 .skills li:hover svg { transform: scale(1.25) rotate(-8deg); }
-.profile-body .data-links { margin-top: 12px; }
-.profile-body .data-links a { color: #dfe5ef; border-color: rgba(255, 255, 255, .25); }
-.profile-body .data-links a:hover { color: var(--neon); border-color: var(--neon); }
-.profile-foot { color: #8b93a3; border-top: 1px solid rgba(255, 255, 255, .12); padding: 6px 16px; }
-.profile-foot .journey-skip { color: #eef1f6; border-color: rgba(255, 255, 255, .3); }
+.profile-body .data-links { margin-top: 14px; }
+.profile-body .data-links a { display: inline-flex; align-items: center; gap: 7px; padding: 7px 15px; font-weight: 760; font-size: 13px; color: #fff; background: var(--file-ink); border: 1.5px solid var(--line); box-shadow: 3px 3px 0 var(--line); transition: transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s, background-color .2s; }
+.profile-body .data-links a:hover { transform: translateY(-2px); box-shadow: 4px 5px 0 var(--line); background: var(--red); color: #fff; border-color: var(--line); }
+.profile-foot { color: var(--muted); border-top: var(--border); padding: 6px 16px; background: var(--paper); }
+.profile-foot .journey-skip { color: var(--ink); border-color: var(--line); }
 .profile-foot .mono { font-size: 9px; }
 
 @media (max-width: 850px) and (min-width: 701px) {
