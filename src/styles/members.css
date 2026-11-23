@@ -1,9 +1,9 @@
 /* Five printed workbench cards. Identity photographs never serve as the cover art. */
-[data-studio] { --file-ink: #444a49; --file-wash: #f2f1ed; --file-grain: #d0d2ca; --file-field: #c9c5ba; }
-[data-studio="planning"] { --file-ink: #9f251d; --file-wash: #fff0e7; --file-grain: #e5cabb; --file-field: #ec4526; }
-[data-studio="mobile"] { --file-ink: #075f5c; --file-wash: #dff5ee; --file-grain: #b5d6ce; --file-field: #21b8b3; }
-[data-studio="data"] { --file-ink: #323c88; --file-wash: #edf0ff; --file-grain: #c7cee6; --file-field: #768bce; }
-[data-studio="editorial"] { --file-ink: #744608; --file-wash: #fff3ce; --file-grain: #e0cfa2; --file-field: #f8ba20; }
+[data-studio] { --file-ink: #444a49; --file-wash: #f2f1ed; --file-grain: #d0d2ca; --file-field: #c9c5ba; --neon: #9aa3b2; }
+[data-studio="planning"] { --file-ink: #9f251d; --file-wash: #fff0e7; --file-grain: #e5cabb; --file-field: #ec4526; --neon: #ff5a3c; }
+[data-studio="mobile"] { --file-ink: #075f5c; --file-wash: #dff5ee; --file-grain: #b5d6ce; --file-field: #21b8b3; --neon: #2ee6c8; }
+[data-studio="data"] { --file-ink: #323c88; --file-wash: #edf0ff; --file-grain: #c7cee6; --file-field: #768bce; --neon: #7aa2ff; }
+[data-studio="editorial"] { --file-ink: #744608; --file-wash: #fff3ce; --file-grain: #e0cfa2; --file-field: #f8ba20; --neon: #ffc93c; }
 .directory { display: grid; grid-template-columns: minmax(258px, .82fr) minmax(0, 1.8fr); gap: 18px; }
 .roster { display: flex; flex-direction: column; gap: 9px; min-width: 0; }
 .member-tab { position: relative; isolation: isolate; display: grid; grid-template-columns: auto minmax(0, 1fr) clamp(60px, 23%, 90px); align-items: center; gap: 11px; flex: 1; min-height: 72px; text-align: start; background: white; border: var(--border); box-shadow: 2px 2px var(--line); transition: transform .18s cubic-bezier(.16,1,.3,1), box-shadow .18s cubic-bezier(.16,1,.3,1), background-color .18s; }
@@ -19,16 +19,19 @@
 .proof-thumb > span { position: absolute; bottom: 0; inset-inline-end: 0; min-width: 21px; line-height: 1.4; text-align: center; font-size: 11px; font-weight: 800; background: var(--paper); border-block-start: 1px solid var(--line); border-inline-start: 1px solid var(--line); }
 
 .profile, .member-sheet { min-width: 0; display: flex; flex-direction: column; }
+/* The card owns a dark cinematic theme, deliberately apart from the light site. */
+.profile { background: #0d1017; }
+.file-deck .file-leaf { background: #0d1017; }
 .profile-bar, .profile-foot { display: flex; align-items: center; justify-content: space-between; }
-.profile-bar { min-height: 38px; padding: 3px 16px; background: #fafafa; border-bottom: var(--border); gap: 10px; }
+.profile-bar { min-height: 38px; padding: 3px 16px; background: rgba(255, 255, 255, .04); border-bottom: 1px solid rgba(255, 255, 255, .12); gap: 10px; color: #eef1f6; }
 .profile-bar > span { display: flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 740; }
 .profile-bar > span svg { color: var(--red); }
 .profile-controls { display: flex; align-items: center; gap: 6px; }
-.profile-controls button { display: grid; place-items: center; width: 32px; height: 32px; color: #44464c; transition: background-color .15s, color .15s; }
-.profile-controls button:hover { background: #f2e9ea; color: var(--red); }
-.page-index { font-size: 11px; font-weight: 650; font-variant-numeric: tabular-nums; color: #4e5056; }
-.page-index b { color: #909096; font-weight: 400; margin-inline: 2px; }
-.member-sheet { flex: 1; background: var(--paper); position: relative; transform-style: preserve-3d; will-change: transform; }
+.profile-controls button { display: grid; place-items: center; width: 32px; height: 32px; color: #c7cdd9; transition: background-color .15s, color .15s; }
+.profile-controls button:hover { background: rgba(255, 255, 255, .09); color: #fff; }
+.page-index { font-size: 11px; font-weight: 650; font-variant-numeric: tabular-nums; color: #aeb6c4; }
+.page-index b { color: #6b7280; font-weight: 400; margin-inline: 2px; }
+.member-sheet { flex: 1; background: #0d1017; position: relative; transform-style: preserve-3d; will-change: transform; }
 /* Cursor-following glare over the whole sheet. */
 .member-glare { position: absolute; inset: 0; z-index: 5; pointer-events: none; opacity: 0; transition: opacity .3s; background: radial-gradient(560px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, .16), transparent 46%); }
 .member-sheet:hover .member-glare { opacity: 1; }
@@ -40,31 +43,36 @@
 @keyframes spark-float { 0%, 100% { transform: rotate(45deg) translateY(0) scale(1); opacity: .35; } 50% { transform: rotate(45deg) translateY(-9px) scale(1.35); opacity: .9; } }
 /* --- New jacket: taller header, diagonal stripes, team stamp, giant ghost number. --- */
 .studio-header { position: relative; isolation: isolate; container-type: inline-size; width: 100%; aspect-ratio: 2.5; min-height: 132px; max-height: 260px; background: var(--file-field); border-bottom: var(--border); overflow: hidden; }
-.studio-illustration { position: absolute; z-index: -1; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.studio-illustration { position: absolute; z-index: -1; inset: 0; width: 100%; height: 100%; object-fit: cover; animation: ken-burns 20s ease-in-out infinite alternate; }
+@keyframes ken-burns { from { transform: scale(1) translate(0, 0); } to { transform: scale(1.09) translate(-1.5%, 1.5%); } }
 .studio-shade { position: absolute; inset: 0; pointer-events: none; background:
-  linear-gradient(180deg, transparent 48%, rgba(10, 10, 12, .34)),
-  linear-gradient(270deg, rgba(10, 10, 12, .22), transparent 50%); }
+  linear-gradient(180deg, rgba(5, 8, 14, .30), rgba(5, 8, 14, .62)),
+  linear-gradient(270deg, rgba(5, 8, 14, .38), transparent 52%); }
 .studio-stripes { position: absolute; inset: 0; pointer-events: none; opacity: .5; background: repeating-linear-gradient(45deg, rgba(255, 255, 255, .055) 0 10px, transparent 10px 22px); }
-.studio-ghost { position: absolute; inset-inline-end: 1%; bottom: -12%; font-size: clamp(84px, 17cqw, 150px); font-weight: 900; line-height: 1; letter-spacing: -.04em; color: transparent; -webkit-text-stroke: 2px rgba(255, 255, 255, .42); user-select: none; pointer-events: none; animation: ghost-bob 7s ease-in-out infinite; }
+.studio-ghost { position: absolute; inset-inline-end: 1%; bottom: -12%; font-size: clamp(84px, 17cqw, 150px); font-weight: 900; line-height: 1; letter-spacing: -.04em; color: transparent; -webkit-text-stroke: 2px rgba(255, 255, 255, .5); user-select: none; pointer-events: none; animation: ghost-bob 7s ease-in-out infinite; }
 @keyframes ghost-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
-.studio-stamp { position: absolute; top: 10px; inset-inline-end: 12px; transform: rotate(6deg); padding: 3px 10px; background: rgba(255, 255, 255, .92); border: 2px solid var(--line); outline: 1px solid var(--line); outline-offset: 2px; font-size: 11px; font-weight: 900; letter-spacing: -.01em; color: var(--ink); box-shadow: 2px 2px 0 rgba(17, 17, 17, .55); user-select: none; pointer-events: none; }
+.studio-stamp { position: absolute; top: 10px; inset-inline-end: 12px; transform: rotate(6deg); padding: 3px 10px; background: rgba(10, 13, 20, .72); border: 1.5px solid var(--neon); outline: 1px solid color-mix(in srgb, var(--neon) 55%, transparent); outline-offset: 2px; font-size: 11px; font-weight: 900; letter-spacing: -.01em; color: #fff; text-shadow: 0 0 12px var(--neon); box-shadow: 0 0 18px color-mix(in srgb, var(--neon) 45%, transparent); user-select: none; pointer-events: none; animation: stamp-glow 3.4s ease-in-out infinite; }
+@keyframes stamp-glow { 0%, 100% { box-shadow: 0 0 12px color-mix(in srgb, var(--neon) 35%, transparent); } 50% { box-shadow: 0 0 24px color-mix(in srgb, var(--neon) 65%, transparent); } }
 .studio-shine { position: absolute; top: -20%; bottom: -20%; width: 26%; left: 0; pointer-events: none; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .16), transparent); transform: translateX(-220%) skewX(-18deg); animation: shine-sweep 7s cubic-bezier(.4, 0, .2, 1) infinite; }
 @keyframes shine-sweep { 0%, 62% { transform: translateX(-220%) skewX(-18deg); } 88%, 100% { transform: translateX(520%) skewX(-18deg); } }
-.studio-lettering { position: absolute; inset-inline-start: 4.5%; top: 44%; transform: translateY(-50%); color: #111; }
-.studio-kicker { display: inline-flex; align-items: center; gap: 5px; vertical-align: top; font-size: clamp(9px, 1.5cqw, 12px); line-height: 1.5; font-weight: 750; padding: 1px 6px; border: 1px solid var(--line); background: #fff8e8; }
-.studio-kicker i { width: 5px; height: 5px; background: var(--file-ink); }
-.studio-lettering p { margin: 7px 0 0; font-size: clamp(30px, 6.5cqw, 54px); font-weight: 900; line-height: 1.06; letter-spacing: -.045em; text-shadow: 0 1px 0 rgba(255, 255, 255, .55); }
+.studio-lettering { position: absolute; inset-inline-start: 4.5%; top: 44%; transform: translateY(-50%); color: #fff; }
+.studio-kicker { display: inline-flex; align-items: center; gap: 5px; vertical-align: top; font-size: clamp(9px, 1.5cqw, 12px); line-height: 1.5; font-weight: 750; padding: 1px 6px; border: 1px solid rgba(255, 255, 255, .35); background: rgba(8, 11, 18, .55); color: #e8ecf3; }
+.studio-kicker i { width: 5px; height: 5px; background: var(--neon); box-shadow: 0 0 8px var(--neon); }
+.studio-lettering p { margin: 7px 0 0; font-size: clamp(30px, 6.5cqw, 54px); font-weight: 900; line-height: 1.06; letter-spacing: -.045em; text-shadow: 0 2px 18px rgba(0, 0, 0, .55), 0 0 26px color-mix(in srgb, var(--neon) 40%, transparent); }
 .studio-lettering b { display: block; font-weight: inherit; }
-.profile-body { --gutter: clamp(18px, 2.5vw, 32px); flex: 1; padding: 14px var(--gutter) 19px; }
+.profile-body { --gutter: clamp(18px, 2.5vw, 32px); flex: 1; padding: 14px var(--gutter) 19px; color: #eef1f6; background:
+  radial-gradient(620px 320px at 88% -6%, color-mix(in srgb, var(--neon) 16%, transparent), transparent 70%),
+  radial-gradient(520px 300px at 4% 112%, color-mix(in srgb, var(--neon) 10%, transparent), transparent 70%),
+  linear-gradient(165deg, #10141d 0%, #171d2a 55%, #0d1017 100%); }
 .member-intro { display: flex; align-items: center; gap: 18px; }
-/* --- Bigger portrait with an experience caption strip over the photo. --- */
-.portrait { width: 110px; height: 128px; display: inline-grid; place-items: center; position: relative; flex: none; color: var(--file-ink); border: 2px solid var(--line); background: var(--file-wash) radial-gradient(var(--file-grain) 1px, transparent 1px) 0 0 / 7px 7px; overflow: hidden; }
-.member-intro .portrait { align-self: flex-start; margin-block-start: -38px; box-shadow: 0 0 0 3px white, 6px 6px 0 2px var(--line), 0 14px 28px color-mix(in srgb, var(--file-ink) 32%, transparent); transition: transform .35s cubic-bezier(.16,1,.3,1); }
+/* --- Big neon-framed portrait with an experience caption strip over the photo. --- */
+.portrait { width: 140px; height: 163px; display: inline-grid; place-items: center; position: relative; flex: none; color: var(--neon); border: 2px solid var(--neon); background: var(--file-wash) radial-gradient(var(--file-grain) 1px, transparent 1px) 0 0 / 7px 7px; overflow: hidden; }
+.member-intro .portrait { align-self: flex-start; margin-block-start: -48px; box-shadow: 0 0 0 3px rgba(255, 255, 255, .07), 0 0 34px color-mix(in srgb, var(--neon) 50%, transparent), 0 16px 30px rgba(0, 0, 0, .55); transition: transform .35s cubic-bezier(.16,1,.3,1); }
 .member-intro .portrait:hover { transform: translateY(-3px) rotate(-1deg); }
 .portrait::after { content: ''; position: absolute; inset: 5px; border: 1px solid currentColor; opacity: .22; pointer-events: none; z-index: 2; }
 .portrait strong { font-size: 44px; line-height: 1; font-weight: 850; }
-.portrait img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 32%; transition: transform .5s cubic-bezier(.16,1,.3,1), filter .5s; }
-.member-intro .portrait:hover img { transform: scale(1.07); filter: saturate(1.12); }
+.portrait img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 32%; filter: saturate(1.12) contrast(1.06); transition: transform .5s cubic-bezier(.16,1,.3,1), filter .5s; }
+.member-intro .portrait:hover img { transform: scale(1.07); filter: saturate(1.25) contrast(1.08); }
 .portrait-badge { position: absolute; z-index: 3; bottom: 7px; left: 50%; transform: translateX(-50%); display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; background: rgba(15, 17, 21, .88); color: #fff; font-size: 10px; font-weight: 800; line-height: 1.5; padding: 2px 9px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, .35); }
 .portrait-badge svg { color: #ffd166; }
 /* An uploaded portrait may be a wide wordmark. Keep the complete logo visible. */
@@ -73,32 +81,36 @@
 .portrait-mini { margin-inline-start: 12px; width: 38px; height: 44px; background-size: 5px 5px; }
 .portrait-mini::after { inset: 2px; } .portrait-mini strong { font-size: 18px; }
 .member-identity { min-width: 0; }
-.member-eyebrow { display: flex; align-items: center; gap: 6px; font-weight: 600; color: var(--file-ink); font-size: 10.5px; }
-.member-eyebrow i { width: 12px; height: 2px; background: currentColor; }
-.member-identity h3 { margin-block: 2px; font-size: clamp(26px, 2.6vw, 38px); font-weight: 900; letter-spacing: -.035em; line-height: 1.4; background: linear-gradient(120deg, var(--ink) 30%, var(--file-ink)); -webkit-background-clip: text; background-clip: text; color: transparent; }
-@supports not ((background-clip: text) or (-webkit-background-clip: text)) { .member-identity h3 { color: var(--ink); } }
-.member-role { display: inline-flex; align-items: center; gap: 6px; background: var(--file-wash); color: var(--file-ink); border: 1.5px solid currentColor; padding: 2px 9px; font-size: 12px; font-weight: 780; box-shadow: 2px 2px 0 color-mix(in srgb, var(--file-ink) 35%, transparent); }
-.member-role::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; animation: role-pulse 2.2s ease-in-out infinite; }
+.member-eyebrow { display: flex; align-items: center; gap: 6px; font-weight: 600; color: var(--neon); font-size: 10.5px; text-shadow: 0 0 12px color-mix(in srgb, var(--neon) 55%, transparent); }
+.member-eyebrow i { width: 12px; height: 2px; background: currentColor; box-shadow: 0 0 8px var(--neon); }
+.member-identity h3 { margin-block: 2px; font-size: clamp(26px, 2.6vw, 38px); font-weight: 900; letter-spacing: -.035em; line-height: 1.4; background: linear-gradient(120deg, #ffffff 35%, var(--neon)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+@supports not ((background-clip: text) or (-webkit-background-clip: text)) { .member-identity h3 { color: #fff; } }
+.member-role { display: inline-flex; align-items: center; gap: 6px; background: rgba(255, 255, 255, .06); color: var(--neon); border: 1.5px solid var(--neon); padding: 2px 9px; font-size: 12px; font-weight: 780; box-shadow: 0 0 16px color-mix(in srgb, var(--neon) 30%, transparent); }
+.member-role::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; box-shadow: 0 0 8px currentColor; animation: role-pulse 2.2s ease-in-out infinite; }
 @keyframes role-pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .35; transform: scale(.72); } }
 /* Education + experience facts, kept to two compact lines under the role. */
 .member-facts { display: flex; flex-direction: column; gap: 3px; margin: 8px 0 0; padding: 0; list-style: none; }
-.member-facts li { display: flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 600; line-height: 1.6; color: #4d5056; }
-.member-facts svg { color: var(--file-ink); flex: none; }
-/* --- Bio as a quote card with a giant quotation mark. --- */
-.bio { position: relative; margin-block: 15px 12px; padding: 10px 14px 10px 14px; padding-inline-start: 36px; font-size: 14px; color: #3a3b42; line-height: 1.95; background: var(--file-wash); border: 1px solid color-mix(in srgb, var(--file-ink) 28%, transparent); border-inline-start: 4px solid var(--file-ink); }
-.bio::before { content: '❝'; position: absolute; top: 0; inset-inline-start: 9px; font-size: 30px; line-height: 1.4; color: var(--file-ink); opacity: .4; font-weight: 900; }
-.locked-profile .bio { color: var(--muted); }
-.skills { border-top: 1px dashed #c5c6c9; padding-top: 11px; display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px 16px; }
-.skills h4 { display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 780; }
-.skills h4 svg { color: var(--file-ink); }
+.member-facts li { display: flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 600; line-height: 1.6; color: #b9c1cf; }
+.member-facts svg { color: var(--neon); flex: none; }
+/* --- Bio as a glass quote card with a giant quotation mark. --- */
+.bio { position: relative; margin-block: 15px 12px; padding: 10px 14px 10px 14px; padding-inline-start: 36px; font-size: 14px; color: #dbe1ec; line-height: 1.95; background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .12); border-inline-start: 4px solid var(--neon); backdrop-filter: blur(6px); }
+.bio::before { content: '❝'; position: absolute; top: 0; inset-inline-start: 9px; font-size: 30px; line-height: 1.4; color: var(--neon); opacity: .55; font-weight: 900; text-shadow: 0 0 14px var(--neon); }
+.locked-profile .bio { color: #8b93a3; }
+.profile-body .skeleton i { background: rgba(255, 255, 255, .12); }
+.skills { border-top: 1px dashed rgba(255, 255, 255, .16); padding-top: 11px; display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px 16px; }
+.skills h4 { display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 780; color: #eef1f6; }
+.skills h4 svg { color: var(--neon); }
 .skills ul { display: flex; flex-wrap: wrap; gap: 6px; }
-/* --- Skill chips with per-skill icons. --- */
-.skills li { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 650; background: #f8f8f9; border: 1.5px solid #acaeb3; padding: 4px 9px; transition: transform .16s cubic-bezier(.16,1,.3,1), background-color .16s, border-color .16s, box-shadow .16s; }
-.skills li svg { color: var(--file-ink); transition: transform .2s cubic-bezier(.16,1,.3,1); }
-.skills li:hover { background: var(--file-wash); border-color: var(--file-ink); transform: translateY(-2px); box-shadow: 2px 2px 0 color-mix(in srgb, var(--file-ink) 40%, transparent); }
+/* --- Skill chips with per-skill icons, glass on dark. --- */
+.skills li { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 650; color: #e8ecf3; background: rgba(255, 255, 255, .07); border: 1.5px solid rgba(255, 255, 255, .18); padding: 4px 9px; transition: transform .16s cubic-bezier(.16,1,.3,1), background-color .16s, border-color .16s, box-shadow .16s; }
+.skills li svg { color: var(--neon); transition: transform .2s cubic-bezier(.16,1,.3,1); }
+.skills li:hover { background: color-mix(in srgb, var(--neon) 14%, transparent); border-color: var(--neon); transform: translateY(-2px); box-shadow: 0 0 16px color-mix(in srgb, var(--neon) 40%, transparent); }
 .skills li:hover svg { transform: scale(1.25) rotate(-8deg); }
 .profile-body .data-links { margin-top: 12px; }
-.profile-foot { color: #666971; border-top: 1px solid #dbdbdf; padding: 6px 16px; }
+.profile-body .data-links a { color: #dfe5ef; border-color: rgba(255, 255, 255, .25); }
+.profile-body .data-links a:hover { color: var(--neon); border-color: var(--neon); }
+.profile-foot { color: #8b93a3; border-top: 1px solid rgba(255, 255, 255, .12); padding: 6px 16px; }
+.profile-foot .journey-skip { color: #eef1f6; border-color: rgba(255, 255, 255, .3); }
 .profile-foot .mono { font-size: 9px; }
 
 @media (max-width: 850px) and (min-width: 701px) {
@@ -116,8 +128,8 @@
 }
 @media (max-width: 540px) {
   .profile-bar, .profile-foot { padding-inline: 10px; }
-  .member-intro { gap: 13px; } .member-intro .portrait { width: 84px; height: 100px; margin-block-start: -30px; }
-  .member-intro .portrait strong { font-size: 34px; } .member-identity h3 { font-size: 23px; }
+  .member-intro { gap: 13px; } .member-intro .portrait { width: 110px; height: 128px; margin-block-start: -36px; }
+  .member-intro .portrait strong { font-size: 38px; } .member-identity h3 { font-size: 23px; }
   .portrait-badge { font-size: 9px; padding: 1px 7px; }
   .member-facts li { font-size: 10.5px; }
   .studio-lettering { inset-inline-start: 4%; } .studio-lettering p { margin-top: 4px; }
