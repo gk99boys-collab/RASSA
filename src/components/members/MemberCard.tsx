@@ -74,6 +74,7 @@ function StudioHeader({ member, studio, sealed }: ArtProps) {
     {!custom && <div className="studio-lettering"><span className="studio-kicker"><i />تصویرسازی کارگاه</span>
       <p>{top} <b>{bottom}</b></p></div>}
     <span className="studio-stamp" aria-hidden="true">تیم رَسا</span>
+    <span className="member-chip" aria-hidden="true"><i /><i /><i /></span>
     <span className="spark spark-a" aria-hidden="true" />
     <span className="spark spark-b" aria-hidden="true" />
     <span className="spark spark-c" aria-hidden="true" />
