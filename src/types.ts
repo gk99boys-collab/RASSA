@@ -29,6 +29,9 @@ export interface Member {
   photo_url: string | null
   media?: { portrait_path: string | null; cover_path: string | null } | null
   links: RawLinks
+  /** Optional local profile facts (education / experience). Supabase rows simply omit them. */
+  education?: string
+  experience?: string
 }
 
 export type DataSource = 'loading' | 'supabase' | 'fallback'

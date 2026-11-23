@@ -4,6 +4,17 @@ import type { Team } from '../types'
 import { ActionLink, EVENT_NAME } from './PrintUI'
 import { MotionPoster } from './poster/MotionPoster'
 
+const TICKER_ITEMS = ['می‌رسیم', 'می‌سازیم', 'می‌درخشیم', 'تیم رَسا', 'دوره هشتم']
+
+export function Ticker() {
+  const row = TICKER_ITEMS.map((item) => <span key={item} className="ticker-item">{item}<i aria-hidden="true" /></span>)
+  return (
+    <div className="ticker" aria-hidden="true">
+      <div className="ticker-track" dir="ltr"><span className="ticker-row">{row}</span><span className="ticker-row">{row}</span></div>
+    </div>
+  )
+}
+
 export function Hero({ team, count, ready }: { team: Team; count: number; ready: boolean }) {
   const facts = ['رشته نرم‌افزارهای ویژه تلفن همراه', `تیم ${toPersianDigits(count)} نفره`, 'رتبه اول دوره هفتم']
   return (
