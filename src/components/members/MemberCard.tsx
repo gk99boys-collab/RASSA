@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useRef, useState, type PointerEvent } from 'react'
+import { motion, useMotionValue, useSpring } from 'framer-motion'
 import {
   Briefcase, Calculator, Camera, Code, Database, Globe, GraduationCap, Layers2,
   LockKeyhole, Palette, PenLine, PenTool, Presentation, Scissors, Server, Target,
@@ -6,6 +7,7 @@ import {
 import { formatOrderBadge, resolveMemberPhotoUrl } from '../../lib/supabase'
 import type { Member } from '../../types'
 import { mediaUrl } from '../../lib/memberMedia'
+import { useSiteMotion } from '../../motion/MotionPreferences'
 import { DataLinks, Skeleton } from '../PrintUI'
 import { artwork, cardDesign, STUDIOS, type Studio } from './studios'
 
@@ -72,6 +74,9 @@ function StudioHeader({ member, studio, sealed }: ArtProps) {
     {!custom && <div className="studio-lettering"><span className="studio-kicker"><i />تصویرسازی کارگاه</span>
       <p>{top} <b>{bottom}</b></p></div>}
     <span className="studio-stamp" aria-hidden="true">تیم رَسا</span>
+    <span className="spark spark-a" aria-hidden="true" />
+    <span className="spark spark-b" aria-hidden="true" />
+    <span className="spark spark-c" aria-hidden="true" />
     <span className="studio-shine" aria-hidden="true" />
   </header>
 }
@@ -79,7 +84,27 @@ function StudioHeader({ member, studio, sealed }: ArtProps) {
 export function MemberCard({ member, loading }: { member: Member; loading: boolean }) {
   const { studio, sealed } = cardDesign(member)
   const facts = !sealed && (member.education || member.experience)
-  return <article className="member-sheet" data-studio={studio}>
+  const { enabled } = useSiteMotion()
+  const sheet = useRef<HTMLElement>(null)
+  const tiltX = useSpring(useMotionValue(0), { stiffness: 220, damping: 22, mass: .6 })
+  const tiltY = useSpring(useMotionValue(0), { stiffness: 220, damping: 22, mass: .6 })
+
+  // Pointer-tracked 3D tilt + glare. Mouse only; quiet mode and touch stay flat.
+  function track(e: PointerEvent<HTMLElement>) {
+    if (!enabled || e.pointerType !== 'mouse' || !sheet.current) return
+    const box = sheet.current.getBoundingClientRect()
+    const px = (e.clientX - box.left) / box.width
+    const py = (e.clientY - box.top) / box.height
+    tiltY.set((px - .5) * 7)
+    tiltX.set((.5 - py) * 7)
+    sheet.current.style.setProperty('--mx', `${px * 100}%`)
+    sheet.current.style.setProperty('--my', `${py * 100}%`)
+  }
+  function settle() { tiltX.set(0); tiltY.set(0) }
+
+  return <motion.article ref={sheet} className="member-sheet" data-studio={studio}
+    onPointerMove={track} onPointerLeave={settle} onPointerCancel={settle}
+    style={{ rotateX: tiltX, rotateY: tiltY, transformPerspective: 1100 }}>
     <StudioHeader member={member} studio={studio} sealed={sealed} />
     <div className={`profile-body${sealed ? ' locked-profile' : ''}`}>
       <div className="member-intro">
@@ -101,5 +126,6 @@ export function MemberCard({ member, loading }: { member: Member; loading: boole
         {!sealed && <DataLinks links={member.links} label={`پیوندهای ${member.name}`} />}
       </>}
     </div>
-  </article>
+    <span className="member-glare" aria-hidden="true" />
+  </motion.article>
 }

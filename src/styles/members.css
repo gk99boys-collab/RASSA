@@ -28,7 +28,16 @@
 .profile-controls button:hover { background: #f2e9ea; color: var(--red); }
 .page-index { font-size: 11px; font-weight: 650; font-variant-numeric: tabular-nums; color: #4e5056; }
 .page-index b { color: #909096; font-weight: 400; margin-inline: 2px; }
-.member-sheet { flex: 1; background: var(--paper); }
+.member-sheet { flex: 1; background: var(--paper); position: relative; transform-style: preserve-3d; will-change: transform; }
+/* Cursor-following glare over the whole sheet. */
+.member-glare { position: absolute; inset: 0; z-index: 5; pointer-events: none; opacity: 0; transition: opacity .3s; background: radial-gradient(560px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, .16), transparent 46%); }
+.member-sheet:hover .member-glare { opacity: 1; }
+/* Floating sparkles inside the jacket header. */
+.spark { position: absolute; width: 6px; height: 6px; background: #fff; transform: rotate(45deg); opacity: .55; pointer-events: none; animation: spark-float 5s ease-in-out infinite; }
+.spark-a { top: 18%; inset-inline-start: 58%; animation-delay: 0s; }
+.spark-b { top: 30%; inset-inline-start: 72%; width: 4px; height: 4px; animation-delay: 1.6s; }
+.spark-c { top: 12%; inset-inline-start: 84%; width: 5px; height: 5px; animation-delay: 3.1s; }
+@keyframes spark-float { 0%, 100% { transform: rotate(45deg) translateY(0) scale(1); opacity: .35; } 50% { transform: rotate(45deg) translateY(-9px) scale(1.35); opacity: .9; } }
 /* --- New jacket: taller header, diagonal stripes, team stamp, giant ghost number. --- */
 .studio-header { position: relative; isolation: isolate; container-type: inline-size; width: 100%; aspect-ratio: 2.5; min-height: 132px; max-height: 260px; background: var(--file-field); border-bottom: var(--border); overflow: hidden; }
 .studio-illustration { position: absolute; z-index: -1; inset: 0; width: 100%; height: 100%; object-fit: cover; }
@@ -36,7 +45,8 @@
   linear-gradient(180deg, transparent 48%, rgba(10, 10, 12, .34)),
   linear-gradient(270deg, rgba(10, 10, 12, .22), transparent 50%); }
 .studio-stripes { position: absolute; inset: 0; pointer-events: none; opacity: .5; background: repeating-linear-gradient(45deg, rgba(255, 255, 255, .055) 0 10px, transparent 10px 22px); }
-.studio-ghost { position: absolute; inset-inline-end: 1%; bottom: -12%; font-size: clamp(84px, 17cqw, 150px); font-weight: 900; line-height: 1; letter-spacing: -.04em; color: transparent; -webkit-text-stroke: 2px rgba(255, 255, 255, .42); user-select: none; pointer-events: none; }
+.studio-ghost { position: absolute; inset-inline-end: 1%; bottom: -12%; font-size: clamp(84px, 17cqw, 150px); font-weight: 900; line-height: 1; letter-spacing: -.04em; color: transparent; -webkit-text-stroke: 2px rgba(255, 255, 255, .42); user-select: none; pointer-events: none; animation: ghost-bob 7s ease-in-out infinite; }
+@keyframes ghost-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
 .studio-stamp { position: absolute; top: 10px; inset-inline-end: 12px; transform: rotate(6deg); padding: 3px 10px; background: rgba(255, 255, 255, .92); border: 2px solid var(--line); outline: 1px solid var(--line); outline-offset: 2px; font-size: 11px; font-weight: 900; letter-spacing: -.01em; color: var(--ink); box-shadow: 2px 2px 0 rgba(17, 17, 17, .55); user-select: none; pointer-events: none; }
 .studio-shine { position: absolute; top: -20%; bottom: -20%; width: 26%; left: 0; pointer-events: none; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .16), transparent); transform: translateX(-220%) skewX(-18deg); animation: shine-sweep 7s cubic-bezier(.4, 0, .2, 1) infinite; }
 @keyframes shine-sweep { 0%, 62% { transform: translateX(-220%) skewX(-18deg); } 88%, 100% { transform: translateX(520%) skewX(-18deg); } }
@@ -49,7 +59,8 @@
 .member-intro { display: flex; align-items: center; gap: 18px; }
 /* --- Bigger portrait with an experience caption strip over the photo. --- */
 .portrait { width: 110px; height: 128px; display: inline-grid; place-items: center; position: relative; flex: none; color: var(--file-ink); border: 2px solid var(--line); background: var(--file-wash) radial-gradient(var(--file-grain) 1px, transparent 1px) 0 0 / 7px 7px; overflow: hidden; }
-.member-intro .portrait { align-self: flex-start; margin-block-start: -38px; box-shadow: 0 0 0 3px white, 6px 6px 0 2px var(--line); }
+.member-intro .portrait { align-self: flex-start; margin-block-start: -38px; box-shadow: 0 0 0 3px white, 6px 6px 0 2px var(--line), 0 14px 28px color-mix(in srgb, var(--file-ink) 32%, transparent); transition: transform .35s cubic-bezier(.16,1,.3,1); }
+.member-intro .portrait:hover { transform: translateY(-3px) rotate(-1deg); }
 .portrait::after { content: ''; position: absolute; inset: 5px; border: 1px solid currentColor; opacity: .22; pointer-events: none; z-index: 2; }
 .portrait strong { font-size: 44px; line-height: 1; font-weight: 850; }
 .portrait img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 32%; transition: transform .5s cubic-bezier(.16,1,.3,1), filter .5s; }
@@ -64,8 +75,11 @@
 .member-identity { min-width: 0; }
 .member-eyebrow { display: flex; align-items: center; gap: 6px; font-weight: 600; color: var(--file-ink); font-size: 10.5px; }
 .member-eyebrow i { width: 12px; height: 2px; background: currentColor; }
-.member-identity h3 { margin-block: 2px; font-size: clamp(26px, 2.6vw, 38px); font-weight: 900; letter-spacing: -.035em; line-height: 1.4; }
-.member-role { display: inline-block; background: var(--file-wash); color: var(--file-ink); border: 1.5px solid currentColor; padding: 2px 9px; font-size: 12px; font-weight: 780; box-shadow: 2px 2px 0 color-mix(in srgb, var(--file-ink) 35%, transparent); }
+.member-identity h3 { margin-block: 2px; font-size: clamp(26px, 2.6vw, 38px); font-weight: 900; letter-spacing: -.035em; line-height: 1.4; background: linear-gradient(120deg, var(--ink) 30%, var(--file-ink)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+@supports not ((background-clip: text) or (-webkit-background-clip: text)) { .member-identity h3 { color: var(--ink); } }
+.member-role { display: inline-flex; align-items: center; gap: 6px; background: var(--file-wash); color: var(--file-ink); border: 1.5px solid currentColor; padding: 2px 9px; font-size: 12px; font-weight: 780; box-shadow: 2px 2px 0 color-mix(in srgb, var(--file-ink) 35%, transparent); }
+.member-role::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; animation: role-pulse 2.2s ease-in-out infinite; }
+@keyframes role-pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .35; transform: scale(.72); } }
 /* Education + experience facts, kept to two compact lines under the role. */
 .member-facts { display: flex; flex-direction: column; gap: 3px; margin: 8px 0 0; padding: 0; list-style: none; }
 .member-facts li { display: flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 600; line-height: 1.6; color: #4d5056; }
@@ -80,8 +94,9 @@
 .skills ul { display: flex; flex-wrap: wrap; gap: 6px; }
 /* --- Skill chips with per-skill icons. --- */
 .skills li { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 650; background: #f8f8f9; border: 1.5px solid #acaeb3; padding: 4px 9px; transition: transform .16s cubic-bezier(.16,1,.3,1), background-color .16s, border-color .16s, box-shadow .16s; }
-.skills li svg { color: var(--file-ink); }
+.skills li svg { color: var(--file-ink); transition: transform .2s cubic-bezier(.16,1,.3,1); }
 .skills li:hover { background: var(--file-wash); border-color: var(--file-ink); transform: translateY(-2px); box-shadow: 2px 2px 0 color-mix(in srgb, var(--file-ink) 40%, transparent); }
+.skills li:hover svg { transform: scale(1.25) rotate(-8deg); }
 .profile-body .data-links { margin-top: 12px; }
 .profile-foot { color: #666971; border-top: 1px solid #dbdbdf; padding: 6px 16px; }
 .profile-foot .mono { font-size: 9px; }
