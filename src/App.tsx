@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import { About } from './components/About'
 import { Projects } from './components/Projects'
-import { Hero } from './components/Hero'
+import { Hero, Ticker } from './components/Hero'
 import { Honors } from './components/Honors'
 import { MemberDirectory } from './components/MemberDirectory'
 import { firstVisit, MinimalIntro } from './components/MinimalIntro'
@@ -20,6 +20,7 @@ function Profile() {
     <main className="page-width" id="content" tabIndex={-1}>
       <PageCaption />
       <Hero team={team} count={members.length} ready={!intro} />
+      <Ticker />
       <About team={team} loading={loading} />
       <MemberDirectory members={members} loading={loading} teamName={team.name} />
       <Honors text={team.achievement_text} count={members.length} loading={loading} />

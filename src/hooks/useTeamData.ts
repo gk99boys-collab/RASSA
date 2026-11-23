@@ -75,6 +75,8 @@ export function useTeamData(): TeamDataState {
                 photo_url: row.photo_url ?? null,
                 media: row.media ?? null,
                 links: row.links ?? [],
+                education: row.education ?? undefined,
+                experience: row.experience ?? undefined,
               }))
             : FALLBACK_MEMBERS
 

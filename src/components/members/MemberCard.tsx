@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Layers2, LockKeyhole } from 'lucide-react'
+import { Briefcase, GraduationCap, Layers2, LockKeyhole } from 'lucide-react'
 import { formatOrderBadge, resolveMemberPhotoUrl } from '../../lib/supabase'
 import type { Member } from '../../types'
 import { mediaUrl } from '../../lib/memberMedia'
@@ -44,13 +44,17 @@ function StudioHeader({ member, studio, sealed }: ArtProps) {
       srcSet={custom ? undefined : `${artwork(studio, 756)} 756w, ${artwork(studio, 1404)} 1404w`}
       sizes={custom ? undefined : '(max-width: 700px) calc(100vw - 32px), (max-width: 1400px) 63vw, 860px'}
       width={1404} height={520} loading="lazy" decoding="async" onError={onError} alt={custom ? `تصویر اختصاصی کارت ${member.name}` : STUDIOS[studio].alt} />
+    <span className="studio-shade" aria-hidden="true" />
+    <span className="studio-ghost mono" aria-hidden="true" dir="ltr">{formatOrderBadge(member.sort_order)}</span>
     {!custom && <div className="studio-lettering"><span className="studio-kicker"><i />تصویرسازی کارگاه</span>
       <p>{top} <b>{bottom}</b></p></div>}
+    <span className="studio-shine" aria-hidden="true" />
   </header>
 }
 
 export function MemberCard({ member, loading }: { member: Member; loading: boolean }) {
   const { studio, sealed } = cardDesign(member)
+  const facts = !sealed && (member.education || member.experience)
   return <article className="member-sheet" data-studio={studio}>
     <StudioHeader member={member} studio={studio} sealed={sealed} />
     <div className={`profile-body${sealed ? ' locked-profile' : ''}`}>
@@ -60,6 +64,10 @@ export function MemberCard({ member, loading }: { member: Member; loading: boole
           <span className="member-eyebrow"><i />عضو شماره {formatOrderBadge(member.sort_order)}</span>
           <h3>{member.name}</h3>
           <span className="member-role">{sealed ? 'در انتظار معرفی' : member.role}</span>
+          {facts && <ul className="member-facts">
+            {member.education && <li><GraduationCap size={13} aria-hidden="true" />{member.education}</li>}
+            {member.experience && <li><Briefcase size={13} aria-hidden="true" />{member.experience}</li>}
+          </ul>}
         </div>
       </div>
       {loading && !sealed ? <Skeleton label="در حال دریافت مشخصات عضو" /> : <>
