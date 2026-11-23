@@ -1,10 +1,29 @@
 import { useState } from 'react'
-import { Briefcase, GraduationCap, Layers2, LockKeyhole } from 'lucide-react'
+import {
+  Briefcase, Calculator, Camera, Code, Database, Globe, GraduationCap, Layers2,
+  LockKeyhole, Palette, PenLine, PenTool, Presentation, Scissors, Server, Target,
+} from 'lucide-react'
 import { formatOrderBadge, resolveMemberPhotoUrl } from '../../lib/supabase'
 import type { Member } from '../../types'
 import { mediaUrl } from '../../lib/memberMedia'
 import { DataLinks, Skeleton } from '../PrintUI'
 import { artwork, cardDesign, STUDIOS, type Studio } from './studios'
+
+function skillIcon(skill: string) {
+  if (/فرانت‌اند|فرانت/.test(skill)) return Code
+  if (/گرافیک/.test(skill)) return Palette
+  if (/وب‌سایت|وب/.test(skill)) return Globe
+  if (/مدیریت پروژه/.test(skill)) return Target
+  if (/عکاسی/.test(skill)) return Camera
+  if (/سناریو/.test(skill)) return PenLine
+  if (/ادیتور/.test(skill)) return Scissors
+  if (/بک‌اند/.test(skill)) return Server
+  if (/پشتیبان/.test(skill)) return Database
+  if (/حسابداری/.test(skill)) return Calculator
+  if (/تولید محتوا/.test(skill)) return PenTool
+  if (/ارائه/.test(skill)) return Presentation
+  return Layers2
+}
 
 export function Portrait({ member, sealed, mini = false }: { member: Member; sealed: boolean; mini?: boolean }) {
   const [failed, setFailed] = useState<string[]>([])
@@ -13,11 +32,14 @@ export function Portrait({ member, sealed, mini = false }: { member: Member; sea
     .find(url => url && !failed.includes(url))
   const initials = member.name.trim().replace(/^سید\s+/, '').split(/\s+/).filter(Boolean)
     .filter((_, i, words) => i === 0 || i === words.length - 1).map(word => word[0]).join('‌')
+  // Short "۵ سال سابقه" caption for the photo strip; full text stays in the facts.
+  const badge = !mini && !sealed ? member.experience?.match(/^(.+?سابقه)/)?.[1] : undefined
   return <span className={`portrait${mini ? ' portrait-mini' : ''}${sealed ? ' lock-print' : ''}`}
     aria-hidden={mini || !src ? true : undefined}>
     {sealed ? <LockKeyhole size={mini ? 18 : 28} strokeWidth={1.7} />
       : src ? <img className={src === uploaded ? 'uploaded-portrait' : undefined} src={src} alt={mini ? '' : member.name} loading="lazy" decoding="async" onError={() => setFailed(old => [...old, src])} />
       : <><strong>{initials || '—'}</strong>{!mini && <span className="portrait-id mono" dir="ltr"># {formatOrderBadge(member.sort_order)}</span>}</>}
+    {badge && <span className="portrait-badge"><Briefcase size={11} aria-hidden="true" />{badge}</span>}
   </span>
 }
 
@@ -45,9 +67,11 @@ function StudioHeader({ member, studio, sealed }: ArtProps) {
       sizes={custom ? undefined : '(max-width: 700px) calc(100vw - 32px), (max-width: 1400px) 63vw, 860px'}
       width={1404} height={520} loading="lazy" decoding="async" onError={onError} alt={custom ? `تصویر اختصاصی کارت ${member.name}` : STUDIOS[studio].alt} />
     <span className="studio-shade" aria-hidden="true" />
+    <span className="studio-stripes" aria-hidden="true" />
     <span className="studio-ghost mono" aria-hidden="true" dir="ltr">{formatOrderBadge(member.sort_order)}</span>
     {!custom && <div className="studio-lettering"><span className="studio-kicker"><i />تصویرسازی کارگاه</span>
       <p>{top} <b>{bottom}</b></p></div>}
+    <span className="studio-stamp" aria-hidden="true">تیم رَسا</span>
     <span className="studio-shine" aria-hidden="true" />
   </header>
 }
@@ -73,7 +97,7 @@ export function MemberCard({ member, loading }: { member: Member; loading: boole
       {loading && !sealed ? <Skeleton label="در حال دریافت مشخصات عضو" /> : <>
         <p className="bio">{member.bio}</p>
         {!sealed && member.skills.length > 0 && <div className="skills"><h4><Layers2 size={15} />مهارت‌ها</h4>
-          <ul>{member.skills.map(skill => <li key={skill}>{skill}</li>)}</ul></div>}
+          <ul>{member.skills.map(skill => { const Icon = skillIcon(skill); return <li key={skill}><Icon size={13} aria-hidden="true" />{skill}</li> })}</ul></div>}
         {!sealed && <DataLinks links={member.links} label={`پیوندهای ${member.name}`} />}
       </>}
     </div>
