@@ -73,7 +73,7 @@ export function useTeamData(): TeamDataState {
                 skills: Array.isArray(row.skills) ? row.skills.filter(Boolean) : [],
                 bio: row.bio || '',
                 photo_url: row.photo_url ?? null,
-                media: row.media ?? null,
+                media: row.photo_url ? null : (row.media ?? null),
                 links: row.links ?? [],
                 education: row.education ?? undefined,
                 experience: row.experience ?? undefined,
