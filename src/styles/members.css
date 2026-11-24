@@ -98,14 +98,14 @@
 .bio::before { content: '❝'; position: absolute; top: 0; inset-inline-start: 9px; font-size: 30px; line-height: 1.4; color: var(--neon); opacity: .55; font-weight: 900; text-shadow: 0 0 14px var(--neon); }
 .locked-profile .bio { color: #8b93a3; }
 .profile-body .skeleton i { background: rgba(255, 255, 255, .12); }
-.skills { border-top: 1px dashed rgba(255, 255, 255, .16); padding-top: 11px; display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px 16px; }
-.skills h4 { display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 780; color: #eef1f6; }
-.skills h4 svg { color: var(--neon); }
+.skills { border-top: 1px dashed var(--file-grain); padding-top: 11px; display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px 16px; }
+.skills h4 { display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 780; color: var(--ink); }
+.skills h4 svg { color: var(--file-ink); }
 .skills ul { display: flex; flex-wrap: wrap; gap: 6px; }
-/* --- Skill chips with per-skill icons, glass on dark. --- */
-.skills li { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 650; color: #e8ecf3; background: rgba(255, 255, 255, .07); border: 1.5px solid rgba(255, 255, 255, .18); padding: 4px 9px; transition: transform .16s cubic-bezier(.16,1,.3,1), background-color .16s, border-color .16s, box-shadow .16s; }
-.skills li svg { color: var(--neon); transition: transform .2s cubic-bezier(.16,1,.3,1); }
-.skills li:hover { background: color-mix(in srgb, var(--neon) 14%, transparent); border-color: var(--neon); transform: translateY(-2px); box-shadow: 0 0 16px color-mix(in srgb, var(--neon) 40%, transparent); }
+/* --- Skill chips with per-skill icons, crisp on light paper. --- */
+.skills li { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 650; color: var(--ink); background: var(--file-wash); border: 1.5px solid var(--file-grain); padding: 4px 9px; transition: transform .16s cubic-bezier(.16,1,.3,1), background-color .16s, border-color .16s, box-shadow .16s; }
+.skills li svg { color: var(--file-ink); transition: transform .2s cubic-bezier(.16,1,.3,1); }
+.skills li:hover { background: #fff; border-color: var(--file-ink); transform: translateY(-2px); box-shadow: 2px 3px 0 var(--file-ink); }
 .skills li:hover svg { transform: scale(1.25) rotate(-8deg); }
 .profile-body .data-links { margin-top: 14px; }
 .profile-body .data-links a { display: inline-flex; align-items: center; gap: 7px; padding: 7px 15px; font-weight: 760; font-size: 13px; color: #fff; background: var(--file-ink); border: 1.5px solid var(--line); box-shadow: 3px 3px 0 var(--line); transition: transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s, background-color .2s; }
