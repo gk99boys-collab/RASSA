@@ -1,8 +1,8 @@
 import { useRef, useState, type PointerEvent } from 'react'
 import { motion, useMotionValue, useSpring } from 'framer-motion'
 import {
-  Briefcase, Calculator, Camera, Code, Database, Globe, GraduationCap, Layers2,
-  LockKeyhole, Palette, PenLine, PenTool, Presentation, Scissors, Server, Target,
+  Briefcase, Calculator, Camera, Check, Code, Database, Globe, GraduationCap, Layers2,
+  LockKeyhole, Palette, PenLine, PenTool, Presentation, QrCode, Scissors, Server, Share2, Target,
 } from 'lucide-react'
 import { formatOrderBadge, resolveMemberPhotoUrl } from '../../lib/supabase'
 import type { Member } from '../../types'
@@ -102,6 +102,14 @@ export function MemberCard({ member, loading }: { member: Member; loading: boole
   }
   function settle() { tiltX.set(0); tiltY.set(0) }
 
+  const [copied, setCopied] = useState(false)
+  const shareUrl = `${window.location.origin}${window.location.pathname}?member=${member.sort_order}#members`
+  const qrTarget = (Array.isArray(member.links) ? member.links[0]?.url : undefined) || shareUrl
+  function copyCardLink() {
+    navigator.clipboard?.writeText(shareUrl).catch(() => {})
+    setCopied(true)
+    window.setTimeout(() => setCopied(false), 2000)
+  }
   return <motion.article ref={sheet} className="member-sheet" data-studio={studio}
     onPointerMove={track} onPointerLeave={settle} onPointerCancel={settle}
     style={{ rotateX: tiltX, rotateY: tiltY, transformPerspective: 1100 }}>
@@ -123,7 +131,15 @@ export function MemberCard({ member, loading }: { member: Member; loading: boole
         <p className="bio">{member.bio}</p>
         {!sealed && member.skills.length > 0 && <div className="skills"><h4><Layers2 size={15} />مهارت‌ها</h4>
           <ul>{member.skills.map(skill => { const Icon = skillIcon(skill); return <li key={skill}><Icon size={13} aria-hidden="true" />{skill}</li> })}</ul></div>}
-        {!sealed && <DataLinks links={member.links} label={`پیوندهای ${member.name}`} />}
+        {!sealed && <div className="member-actions">
+          <DataLinks links={member.links} label={`پیوندهای ${member.name}`} />
+          <button type="button" className="share-btn" onClick={copyCardLink}>
+            {copied ? <><Check size={14} />کپی شد!</> : <><Share2 size={14} />کپی لینک کارت</>}
+          </button>
+          <a className="qr-chip" href={qrTarget} target="_blank" rel="noreferrer" title="اسکن یا باز کردن لینک">
+            <QrCode size={16} aria-hidden="true" /><span>QR</span>
+          </a>
+        </div>}
       </>}
     </div>
     <span className="member-glare" aria-hidden="true" />
