@@ -26,8 +26,30 @@ function FileLeaf({ member, loading, direction }: { member: Member; loading: boo
   </motion.div>
 }
 
+function playFlipTick() {
+  try {
+    const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext
+    if (!AudioCtx) return
+    const ctx = new AudioCtx()
+    const osc = ctx.createOscillator()
+    const gain = ctx.createGain()
+    osc.type = 'triangle'
+    osc.frequency.setValueAtTime(520, ctx.currentTime)
+    osc.frequency.exponentialRampToValueAtTime(190, ctx.currentTime + 0.045)
+    gain.gain.setValueAtTime(0.035, ctx.currentTime)
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05)
+    osc.connect(gain); gain.connect(ctx.destination)
+    osc.start(); osc.stop(ctx.currentTime + 0.055)
+  } catch {}
+}
+
 export function MemberDirectory({ members, loading, teamName }: { members: Member[]; loading: boolean; teamName: string }) {
-  const [selection, setSelection] = useState<{ seat: number | null; dir: number }>({ seat: null, dir: 1 })
+  const [selection, setSelection] = useState<{ seat: number | null; dir: number }>(() => {
+    try {
+      const m = Number(new URLSearchParams(window.location.search).get('member'))
+      return m >= 1 ? { seat: m, dir: 1 } : { seat: null, dir: 1 }
+    } catch { return { seat: null, dir: 1 } }
+  })
   const [compact, setCompact] = useState(() => window.matchMedia(MOBILE_LIST).matches)
   const list = useRef<HTMLDivElement>(null)
   const touchX = useRef<number | null>(null)
@@ -36,6 +58,7 @@ export function MemberDirectory({ members, loading, teamName }: { members: Membe
   const index = Math.max(0, members.findIndex((member) => member.sort_order === selection.seat))
   const member = members[index]
   const onStop = useCallback((i: number) => {
+    playFlipTick()
     const seat = members[i].sort_order
     setSelection(old => old.seat === seat ? old : { seat, dir: seat >= (old.seat ?? seat) ? 1 : -1 })
   }, [members])
