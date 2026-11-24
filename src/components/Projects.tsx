@@ -1,4 +1,4 @@
-import { ExternalLink, Trophy } from 'lucide-react'
+import { ExternalLink, LockKeyhole, Sparkles, Trophy } from 'lucide-react'
 import { PROJECT_ENTRIES } from '../data/projects'
 import { toPersianDigits } from '../lib/supabase'
 import { Reveal, SectionTitle } from './PrintUI'
@@ -23,6 +23,9 @@ export function Projects() {
               <span className="project-kicker">{entry.kicker}</span>
               <h3 className="project-name">{entry.title}</h3>
               <p className="project-desc">{entry.description}</p>
+              <ul className="project-tags" aria-label="فناوری‌های پروژه">
+                <li>HTML5</li><li>CSS3</li><li>JavaScript</li><li>Responsive</li>
+              </ul>
               <div className="project-foot">
                 <span className="project-context">{entry.context}</span>
                 <a className="project-cta" href={entry.url} target="_blank" rel="noopener noreferrer"
@@ -33,6 +36,25 @@ export function Projects() {
             </div>
           </article>
         ))}
+        <article className="project-card project-card-upcoming paper">
+          <div className="project-cover project-cover-upcoming" aria-hidden="true">
+            <span className="project-cover-letter">۰۸</span>
+            <span className="project-badge"><Sparkles size={11} strokeWidth={2.2} aria-hidden="true" />دوره هشتم</span>
+            <span className="project-host mono" dir="ltr"><bdi>rassa-team · 1405</bdi></span>
+          </div>
+          <div className="project-body">
+            <span className="project-kicker">رویداد ملی تولید محتوای دیجیتال بسیج</span>
+            <h3 className="project-name">پروژه‌ی دوره هشتم — در حال ساخت</h3>
+            <p className="project-desc">در حال طراحی و توسعه اپلیکیشن و محصول جدید تیم رَسا برای هشتمین دوره رویداد؛ به‌زودی پس از رونمایی رسمی اینجا منتشر می‌شود.</p>
+            <ul className="project-tags" aria-label="فناوری‌های پروژه">
+              <li>Mobile App</li><li>React</li><li>UI/UX</li>
+            </ul>
+            <div className="project-foot">
+              <span className="project-context">سال جاری — دوره هشتم</span>
+              <span className="project-soon"><LockKeyhole size={14} aria-hidden="true" /> به‌زودی</span>
+            </div>
+          </div>
+        </article>
       </Reveal>
       <p className="project-count"><bdi className="mono" lang="en">RASSA/PROJECTS</bdi><span>{toPersianDigits(PROJECT_ENTRIES.length)} پروژه‌ی منتشرشده</span></p>
     </section>
