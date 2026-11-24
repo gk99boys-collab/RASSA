@@ -1,7 +1,7 @@
 import { useSiteMotion } from '../motion/MotionPreferences'
 import { useEffect, useRef, useState } from 'react'
 import { motion, useScroll } from 'framer-motion'
-import { ArrowUp, ChevronLeft, ExternalLink, Home, Menu, UsersRound, X } from 'lucide-react'
+import { ArrowUp, ChevronLeft, ExternalLink, Home, Menu, Moon, Sun, UsersRound, X } from 'lucide-react'
 import type { Team } from '../types'
 import { EventLogo, RasaLogo, RasaMark } from './BrandMarks'
 import { SoundtrackControl } from './SoundtrackControl'
@@ -81,6 +81,13 @@ export function SiteHeader({ name }: { name: string }) {
     document.addEventListener('pointerdown', outside)
     return () => { document.removeEventListener('keydown', key); document.removeEventListener('pointerdown', outside) }
   }, [menu])
+  const [dark, setDark] = useState(() => {
+    try { return localStorage.getItem('rassa-theme') === 'dark' } catch { return false }
+  })
+  useEffect(() => {
+    document.documentElement.dataset.theme = dark ? 'dark' : 'light'
+    try { localStorage.setItem('rassa-theme', dark ? 'dark' : 'light') } catch {}
+  }, [dark])
   return (
     <header className="masthead" ref={header} onClick={(event) => {
       if ((event.target as Element).closest('a')) setMenu(false)
@@ -104,6 +111,15 @@ export function SiteHeader({ name }: { name: string }) {
           </a>)}
         </nav>
         <div className="masthead-actions">
+          <button
+            type="button"
+            className="theme-toggle"
+            onClick={() => setDark((d) => !d)}
+            aria-label={dark ? 'حالت روز' : 'حالت شب'}
+            title={dark ? 'حالت روز' : 'حالت شب'}
+          >
+            {dark ? <Sun size={16} /> : <Moon size={16} />}
+          </button>
           <SoundtrackControl />
           <a className="event-link" href={EVENT_URL} target="_blank" rel="noopener noreferrer" aria-label={`وب‌سایت ${EVENT_NAME}`}>
             <EventLogo className="masthead-event" />

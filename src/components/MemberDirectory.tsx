@@ -30,6 +30,7 @@ export function MemberDirectory({ members, loading, teamName }: { members: Membe
   const [selection, setSelection] = useState<{ seat: number | null; dir: number }>({ seat: null, dir: 1 })
   const [compact, setCompact] = useState(() => window.matchMedia(MOBILE_LIST).matches)
   const list = useRef<HTMLDivElement>(null)
+  const touchX = useRef<number | null>(null)
   const listPrinted = useInView(list, { once: true, amount: .15 })
   const { enabled } = useSiteMotion()
   const index = Math.max(0, members.findIndex((member) => member.sort_order === selection.seat))
@@ -86,7 +87,17 @@ export function MemberDirectory({ members, loading, teamName }: { members: Membe
                 <button type="button" aria-label="عضو بعدی" onClick={() => select((index + 1) % members.length, 1)}><ChevronLeft size={15} /></button>
               </div>
             </div>
-            <div className="file-deck">{enabled
+            <div
+              className="file-deck"
+              onTouchStart={(e) => { touchX.current = e.touches[0]?.clientX ?? null }}
+              onTouchEnd={(e) => {
+                if (touchX.current === null) return
+                const dx = (e.changedTouches[0]?.clientX ?? touchX.current) - touchX.current
+                touchX.current = null
+                if (Math.abs(dx) < 45) return
+                onStop(Math.max(0, Math.min(members.length - 1, index + (dx < 0 ? 1 : -1))))
+              }}
+            >{enabled
               ? <AnimatePresence initial={false} custom={selection.dir}>
                 <FileLeaf key={member.id} member={member} loading={loading} direction={selection.dir} />
               </AnimatePresence>
