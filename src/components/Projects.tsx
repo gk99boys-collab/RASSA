@@ -15,7 +15,15 @@ export function Projects() {
         {PROJECT_ENTRIES.map((entry) => (
           <article key={entry.id} className="project-card paper">
             <div className="project-cover" aria-hidden="true">
-              <span className="project-cover-letter">{entry.kicker.trim().charAt(0)}</span>
+              <div className="project-browser-preview">
+                <div className="pb-hero">
+                  <b>خوسف</b>
+                  <span>نگین کویر خراسان</span>
+                </div>
+                <div className="pb-cards">
+                  <i /><i /><i />
+                </div>
+              </div>
               <span className="project-badge"><Trophy size={11} strokeWidth={2.2} aria-hidden="true" />{entry.badge}</span>
               {hostOf(entry.url) && <span className="project-host mono" dir="ltr"><bdi>{hostOf(entry.url)}</bdi></span>}
             </div>
