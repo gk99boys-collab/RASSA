@@ -39,13 +39,10 @@ export function useMemberJourney(count: number, enabled: boolean, onStop: (index
       const progress = prev ? Math.max(0, Math.min(count - 1, travel / prev.step)) : 0
       // Scroll positions round to physical pixels at both endpoints.
       const held = !!prev && travel >= -1 && travel <= (count - 1) * prev.step + 1
-      if (firstFit === -1) {
-        metrics.current = null; last = -1; delete root!.dataset.pinned
-        if (held) window.scrollTo({ top: docTop + offsets[offsets.length - 1] - roof, behavior: 'instant' })
-        return
-      }
+      // Always pin on desktop/tablet when journey is enabled, falling back to the last anchor on short viewports.
+      const fitIndex = firstFit === -1 ? anchors.length - 1 : firstFit
       // Don't bring the heading back mid-read just because the next bio is shorter.
-      anchor = prev && box.top <= roof + 1 ? Math.max(firstFit, anchor) : firstFit
+      anchor = prev && box.top <= roof + 1 ? Math.max(fitIndex, anchor) : fitIndex
       const top = (anchor ? compactRoof : roof) - offsets[anchor]
       const step = Math.round(Math.max(180, Math.min(420, window.innerHeight * .45)))
       metrics.current = { top, step }
