@@ -59,7 +59,9 @@
 .project-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr)); gap: 14px; }
 .project-card { display: grid; grid-template-columns: 238px 1fr; overflow: hidden; box-shadow: 3px 3px 0 #bc3540; transition: transform .28s cubic-bezier(.16,1,.3,1), box-shadow .28s; }
 .project-card:hover { transform: translateY(-4px); box-shadow: 6px 8px 0 #bc3540; }
-.project-cover { position: relative; isolation: isolate; display: flex; flex-direction: column; justify-content: space-between; align-items: stretch; gap: 14px; padding: 18px 16px; min-height: 228px; background: var(--ink); background-image: radial-gradient(#ffffff22 1px, transparent 1.1px); background-size: 13px 13px; border-inline-end: var(--border); overflow: hidden; }
+.project-cover { position: relative; isolation: isolate; display: flex; flex-direction: column; justify-content: space-between; align-items: stretch; gap: 14px; padding: 34px 16px 18px; min-height: 228px; background: var(--ink); background-image: radial-gradient(#ffffff22 1px, transparent 1.1px); background-size: 13px 13px; border-inline-end: var(--border); overflow: hidden; }
+.project-cover::before { content: ''; position: absolute; top: 0; inset-inline: 0; height: 22px; background: #1c1e24; border-bottom: 1px solid #ffffff1a; }
+.project-cover::after { content: ''; position: absolute; top: 7px; inset-inline-start: 12px; width: 8px; height: 8px; border-radius: 50%; background: #ff5f56; box-shadow: 14px 0 0 #ffbd2e, 28px 0 0 #27c93f; }
 .project-cover-letter { position: absolute; inset-inline-start: -9%; bottom: -24%; font-size: 215px; font-weight: 900; line-height: 1; color: #ffffff12; user-select: none; pointer-events: none; transition: transform .45s cubic-bezier(.16,1,.3,1), color .45s; }
 .project-card:hover .project-cover-letter { transform: scale(1.08) rotate(-4deg); color: #ffffff20; }
 .project-badge { position: relative; display: inline-flex; align-items: center; gap: 6px; align-self: flex-start; background: var(--red); border: 1px solid #2b0a0d; color: #fff; padding: 4px 10px 3px; font-size: 11px; font-weight: 800; line-height: 1.5; box-shadow: 2px 2px 0 #00000070; }

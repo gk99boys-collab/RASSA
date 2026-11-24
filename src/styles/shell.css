@@ -13,6 +13,8 @@
 
 html { direction: rtl; scroll-behavior: smooth; scroll-padding-top: 98px; }
 body {
+  background-image: radial-gradient(rgba(22, 24, 29, .065) 1px, transparent 1px);
+  background-size: 20px 20px;
   margin: 0; min-height: 100dvh; background: var(--canvas); color: var(--ink);
   background-image: radial-gradient(#d6d8dd .8px, transparent .9px); background-size: 17px 17px;
   font-family: var(--font-sans); font-weight: 400; -webkit-font-smoothing: antialiased;
